@@ -10,6 +10,8 @@ import 'codemirror/mode/clike/clike'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
 import CodeSelect from './components/codeSelect'
 
+import useEdit from'./useEdit'
+
 const codingOptions = [
     { label: 'Python', value: 'python'},
     { label: 'HTML', value: 'xml' },
@@ -20,17 +22,16 @@ const codingOptions = [
 ]
 
 export default function Editor(props) {
+    const { codes, opened, sendCodes } = useEdit();
     const [language, setLan] = useState('python');
-    const [displayName, setName] = useState('');
-    const [value, setValue] = useState('')
-    const [open, setOpen] = useState(true);
     function onChangeCode(value) { 
         console.log(value);
         setLan(value.value);
-        setName(value.value);
     }
     function onChange(value) { 
-        setValue(value);
+        sendCodes(value);
+        // setValue(value);
+        console.log(value);
         console.log(language);
     }
 
@@ -45,8 +46,8 @@ export default function Editor(props) {
                     </div>
                     
                     <ControlledEditor
-                        onBeforeChange={(editor, data, value) => { onChange(value); }}
-                        value={value}
+                        onBeforeChange={(editor, data, value) => { onChange(value);}}
+                        value={opened? codes: 'Loading...'}
                         className="code_mirror_wrapper"
                         options={{
                             lineWrapping: true,
