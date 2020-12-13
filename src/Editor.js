@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import 'codemirror/lib/codemirror.css'
-import 'codemirror/theme/material-darker.css'
+import 'codemirror/theme/monokai.css'
 import 'codemirror/mode/xml/xml'
 import 'codemirror/mode/python/python'
 import 'codemirror/mode/javascript/javascript'
@@ -52,7 +52,7 @@ export default function Editor(props) {
                             lineWrapping: true,
                             lint: true,
                             mode: language,
-                            theme: 'material-darker',
+                            theme: 'monokai',
                             lineNumbers: true,
                             cursorHeight: 0.85,
                         }}
