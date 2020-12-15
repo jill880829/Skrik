@@ -9,7 +9,7 @@ import 'codemirror/mode/verilog/verilog'
 import 'codemirror/mode/clike/clike'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
 import CodeSelect from './components/codeSelect'
-
+import FileStructure from './structure'
 import useEdit from'./useEdit'
 
 const codingOptions = [
@@ -38,7 +38,9 @@ export default function Editor(props) {
     return (
         <div>
             <div className='page_container'>
-                <div id='folder_structure'>folder structure</div>
+                <div id='folder_structure'>
+                    <FileStructure/>
+                </div>
                 <div id='editor_container'>
                     <div id='editor_title'>
                         File Name
