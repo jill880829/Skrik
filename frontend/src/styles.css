@@ -28,3 +28,24 @@
   justify-content: flex-start;
   align-items: center;
 }
+.file{
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+}
+.file .fileSpan{
+  margin-left: 5px;
+}
+.file .fileSpan:hover{
+  cursor:pointer;
+}
+.folder{
+  padding-left: 20px;
+}
+.folder .folder--label {
+  display: flex;
+  align-items: center;
+}
+.folder .folder--label .folderSpan{
+  margin-left: 5px;
+}
