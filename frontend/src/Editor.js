@@ -34,7 +34,6 @@ export default function Editor(props) {
         console.log(value);
         console.log(language);
     }
-
     return (
         <div>
             <div className='page_container'>

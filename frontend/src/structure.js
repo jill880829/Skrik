@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import styled from "styled-components";
 import { IconContext } from "react-icons";
 import { AiOutlineFile, AiOutlineFolder } from "react-icons/ai";
@@ -25,19 +25,16 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 
-
-
-
-
 export default function Structure() {
-    const File = ({ name,filepath }) => {
+    
+    const File = ({ name,filepath,focusOn }) => {
         let ext = name.split(".")[1];
     
         return (
-            <div id={filepath} className="file" filepath={filepath} key={filepath}>
+            <div id={filepath} className={focusOn?"fileFocus":"file"} filepath={filepath} key={filepath}>
                 {/* onClick={(event)=>console.log("Click on ",event.target)} */}
                 {FILE_ICONS[ext] || <AiOutlineFile />}
-                <span className="fileSpan" onClick={(event)=>handleclickFile(event)}>{name}</span>
+                <span className="fileSpan" onClick={(event)=>handleclickFile(event)} key={filepath+' span'}>{name}</span>
             </div>
         );
     };
@@ -51,31 +48,41 @@ export default function Structure() {
         };
     
         return (
-            <div className="folder" folderpath={folderpath}>
-                <div className="folder--label" onClick={handleToggle}>
+            <div id={folderpath} className="folder" folderpath={folderpath} key={folderpath}>
+                <div className="folder--label" onClick={handleToggle} key={folderpath+' div'}>
                     <AiOutlineFolder />
-                    <span className="folderSpan">{name}</span>
+                    <span className="folderSpan" key={folderpath+' span'}>{name}</span>
                 </div>
                 <Collapsible isOpen={isOpen}>{children}</Collapsible>
             </div>
         );
     };
-    
+    const Input = ({ name,filepath,focusOn }) =>{
+        return(
+            <div id={filepath} className={focusOn?"fileFocus":"file"} filepath={filepath} key={filepath}>
+                {/* onClick={(event)=>console.log("Click on ",event.target)} */}
+                {<AiOutlineFile />}
+                <input className="fileSpan" placeholder="Type file name here"></input>
+            </div>
+        )
+    }
     const Tree = ({ children }) => {
         return <StyledTree>{children}</StyledTree>;
     };
-    
+    Tree.Input = Input;
     Tree.File = File;
     Tree.Folder = Folder;
     
-    
+    const handleAddNewFile = () =>{
+       AddNewFile()
+    }
     const FolderStructure = ({ projectName }) => {
         return (
             <div className="title">
                 <span className="titleName">{projectName}</span>
                 <IconContext.Provider value={{ className: 'react-icons' }}>
                     <div className="titleFunction">
-                        <VscNewFile onClick={() => { alert("Make New File") }} />
+                        <VscNewFile onClick={()=>handleAddNewFile()} />
                         <VscNewFolder onClick={() => { alert("Make New Folder") }} />
                         <VscRefresh onClick={() => { alert("Refresh") }} />
                         <VscCollapseAll onClick={() => { alert("Collapse All") }} />
@@ -86,7 +93,7 @@ export default function Structure() {
     }
     let filepath='';
     const displayStruct = (ele,i) => {
-        // console.log(ele)
+        //console.log(ele)
         if(Array.isArray(ele)){
             return ele.map(displayStruct)
         }
@@ -96,7 +103,7 @@ export default function Structure() {
         }
         else if (ele.type === "file") {
             //console.log("Filepath:" ,filepath+i)
-            return <Tree.File name={ele.name} filepath={filepath+i}/>        
+            return <Tree.File name={ele.name} filepath={filepath+i} focusOn={ele.status==='on'}/>        
         }
         else if (ele.type === "folder"){
             filepath+=`${i}_`
@@ -109,7 +116,13 @@ export default function Structure() {
                 </Tree.Folder>
             )
         }
-        else {
+        else if (ele.type === "blank"){
+            if(ele.displayAddBlank)
+            return(
+            <Tree.Input name="I am a blank" filepath={filepath+i} focusOn={ele.status==='false'}/>
+            //<input className='file' type="text"/>
+            // <Tree.File name="I am a blank" filepath={filepath+i} focusOn={ele.status==='false'}/> 
+            )
         }
         
     }
@@ -117,23 +130,33 @@ export default function Structure() {
         {   
             type:"folder",
             name:"src",
+            status:"open",
             data:[
                 {
                     type:"folder",
                     name:"components",
+                    status:"open",
                     data:[
                         {
+                            type:"blank",
+                            displayAddBlank:false,
+                        },
+                        {
                             type:"file",
-                            name:"Modal.js",
+                            name:"SkrikPage.js",
                             status:"off",
                         },
                         {
                             type:"file",
-                            name:"Modal.css",
+                            name:"SkrikPage.css",
                             status:"off"
                         },
                         "EOF"
                     ]
+                },
+                {
+                    type:"blank",
+                    displayAddBlank:false,
                 },
                 {
                     type:"file",
@@ -154,19 +177,21 @@ export default function Structure() {
             ]
         },
         {
+            type:"blank",
+            displayAddBlank:false,
+        },
+        {
             type:"file",
             name:"package.json",
             status:"off"
         },
     ]
 
-    const { treeStructure,loadStructure,onClickFile,currentFilePath } = useStructure(str1);
+    const { treeStructure,loadStructure,resetStatus,onClickFile,AddNewFile,currentFilePath } = useStructure(str1);
     const handleclickFile = (event) => {
         let fp = event.target.parentNode.id
-        // let path = String(fp).split('_')
-        // console.log(path)
+        resetStatus()
         onClickFile(String(fp))
-
     }
     return (
         <div className="App">

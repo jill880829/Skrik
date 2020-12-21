@@ -33,11 +33,25 @@
   display: flex;
   align-items: center;
 }
+.fileFocus{
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  font-weight:bold;
+}
+.fileFocus .fileSpan{
+  margin-left: 5px;
+}
+.fileFocus .fileSpan:hover{
+  cursor:pointer;
+  color:#1212FF;
+}
 .file .fileSpan{
   margin-left: 5px;
 }
 .file .fileSpan:hover{
   cursor:pointer;
+  color:#1212FF;
 }
 .folder{
   padding-left: 20px;
