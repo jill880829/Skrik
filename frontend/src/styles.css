@@ -53,13 +53,40 @@
   cursor:pointer;
   color:#1212FF;
 }
+.file .inputSpan{
+  margin-left: 5px;
+}
+.file .inputSpan:hover{
+  cursor:text;
+  color:#1212FF;
+}
 .folder{
   padding-left: 20px;
 }
-.folder .folder--label {
+.folder > .folder--label {
   display: flex;
   align-items: center;
 }
-.folder .folder--label .folderSpan{
+.folder > .folder--label > .folderSpan{
   margin-left: 5px;
+}
+.folder > .folder--label > .folderSpan:hover{
+  cursor:pointer;
+  color:#1212FF;
+}
+.folderFocus{
+  padding-left: 20px;
+}
+.folderFocus > .folder--label {
+  display: flex;
+  align-items: center;
+  cursor:pointer;
+  font-weight:bold;
+}
+.folderFocus > .folder--label > .folderSpan{
+  margin-left: 5px;
+}
+.folderFocus > .folder--label > .folderSpan:hover{
+  cursor:pointer;
+  color:#1212FF;
 }

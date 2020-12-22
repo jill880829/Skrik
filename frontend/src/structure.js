@@ -32,14 +32,13 @@ export default function Structure() {
 
         return (
             <div id={filepath} className={focusOn ? "fileFocus" : "file"} filepath={filepath} key={filepath}>
-                {/* onClick={(event)=>console.log("Click on ",event.target)} */}
                 {FILE_ICONS[ext] || <AiOutlineFile />}
                 <span className="fileSpan" onClick={(event) => handleclickFile(event)} key={filepath + ' span'}>{name}</span>
             </div>
         );
     };
 
-    const Folder = ({ name, children, folderpath }) => {
+    const Folder = ({ name, children, folderpath, focusOn }) => {
         const [isOpen, setIsOpen] = useState(false);
 
         const handleToggle = e => {
@@ -48,10 +47,10 @@ export default function Structure() {
         };
 
         return (
-            <div id={folderpath} className="folder" folderpath={folderpath} key={folderpath}>
+            <div id={folderpath} className={focusOn ? "folderFocus" : "folder"} folderpath={folderpath} key={folderpath}>
                 <div className="folder--label" onClick={handleToggle} key={folderpath + ' div'}>
                     <AiOutlineFolder />
-                    <span className="folderSpan" key={folderpath + ' span'}>{name}</span>
+                    <span className="folderSpan" key={folderpath + ' span'} onClick={(event)=>handleclickFolder(event)}>{name}</span>
                 </div>
                 <Collapsible isOpen={isOpen}>{children}</Collapsible>
             </div>
@@ -62,7 +61,7 @@ export default function Structure() {
             <div id={filepath} className={focusOn ? "fileFocus" : "file"} filepath={filepath} key={filepath}>
                 {/* onClick={(event)=>console.log("Click on ",event.target)} */}
                 {<AiOutlineFile />}
-                <input className="fileSpan" placeholder="Type file name here"></input>
+                <input className="inputSpan" placeholder="Type file name here" onKeyPress={(event)=>handlePressEnter(event)}></input>
             </div>
         )
     }
@@ -72,7 +71,12 @@ export default function Structure() {
     Tree.Input = Input;
     Tree.File = File;
     Tree.Folder = Folder;
-
+    const handlePressEnter = (event) => {
+        if(event.key==='Enter'){
+            let newFileName = event.target.value
+            SaveToTree(newFileName)
+        }
+    }
     const handleAddNewFile = () => {
         AddNewFile()
     }
@@ -93,7 +97,6 @@ export default function Structure() {
     }
     let filepath = '';
     const displayStruct = (ele, i) => {
-        //console.log(ele)
         if (Array.isArray(ele)) {
             return ele.map(displayStruct)
         }
@@ -102,14 +105,12 @@ export default function Structure() {
             filepath = filepath.substr(0, filepath.length - 1 - spl[spl.length - 2].length)
         }
         else if (ele.type === "file") {
-            //console.log("Filepath:" ,filepath+i)
             return <Tree.File name={ele.name} filepath={filepath + i} focusOn={ele.status === 'on'} />
         }
         else if (ele.type === "folder") {
             filepath += `${i}_`
-            //console.log("FOC: ",filepathc)
             return (
-                <Tree.Folder name={ele.name} folderpath={filepath.substr(0, filepath.length - 1)}>
+                <Tree.Folder name={ele.name} folderpath={filepath.substr(0, filepath.length - 1)} focusOn={ele.status === 'innestopenFocus'}>
                     {
                         displayStruct(ele.data)
                     }
@@ -120,8 +121,6 @@ export default function Structure() {
             if (ele.displayAddBlank)
                 return (
                     <Tree.Input name="I am a blank" filepath={filepath + i} focusOn={ele.status === 'false'} />
-                    //<input className='file' type="text"/>
-                    // <Tree.File name="I am a blank" filepath={filepath+i} focusOn={ele.status==='false'}/> 
                 )
         }
 
@@ -185,13 +184,20 @@ export default function Structure() {
             name: "package.json",
             status: "off"
         },
+        
     ]
 
-    const { treeStructure, loadStructure, resetStatus, onClickFile, AddNewFile, currentFilePath } = useStructure(str1);
+    const { treeStructure, loadStructure, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree ,currentFilePath } = useStructure(str1);
     const handleclickFile = (event) => {
         let fp = event.target.parentNode.id
         resetStatus()
         onClickFile(String(fp))
+    }
+    const handleclickFolder = (event) => {
+        let fp = event.target.parentNode.parentNode.id
+        resetStatus()
+        onClickFolder(String(fp))
+        console.log(treeStructure)
     }
     return (
         <div className="App">
