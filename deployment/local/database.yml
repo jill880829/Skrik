@@ -5,9 +5,9 @@ services:
       context: ../../.
       dockerfile: ./deployment/local/mongoDB/Dockerfile
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=wertyufrtyjnxcxvlfqm
+      - MONGO_INITDB_DATABASE=skrik
     restart: always # keep the mongo server running
     ports:
       - "27017:27017"
