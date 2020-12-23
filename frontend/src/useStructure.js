@@ -14,7 +14,7 @@ const useStructure = (str) => {
         else if (ele.type === 'file') {
             ele.status = 'off';
         }
-        else if (ele.type === 'blankFile'||ele.type === 'blankFolder'){
+        else if (ele.type === 'blankFile' || ele.type === 'blankFolder') {
             ele.displayAddBlank = false
         }
         else if (ele.type === 'folder') {
@@ -22,17 +22,17 @@ const useStructure = (str) => {
             resetIter(ele.data)
         }
     }
-    const modifyClickTree = (fp_arr,isFolder) => {
+    const modifyClickTree = (fp_arr, isFolder) => {
         let a = treeStructure
         for (let i = 0; i < fp_arr.length - 1; i++) {
             a[fp_arr[i]].status = 'open'
-            if ((i === fp_arr.length - 2)&&!isFolder) a[fp_arr[i]].status = 'innestopen'
+            if ((i === fp_arr.length - 2) && !isFolder) a[fp_arr[i]].status = 'innestopen'
             a = a[fp_arr[i]].data
         }
-        if(isFolder){
+        if (isFolder) {
             a[fp_arr[fp_arr.length - 1]].status = 'innestopenFocus'
         }
-        else{
+        else {
             a[fp_arr[fp_arr.length - 1]].status = 'on'
         }
         setTree([...treeStructure])
@@ -50,24 +50,24 @@ const useStructure = (str) => {
         setCurrentFilePath(fp_arr)
         modifyClickTree(fp_arr, true)
     }
-    const IterAddNewFile = (ele,isFolder) => {
+    const IterAddNewFile = (ele, isFolder) => {
         for (let i = 0; i < ele.length; i++) {
             if (ele[i].type === 'folder' && ele[i].status === 'open') {
-                let find = IterAddNewFile(ele[i].data,isFolder)
-                if(find==='find'){
+                let find = IterAddNewFile(ele[i].data, isFolder)
+                if (find === 'find') {
                     return "find"
                 }
                 else return undefined
             }
-            else if (ele[i].type === 'folder' && (ele[i].status === 'innestopen'||ele[i].status === 'innestopenFocus')) {
+            else if (ele[i].type === 'folder' && (ele[i].status === 'innestopen' || ele[i].status === 'innestopenFocus')) {
                 for (let j = 0; j < ele[i].data.length; j++) {
-                    if(isFolder){
+                    if (isFolder) {
                         if (ele[i].data[j].type === 'blankFolder') {
                             ele[i].data[j].displayAddBlank = true
                             return "find"
                         }
                     }
-                    else{
+                    else {
                         if (ele[i].data[j].type === 'blankFile') {
                             ele[i].data[j].displayAddBlank = true
                             return "find"
@@ -77,26 +77,26 @@ const useStructure = (str) => {
             }
         }
     }
-    const IterComfirmNewFile = (ele,name,isFolder) => {
+    const IterComfirmNewFile = (ele, name, isFolder) => {
         for (let i = 0; i < ele.length; i++) {
             if (ele[i].type === 'folder' && ele[i].status === 'open') {
-                if(IterComfirmNewFile(ele[i].data,name,isFolder)==='find'){
+                if (IterComfirmNewFile(ele[i].data, name, isFolder) === 'find') {
                     return "find"
                 }
                 else return undefined
             }
-            else if (ele[i].type === 'folder' && (ele[i].status === 'innestopen'||ele[i].status === 'innestopenFocus')) {
+            else if (ele[i].type === 'folder' && (ele[i].status === 'innestopen' || ele[i].status === 'innestopenFocus')) {
                 for (let j = 0; j < ele[i].data.length; j++) {
-                    if(isFolder){
+                    if (isFolder) {
                         if (ele[i].data[j].type === 'blankFolder') {
                             ele[i].data[j].displayAddBlank = false
-                            let cnt=0
-                            for(let k=0;k<ele[i].data.length;k++){
-                                if(ele[i].data[k].type=== 'blankFile'){
+                            let cnt = 0
+                            for (let k = 0; k < ele[i].data.length; k++) {
+                                if (ele[i].data[k].type === 'blankFile') {
                                     cnt = k
                                 }
                             }
-                            ele[i].data.splice(cnt-1, 0, {
+                            ele[i].data.splice(cnt - 1, 0, {
                                 type: "folder",
                                 name: name,
                                 status: "close",
@@ -115,7 +115,7 @@ const useStructure = (str) => {
                             return "find"
                         }
                     }
-                    else{
+                    else {
                         if (ele[i].data[j].type === 'blankFile') {
                             ele[i].data[j].displayAddBlank = false
                             ele[i].data.splice(-1, 0, {
@@ -131,33 +131,33 @@ const useStructure = (str) => {
         }
     }
     const AddNewFile = (isFolder) => {
-        let findInsertPlace = IterAddNewFile(treeStructure,isFolder)
-        if(findInsertPlace!=='find'){
-            for(let i=0;i<treeStructure.length;i++){
-                if(isFolder){
-                    if(treeStructure[i].type==='blankFolder'){
-                        treeStructure[i].displayAddBlank=true;
+        let findInsertPlace = IterAddNewFile(treeStructure, isFolder)
+        if (findInsertPlace !== 'find') {
+            for (let i = 0; i < treeStructure.length; i++) {
+                if (isFolder) {
+                    if (treeStructure[i].type === 'blankFolder') {
+                        treeStructure[i].displayAddBlank = true;
                     }
                 }
-                else{
-                    if(treeStructure[i].type==='blankFile'){
-                        treeStructure[i].displayAddBlank=true;
+                else {
+                    if (treeStructure[i].type === 'blankFile') {
+                        treeStructure[i].displayAddBlank = true;
                     }
                 }
             }
         }
-        setTree([...treeStructure])    
+        setTree([...treeStructure])
     }
-    const SaveToTree = (name,isFolder) => {
-        let findInsertPlace = IterComfirmNewFile(treeStructure,name,isFolder)
-        if(findInsertPlace!=='find'){
-            for(let i=0;i<treeStructure.length;i++){
-                if(isFolder){
+    const SaveToTree = (name, isFolder) => {
+        let findInsertPlace = IterComfirmNewFile(treeStructure, name, isFolder)
+        if (findInsertPlace !== 'find') {
+            for (let i = 0; i < treeStructure.length; i++) {
+                if (isFolder) {
                     if (treeStructure[i].type === 'blankFolder') {
-                        treeStructure[i].displayAddBlank=false;
-                        let cnt=0
-                        for(let k=0;k<treeStructure.length;k++){
-                            if(treeStructure[k].type=== 'blankFile'){
+                        treeStructure[i].displayAddBlank = false;
+                        let cnt = 0
+                        for (let k = 0; k < treeStructure.length; k++) {
+                            if (treeStructure[k].type === 'blankFile') {
                                 cnt = k
                             }
                         }
@@ -179,9 +179,9 @@ const useStructure = (str) => {
                         });
                     }
                 }
-                else{
-                    if(treeStructure[i].type==='blankFile'){
-                        treeStructure[i].displayAddBlank=false;
+                else {
+                    if (treeStructure[i].type === 'blankFile') {
+                        treeStructure[i].displayAddBlank = false;
                         treeStructure.push({
                             type: "file",
                             name: name,
@@ -191,7 +191,7 @@ const useStructure = (str) => {
                 }
             }
         }
-        setTree([...treeStructure]) 
+        setTree([...treeStructure])
     }
 
 

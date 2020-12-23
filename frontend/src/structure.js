@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { IconContext } from "react-icons";
-import { AiOutlineFile, AiOutlineFolder } from "react-icons/ai";
+import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons/ai";
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { VscNewFile, VscNewFolder, VscRefresh, VscCollapseAll } from "react-icons/vsc";
+import { SiCplusplus, SiJson } from "react-icons/si";
 import "./styles.css";
 //import { components } from "react-select/dist/react-select.cjs.dev";
 import useStructure from './useStructure'
@@ -14,7 +15,9 @@ const FILE_ICONS = {
     css: <DiCss3Full />,
     html: <DiHtml5 />,
     jsx: <DiReact />,
-    py: <DiPython />
+    py: <DiPython />,
+    cpp: <SiCplusplus />,
+    json: <SiJson />
 };
 
 const StyledTree = styled.div`
@@ -49,8 +52,8 @@ export default function Structure() {
         return (
             <div id={folderpath} className={focusOn ? "folderFocus" : "folder"} folderpath={folderpath} key={folderpath}>
                 <div className="folder--label" onClick={handleToggle} key={folderpath + ' div'}>
-                    <AiOutlineFolder />
-                    <span className="folderSpan" key={folderpath + ' span'} onClick={(event)=>handleclickFolder(event)}>{name}</span>
+                    {(!isOpen) ? <AiOutlineFolderOpen /> : <AiOutlineFolder />}
+                    <span className="folderSpan" key={folderpath + ' span'} onClick={(event) => handleclickFolder(event)}>{name}</span>
                 </div>
                 <Collapsible isOpen={isOpen}>{children}</Collapsible>
             </div>
@@ -60,8 +63,8 @@ export default function Structure() {
         return (
             <div id={filepath} className={focusOn ? "fileFocus" : "file"} filepath={filepath} key={filepath}>
                 {/* onClick={(event)=>console.log("Click on ",event.target)} */}
-                {isFolder?<AiOutlineFolder /> :<AiOutlineFile />}
-                <input className="inputSpan" placeholder={isFolder ? "Type folder name here" : "Type file name here"} onKeyPress={(event)=>handlePressEnter(event,isFolder)}></input>
+                {isFolder ? <AiOutlineFolder /> : <AiOutlineFile />}
+                <input className="inputSpan" placeholder={isFolder ? "Type folder name here" : "Type file name here"} onKeyPress={(event) => handlePressEnter(event, isFolder)}></input>
             </div>
         )
     }
@@ -71,10 +74,10 @@ export default function Structure() {
     Tree.Input = Input;
     Tree.File = File;
     Tree.Folder = Folder;
-    const handlePressEnter = (event,isFolder) => {
-        if(event.key==='Enter'){
+    const handlePressEnter = (event, isFolder) => {
+        if (event.key === 'Enter') {
             let newFileName = event.target.value
-            SaveToTree(newFileName,isFolder)
+            SaveToTree(newFileName, isFolder)
         }
     }
     const handleAddNewFile = () => {
@@ -134,7 +137,7 @@ export default function Structure() {
         }
 
     }
-    const str1 = [
+    const str11 = [
         {
             type: "blankFolder",
             displayAddBlank: false,
@@ -144,7 +147,7 @@ export default function Structure() {
             displayAddBlank: false,
         },
     ]
-    const str11 = [
+    const str1 = [
         {
             type: "blankFolder",
             displayAddBlank: false,
@@ -215,10 +218,10 @@ export default function Structure() {
             name: "package.json",
             status: "off"
         },
-        
+
     ]
 
-    const { treeStructure, loadStructure, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree ,currentFilePath } = useStructure(str1);
+    const { treeStructure, loadStructure, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(str1);
     const handleclickFile = (event) => {
         let fp = event.target.parentNode.id
         resetStatus()
