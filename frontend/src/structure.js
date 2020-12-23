@@ -5,7 +5,7 @@ import { AiOutlineFile, AiOutlineFolder } from "react-icons/ai";
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { VscNewFile, VscNewFolder, VscRefresh, VscCollapseAll } from "react-icons/vsc";
 import "./styles.css";
-import { components } from "react-select/dist/react-select.cjs.dev";
+//import { components } from "react-select/dist/react-select.cjs.dev";
 import useStructure from './useStructure'
 
 
@@ -56,12 +56,12 @@ export default function Structure() {
             </div>
         );
     };
-    const Input = ({ name, filepath, focusOn }) => {
+    const Input = ({ isFolder, filepath, focusOn }) => {
         return (
             <div id={filepath} className={focusOn ? "fileFocus" : "file"} filepath={filepath} key={filepath}>
                 {/* onClick={(event)=>console.log("Click on ",event.target)} */}
-                {<AiOutlineFile />}
-                <input className="inputSpan" placeholder="Type file name here" onKeyPress={(event)=>handlePressEnter(event)}></input>
+                {isFolder?<AiOutlineFolder /> :<AiOutlineFile />}
+                <input className="inputSpan" placeholder={isFolder ? "Type folder name here" : "Type file name here"} onKeyPress={(event)=>handlePressEnter(event,isFolder)}></input>
             </div>
         )
     }
@@ -71,14 +71,17 @@ export default function Structure() {
     Tree.Input = Input;
     Tree.File = File;
     Tree.Folder = Folder;
-    const handlePressEnter = (event) => {
+    const handlePressEnter = (event,isFolder) => {
         if(event.key==='Enter'){
             let newFileName = event.target.value
-            SaveToTree(newFileName)
+            SaveToTree(newFileName,isFolder)
         }
     }
     const handleAddNewFile = () => {
-        AddNewFile()
+        AddNewFile(false)
+    }
+    const handleAddNewFolder = () => {
+        AddNewFile(true)
     }
     const FolderStructure = ({ projectName }) => {
         return (
@@ -87,7 +90,7 @@ export default function Structure() {
                 <IconContext.Provider value={{ className: 'react-icons' }}>
                     <div className="titleFunction">
                         <VscNewFile onClick={() => handleAddNewFile()} />
-                        <VscNewFolder onClick={() => { alert("Make New Folder") }} />
+                        <VscNewFolder onClick={() => handleAddNewFolder()} />
                         <VscRefresh onClick={() => { alert("Refresh") }} />
                         <VscCollapseAll onClick={() => { alert("Collapse All") }} />
                     </div>
@@ -117,27 +120,55 @@ export default function Structure() {
                 </Tree.Folder>
             )
         }
-        else if (ele.type === "blank") {
+        else if (ele.type === "blankFile") {
             if (ele.displayAddBlank)
                 return (
-                    <Tree.Input name="I am a blank" filepath={filepath + i} focusOn={ele.status === 'false'} />
+                    <Tree.Input isFolder={false} filepath={filepath + i} focusOn={ele.status === 'false'} />
+                )
+        }
+        else if (ele.type === "blankFolder") {
+            if (ele.displayAddBlank)
+                return (
+                    <Tree.Input isFolder={true} filepath={filepath + i} focusOn={ele.status === 'false'} />
                 )
         }
 
     }
     const str1 = [
         {
+            type: "blankFolder",
+            displayAddBlank: false,
+        },
+        {
+            type: "blankFile",
+            displayAddBlank: false,
+        },
+    ]
+    const str11 = [
+        {
+            type: "blankFolder",
+            displayAddBlank: false,
+        },
+        {
             type: "folder",
             name: "src",
             status: "open",
             data: [
+                {
+                    type: "blankFolder",
+                    displayAddBlank: false,
+                },
                 {
                     type: "folder",
                     name: "components",
                     status: "open",
                     data: [
                         {
-                            type: "blank",
+                            type: "blankFolder",
+                            displayAddBlank: false,
+                        },
+                        {
+                            type: "blankFile",
                             displayAddBlank: false,
                         },
                         {
@@ -154,7 +185,7 @@ export default function Structure() {
                     ]
                 },
                 {
-                    type: "blank",
+                    type: "blankFile",
                     displayAddBlank: false,
                 },
                 {
@@ -176,7 +207,7 @@ export default function Structure() {
             ]
         },
         {
-            type: "blank",
+            type: "blankFile",
             displayAddBlank: false,
         },
         {
@@ -197,7 +228,6 @@ export default function Structure() {
         let fp = event.target.parentNode.parentNode.id
         resetStatus()
         onClickFolder(String(fp))
-        console.log(treeStructure)
     }
     return (
         <div className="App">
