@@ -3,11 +3,21 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+// mongo setup
+var username = process.env.USERNAME || 'skrik';
+var password = process.env.PASSWORD || 'qrghfvbhfggiyreghruqoqhfriegyireygr';
+var database = process.env.DATABASE || 'skrik';
+var dburl = process.env.DBURL || 'localhost:27017';
+const mongoDB = `mongodb://${username}:${password}@${dburl}/${database}`
+
+mongoose.connect(mongoDB);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,5 +47,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;

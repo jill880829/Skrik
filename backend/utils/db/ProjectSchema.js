@@ -2,31 +2,32 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 
-const LineChange = new Schema(
+const LineChangeSchema = new Schema(
 {
     Index: { type: Number, required: true },
-    Type: { type: String, enum: ["insert", "delete"], required: true },
+    Type: { type: String, enum: ["insert", "delete", "drop"], required: true },
     CreateTime: { type: String, required: true },
     UpdateTime: { type: String, required: true },
     DeleteTime: { type: String },
     Deleted: { type: Boolean, required: true },
+    User: { type: String, required: true },
     Data: { type: String }
 })
 
-
-const File = new Schema(
+// no timestamp => timestamp is in linechange schema
+const FileSchema = new Schema(
 {
     FileName: { type: String, required: true },
     Deleted: {type: Boolean, required: true },
-    LineChanges: [LineChange]
+    LineChanges: [LineChangeSchema]
 })
 
-const Project = new Schema(
+const ProjectSchema = new Schema(
 {
     ProjectName: { type: String, required: true },
-    ProjectId: { type: String, required: true },
     Users: [String],
-    Files: [File]  
-})
+    Files: [FileSchema],
+    Hash: { type: String, required: true },
+}, {collection: 'Projects'})
 
-module.exports = mongoose.model('Project', Project)
+module.exports = mongoose.model('Projects', ProjectSchema)
