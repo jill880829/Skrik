@@ -5,6 +5,9 @@ db.createUser(
         roles: [{
             role: "readWrite",
             db: "skrik"
+        }, {
+            role: "readWrite",
+            db: "session"
         }]
     }
 )
