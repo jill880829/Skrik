@@ -25,9 +25,9 @@ const FileSchema = new Schema(
 const ProjectSchema = new Schema(
 {
     ProjectName: { type: String, required: true },
+    Deleted: {type: Boolean, required: true },
     Users: [String],
-    Files: [FileSchema],
-    Hash: { type: String, required: true },
+    Files: [FileSchema]
 }, {collection: 'Projects'})
 
 module.exports = mongoose.model('Projects', ProjectSchema)
