@@ -13,7 +13,8 @@ const useEdit = () => {
 
     if(task === 'output') {
       let tmp = codes;
-      update.forEach((part) => {
+      const content = update.content
+      content.forEach((part) => {
         if(part.ope === 0) {
           if(part.start === 0) tmp = part.content + sliceLines(tmp, part.start)
           else tmp = sliceLines(tmp, 0, part.start) + '\n' + part.content + sliceLines(tmp, part.start)
@@ -52,7 +53,7 @@ const useEdit = () => {
         count_line += part.count
       }
     })
-    sendData(['input', diff_code])
+    sendData(['input', {author: 'a', content: diff_code}])
   }
 
   return {
@@ -63,4 +64,3 @@ const useEdit = () => {
 }
 
 export default useEdit
-
