@@ -3,7 +3,9 @@ const sha256 = require('crypto-js/sha256');
 const base64 = require('crypto-js/enc-base64');
 const regxstr = /^[ A-Za-z0-9_.-]+$/;
 
+// TODO: addUser function
 
+// register use
 async function createUser(username, password){
     if (username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
@@ -16,7 +18,7 @@ async function createUser(username, password){
         console.error("[db] error querying user for register: " + err);
         return { "success": false, "description": "Querying user Failed!!!" };
     }
-    
+
     if(user !== null)
         return { "success": false, "description": "Username Existed" };
     const passwordHash = base64.stringify(sha256(password));
@@ -30,6 +32,7 @@ async function createUser(username, password){
     return { "success": true, "description": "User creation Finished!!!" };
 }
 
+// login authentication
 async function authUser(username, password){
     if (username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
@@ -51,7 +54,6 @@ async function authUser(username, password){
     return { "success": false, "description": "Authentication Failed!!!" };
 }
 
-//TEST
 // list project ids in user profile page
 async function listProjectids(username){
     if (username.match(regxstr) === null)

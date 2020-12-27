@@ -1,3 +1,8 @@
+## Run Backend
+- Generate ./backend/.env from ./backend/.env.example
+- If not specify `FB_APP_ID` and `FB_APP_SECRET`, FB login is disabled
+	- Google and Github are the same
+
 ## API list
 ### frontend:
 - GET /register
@@ -20,34 +25,31 @@
 
 ### db return format
 
-- for project handling
+- For project collection handling
 
 ```json
 {
-	"success": [boolean],
-	"description": [string]
+	"success": boolean,
+	"description": string
 }
 ```
 
-- for listing file in edit page
-
-```json
-{
-	"success": [boolean],
-	"description": [string],
-	"files":[]
-}
-```
-- for getting content from specific file
+- For listing file in edit page
 
 ```json
 {
-	"success": [boolean],
-	"description": [string],
-	"content":[{"lineid": [Number], "user": [string], "data": [string]}]
+	"success": boolean,
+	"description": string,
+	"files": [ string ]
 }
 ```
-## Run Backend
-- Generate ./backend/.env from ./backend/.env.example
-- If not specify `FB_APP_ID` and `FB_APP_SECRET`, FB login is disabled
-	- Google and Github are the same
+
+- For getting content from specific file
+
+```json
+{
+	"success": boolean,
+	"description": string,
+	"content":[ { "lineid": Integer, "user": string, "data": string } ]
+}
+```

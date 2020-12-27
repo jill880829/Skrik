@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Projects = require('./ProjectSchema');
 const UserData = require('./UserDataSchema');
 const regxstr = /^[ A-Za-z0-9_.-]+$/;
+const regxfile = /^[ /A-Za-z0-9_.-]+$/;
 const regxhex = /^[a-f0-9]+$/;
 const regxnewline = /[\n]/;
 
@@ -15,7 +16,7 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
     projectid = projectid.toLowerCase();
     if (projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!" };
-    if (filename.match(regxstr) === null)
+    if (filename.match(regxfile) === null)
         return { "success": false, "description": "Invalid File Name!!!" };
     if (username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
@@ -70,7 +71,7 @@ async function deleteFile(projectid, filename, username){
     projectid = projectid.toLowerCase();
     if (projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!" };
-    if (filename.match(regxstr) === null)
+    if (filename.match(regxfile) === null)
         return { "success": false, "description": "Invalid File Name!!!" };
     if (username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
@@ -158,7 +159,6 @@ async function createProject(projectname, usernames){
 }
 
 // delete a project
-// not to be use now
 async function deleteProject(projectid){
     projectid = projectid.toLowerCase();
     if (projectid.match(regxhex) === null || projectid.length !== 24)
@@ -231,12 +231,12 @@ async function listFiles(projectid){
 
 }
 
-//test
+// get content in file
 async function getFile(projectid, filename){
     projectid = projectid.toLowerCase();
     if (projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!" };
-    if (filename.match(regxstr) === null)
+    if (filename.match(regxfile) === null)
         return { "success": false, "description": "Invalid File Name!!!", "content": null };
     
     try{
