@@ -25,14 +25,10 @@ export default function Editor(props) {
     const { codes, opened, sendCodes } = useEdit();
     const [language, setLan] = useState('python');
     function onChangeCode(value) { 
-        console.log(value);
         setLan(value.value);
     }
     function onChange(value) { 
         sendCodes(value);
-        // setValue(value);
-        console.log(value);
-        console.log(language);
     }
 
     return (
