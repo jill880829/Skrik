@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  skrik_express:
+    build:
+      context: ../../.
+      dockerfile: ./deployment/local/backend_server/Dockerfile
+    environment:
+      - USERNAME=${USERNAME}
+      - PASSWORD=${PASSWORD}
+      - DATABASE=${DATABASE}
+      - DBURL=${DBURL}
+      - PROJECT_SECRET=${PROJECT_SECRET}
+      - SESSION_SECRET=${SESSION_SECRET}
+      - FB_CALLBACK_URL=${FB_CALLBACK_URL}
+      - FB_APP_ID=${FB_APP_ID}
+      - FB_APP_SECRET=${FB_APP_SECRET}
+    restart: always
+    ports:
+      - "3000:3000"
