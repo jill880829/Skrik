@@ -65,7 +65,25 @@ code {
   border-bottom-right-radius: .5rem;
   border-bottom-left-radius: .5rem;
   overflow: hidden;
-  
-  
+}
 
+
+#menu_container{
+  background-color: #222222;
+  height:100vh;
+}
+.menu_folder{
+  background-color: #dddddd;
+  height:100px;
+  width:100px;
+  text-align: center;
+  vertical-align: middle;
+  display: table-cell;
+  border-radius: 15%;
+}
+#menu_add_btn{
+  background-color: #eeeeee;
+  height:30px;
+  width:30px;
+  border-radius: 100%;
 }
