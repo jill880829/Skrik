@@ -17,7 +17,7 @@
 - GET /api/login/github
 - GET /api/login/google
 - GET /api/projects
-- POST /api/create
+- POST /api/create_
 - GET /api/ls/\<SHA256>
 - ws: /api/wss/\<SHA256>
 - ws: /api/wss/\<SHA256>/getfile
