@@ -2,6 +2,8 @@
 include backend/.env
 export $(shell sed 's/=.*//' backend/.env)
 
+NOW := v0.0.1
+
 init:
 	envsubst < deployment/local/mongoDB/init.js.example > deployment/local/mongoDB/init.js
 
@@ -11,6 +13,15 @@ db:
 		exit 1; \
 	fi
 	docker-compose -f ./deployment/local/database.yml up
+
+db_docker:
+	export NAME=mongo && \
+	docker build \
+		-f deployment/local/mongoDB/Dockerfile \
+		-t us.gcr.io/skrik/$$(echo $$NAME) . && \
+	docker tag us.gcr.io/skrik/$$(echo $$NAME) us.gcr.io/skrik/$$(echo $$NAME):$(NOW) && \
+	docker push us.gcr.io/skrik/$$(echo $$NAME):$(NOW)
+	@echo us.gcr.io/skrik/$$(echo $$NAME):$(NOW)
 
 db_clean:
 	docker-compose -f ./deployment/local/database.yml down

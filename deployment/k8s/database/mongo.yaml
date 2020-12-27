@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: default
+  name: mongo
+  labels:
+    app: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  serviceName: "mongo"
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        args:
+          - "--ignore-db-dir=lost+found"
+        image: asia.gcr.io/balsnctf/mysql:20201130174959
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: password
+          - name: MYSQL_DATABASE
+            value: balsnctf
+          - name: MYSQL_USER
+            value: balsn
+          - name: MYSQL_PASSWORD
+            value: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+          - name: mysql-persistent-storage
+            mountPath: /var/lib/mysql
+          - name: config
+            mountPath: /etc/mysql/conf.d/mysql.cnf
+            subPath: mysql.cnf
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+        - name: config
+          configMap:
+            name: mysql
+      nodeSelector:
+        cloud.google.com/gke-nodepool: mysql-production-node-pool
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  namespace: database
+  labels:
+    app: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  clusterIP: None
+
+
