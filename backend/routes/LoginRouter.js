@@ -4,8 +4,8 @@ var router = express.Router();
 var passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy
 const FacebookStrategy = require('passport-facebook').Strategy
-const GithubStrategy = require('passport-github').Strategy
-const GoogleStrategy = require('passport-google').Strategy
+// const GithubStrategy = require('passport-github').Strategy
+// const GoogleStrategy = require('passport-google').Strategy
 
 var QueryUser = require('../utils/db/QueryUser')
 
@@ -31,19 +31,37 @@ passport.use(new LocalStrategy(
     }
 ))
 
+passport.use(new FacebookStrategy({
+    clientID: process.env.FB_APP_ID,
+    clientSecret: process.env.FB_APP_SECRET,
+    callbackURL: process.env.FB_CALLBACK_URL
+},
+    function (accessToken, refreshToken, profile, done) {
+        process.nextTick(function () {
+            return done(null, profile);
+        });
+    }
+))
+
 passport.serializeUser(function (user, done) {
+    console.log(user)
     done(null, user.username)
 })
 
 passport.deserializeUser(function (username, done) {
-    done(null, {username: username})
+    done(null, { username: username })
 })
 
-router.post('/', passport.authenticate('local', {
-    failureMessage: "fail",
-    successMessage: "success"
-}), function (req, res) {
-    res.send("success")    
+router.post('/', passport.authenticate('local'), 
+function (req, res) {
+    res.send("success")
+});
+
+router.get('/fb', passport.authenticate('facebook'));
+
+router.get('/fb/callback', passport.authenticate('facebook'),
+function (req, res) {
+    res.send("success")
 });
 
 module.exports = {

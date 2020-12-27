@@ -14,10 +14,10 @@ var apiRouter = require('./routes/ApiRouter');
 var app = express();
 
 // mongo setup
-var username = process.env.USERNAME || 'skrik';
-var password = process.env.PASSWORD || 'qrghfvbhfggiyreghruqoqhfriegyireygr';
-var database = process.env.DATABASE || 'skrik';
-var dburl = process.env.DBURL || 'localhost:27017';
+var username = process.env.USERNAME;
+var password = process.env.PASSWORD;
+var database = process.env.DATABASE;
+var dburl = process.env.DBURL;
 const mongoDB = `mongodb://${username}:${password}@${dburl}/${database}`
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -46,10 +46,6 @@ app.use(session({
         maxAge: 60 * 60 * 1000
     }
 }))
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
 // handle login
 app.use(loginRouter.passport.initialize());
@@ -81,5 +77,42 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
+const server = http.createServer(app)
+const wss = new WebSocket.Server({ server })
+let codes = ''
+
+wss.on('connection', ws => {
+  const sendData = (client, data) => {
+    client.send(JSON.stringify(data))
+  }
+
+  sendData(ws, ['output', codes])
+
+  ws.onmessage = (message) => {
+    const { data } = message
+    console.log(data)
+    const [task, payload] = JSON.parse(data)
+
+    switch (task) {
+      case 'input': {
+        codes = payload
+        console.log(codes)
+        wss.clients.forEach((client) => {
+          if(client.readyState === WebSocket.OPEN) {
+            sendData(client, ['output', codes])
+          }
+        })
+        break
+      }
+      default:
+        break
+    }
+  }
+})
+const PORT = process.env.SOCKETIO_PORT || 4000
+
+server.listen(PORT, () => {
+  console.log(`Listening on http://localhost:${PORT}`)
+})
 
 module.exports = app;

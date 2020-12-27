@@ -1,13 +1,13 @@
-version: '3.1'
+version: '3.8'
 services:
   skrik_mongo:
     build:
       context: ../../.
       dockerfile: ./deployment/local/mongoDB/Dockerfile
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=wertyufrtyjnxcxvlfqm
-      - MONGO_INITDB_DATABASE=skrik
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
     restart: always # keep the mongo server running
     ports:
       - "27017:27017"
