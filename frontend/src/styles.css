@@ -13,6 +13,7 @@
 .title:hover .titleFunction {
   visibility: visible;
   position:absolute;
+  cursor: pointer;
   margin: 15px;
   right:0px;
 }

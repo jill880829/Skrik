@@ -8,10 +8,10 @@ import { SiCplusplus, SiJson } from "react-icons/si";
 import "./styles.css";
 //import { components } from "react-select/dist/react-select.cjs.dev";
 import useStructure from './useStructure'
-
+//import rightClick from './components/rightClick'
 
 const FILE_ICONS = {
-    js: <DiJavascript1 onClick={(event) => console.log("Click on ", event.target.parentNode)} />,
+    js: <DiJavascript1 />,
     css: <DiCss3Full />,
     html: <DiHtml5 />,
     jsx: <DiReact />,
@@ -137,7 +137,7 @@ export default function Structure() {
         }
 
     }
-    const str11 = [
+    const str1 = [
         {
             type: "blankFolder",
             displayAddBlank: false,
@@ -147,7 +147,7 @@ export default function Structure() {
             displayAddBlank: false,
         },
     ]
-    const str1 = [
+    const str = [
         {
             type: "blankFolder",
             displayAddBlank: false,
@@ -238,6 +238,7 @@ export default function Structure() {
             <Tree>
                 {displayStruct(treeStructure)}
             </Tree>
+            <rightClick/>
         </div>
     );
 }
