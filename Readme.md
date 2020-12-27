@@ -13,6 +13,9 @@
 ### backend:
 - POST /api/register
 - POST /api/login
+- GET /api/login/fb
+- GET /api/login/github
+- GET /api/login/google
 - GET /api/projects
 - POST /api/create
 - GET /api/ls/\<SHA256>
