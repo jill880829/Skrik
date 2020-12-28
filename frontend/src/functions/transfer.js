@@ -1,5 +1,4 @@
 const transfer = (ls,_keys) => {
-    //console.log(ls)
     if(ls.length>1||ls[0]!==""){
         let copyls = {}
         let data = []
@@ -15,11 +14,9 @@ const transfer = (ls,_keys) => {
             }
         }
         for(const keys in copyls){
-            //console.log(copyls[copyls.length-1])
             data.push(transfer(copyls[keys],keys))
         }
         if(_keys===undefined) {
-            console.log("12e3r4t5hy")
             let a = data[0].data
             a.pop()
             return a
@@ -39,7 +36,6 @@ const transfer = (ls,_keys) => {
                     break;
                 }
             }
-            
             return({
                 type: "folder",
                 name: _keys,
@@ -48,7 +44,7 @@ const transfer = (ls,_keys) => {
             })
         }
     }
-    else{//Terminated
+    else{
         return(
             {
                 type: "file",

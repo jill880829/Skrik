@@ -9,7 +9,7 @@ import "./styles.css";
 //import { components } from "react-select/dist/react-select.cjs.dev";
 import useStructure from './useStructure'
 //import rightClick from './components/rightClick'
-import transfer from './components/trans'
+import transfer from './functions/transfer'
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
