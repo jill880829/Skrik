@@ -1,87 +1,61 @@
-import React, { Component } from 'react'
-const ls=['src/components/SkrikPage.js','src/components/SkrikPage.css','src/index.js','src/index.html','src/text.py','package.js']
-const str = [
-    {
-        type: "blankFolder",
-        displayAddBlank: false,
-    },
-    {
-        type: "folder",
-        name: "src",
-        status: "open",
-        data: [
-            {
+const transfer = (ls,_keys) => {
+    //console.log(ls)
+    if(ls.length>1||ls[0]!==""){
+        let copyls = {}
+        let data = []
+        for(let i=0;i<ls.length;i++){
+            let tokens = ls[i].split('/')[0]
+            let content = ls[i].split('/').slice(1)
+            let contentjoin = content.join('/')
+            if(copyls.hasOwnProperty(tokens)){
+                copyls[tokens].push(contentjoin)
+            }
+            else{
+                copyls[tokens] = [contentjoin]
+            }
+        }
+        for(const keys in copyls){
+            //console.log(copyls[copyls.length-1])
+            data.push(transfer(copyls[keys],keys))
+        }
+        if(_keys===undefined) {
+            console.log("12e3r4t5hy")
+            let a = data[0].data
+            a.pop()
+            return a
+        }
+        else{
+            data.push("EOF")
+            data.splice(0, 0, {
                 type: "blankFolder",
                 displayAddBlank: false,
-            },
-            {
-                type: "folder",
-                name: "components",
-                status: "open",
-                data: [
-                    {
-                        type: "blankFolder",
-                        displayAddBlank: false,
-                    },
-                    {
+            })
+            for(let k=0;k<data.length;k++){
+                if(data[k].type==="file"){
+                    data.splice(k, 0, {
                         type: "blankFile",
                         displayAddBlank: false,
-                    },
-                    {
-                        type: "file",
-                        name: "SkrikPage.js",
-                        status: "off",
-                    },
-                    {
-                        type: "file",
-                        name: "SkrikPage.css",
-                        status: "off"
-                    },
-                    "EOF"
-                ]
-            },
-            {
-                type: "blankFile",
-                displayAddBlank: false,
-            },
-            {
-                type: "file",
-                name: "index.js",
-                status: "off"
-            },
-            {
-                type: "file",
-                name: "index.html",
-                status: "off"
-            },
-            {
-                type: "file",
-                name: "test.py",
-                status: "off"
-            },
-            "EOF"
-        ]
-    },
-    {
-        type: "blankFile",
-        displayAddBlank: false,
-    },
-    {
-        type: "file",
-        name: "package.json",
-        status: "off"
-    },
-
-]
-const transfer = (ls) => {
-    //console.log(ls)
-    let a = ls.map(ele => ele.split('/'))
-    let json = {}
-    for(let idx=0;idx<a.length;idx++){
-        if(!json.hasOwnProperty(a[idx])){
-            json[a[idx]] = {}
+                    })
+                    break;
+                }
+            }
+            
+            return({
+                type: "folder",
+                name: _keys,
+                status: "close",
+                data: data
+            })
         }
     }
-    console.log(json)
+    else{//Terminated
+        return(
+            {
+                type: "file",
+                name: _keys,
+                status: "off",
+            }
+        )
+    }
 }
 export default transfer

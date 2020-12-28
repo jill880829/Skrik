@@ -138,92 +138,11 @@ export default function Structure() {
         }
 
     }
-    const str = [
-        {
-            type: "blankFolder",
-            displayAddBlank: false,
-        },
-        {
-            type: "blankFile",
-            displayAddBlank: false,
-        },
-    ]
-    const ls=['src/components/SkrikPage.js','src/components/SkrikPage.css','src/index.js','src/index.html','src/text.py','package.js']
-    const str1 = [
-        {
-            type: "blankFolder",
-            displayAddBlank: false,
-        },
-        {
-            type: "folder",
-            name: "src",
-            status: "open",
-            data: [
-                {
-                    type: "blankFolder",
-                    displayAddBlank: false,
-                },
-                {
-                    type: "folder",
-                    name: "components",
-                    status: "open",
-                    data: [
-                        {
-                            type: "blankFolder",
-                            displayAddBlank: false,
-                        },
-                        {
-                            type: "blankFile",
-                            displayAddBlank: false,
-                        },
-                        {
-                            type: "file",
-                            name: "SkrikPage.js",
-                            status: "off",
-                        },
-                        {
-                            type: "file",
-                            name: "SkrikPage.css",
-                            status: "off"
-                        },
-                        "EOF"
-                    ]
-                },
-                {
-                    type: "blankFile",
-                    displayAddBlank: false,
-                },
-                {
-                    type: "file",
-                    name: "index.js",
-                    status: "off"
-                },
-                {
-                    type: "file",
-                    name: "index.html",
-                    status: "off"
-                },
-                {
-                    type: "file",
-                    name: "test.py",
-                    status: "off"
-                },
-                "EOF"
-            ]
-        },
-        {
-            type: "blankFile",
-            displayAddBlank: false,
-        },
-        {
-            type: "file",
-            name: "package.json",
-            status: "off"
-        },
+    
+    const ls=['/src/components/SkrikPage.js','/src/components/SkrikPage.css','/src/index.js','/src/index.html','/src/text.py','/package.js']
+    
 
-    ]
-
-    const { treeStructure, loadStructure, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(str1);
+    const { treeStructure, loadStructure, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(ls));
     const handleclickFile = (event) => {
         let fp = event.target.parentNode.id
         resetStatus()

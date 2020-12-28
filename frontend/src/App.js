@@ -30,6 +30,9 @@ function App() {
             <li>
               <Link to="/Menu">Menu</Link>
             </li>
+            <li>
+              <Link>Download</Link>
+            </li>
           </ul>
         </nav>
 

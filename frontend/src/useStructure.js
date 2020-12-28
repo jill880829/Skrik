@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 
 const useStructure = (str) => {
-
+    console.log(str)
     const [treeStructure, setTree] = useState(str);
     const [currentFilePath, setCurrentFilePath] = useState([]);
     const resetStatus = () => {
