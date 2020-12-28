@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: default
+  name: mongo
+  labels:
+    app: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  serviceName: "mongo"
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - name: mongo
+        image: asia.gcr.io/skrik-299012/mongo:v0.0.1
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            value: ${MONGO_INITDB_ROOT_USERNAME}
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            value: ${MONGO_INITDB_ROOT_PASSWORD}
+          - name: MONGO_INITDB_DATABASE
+            value: ${MONGO_INITDB_DATABASE}
+        ports:
+        - containerPort: 27017
+          name: mongo
+        volumeMounts:
+          - name: mongo-persistent-storage
+            mountPath: /var/lib/mysql
+      volumes:
+        - name: mongo-persistent-storage
+          persistentVolumeClaim:
+            claimName: mongo-pvc
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  namespace: default
+  labels:
+    app: mongo
+spec:
+  selector:
+    app: mongo
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+  clusterIP: None
+
+
