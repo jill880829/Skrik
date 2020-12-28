@@ -9,6 +9,7 @@ import "./styles.css";
 //import { components } from "react-select/dist/react-select.cjs.dev";
 import useStructure from './useStructure'
 //import rightClick from './components/rightClick'
+import transfer from './components/trans'
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -94,7 +95,7 @@ export default function Structure() {
                     <div className="titleFunction">
                         <VscNewFile onClick={() => handleAddNewFile()} />
                         <VscNewFolder onClick={() => handleAddNewFolder()} />
-                        <VscRefresh onClick={() => { alert("Refresh") }} />
+                        <VscRefresh onClick={() => transfer(ls)} />
                         <VscCollapseAll onClick={() => { alert("Collapse All") }} />
                     </div>
                 </IconContext.Provider>
@@ -137,7 +138,7 @@ export default function Structure() {
         }
 
     }
-    const str1 = [
+    const str = [
         {
             type: "blankFolder",
             displayAddBlank: false,
@@ -147,7 +148,8 @@ export default function Structure() {
             displayAddBlank: false,
         },
     ]
-    const str = [
+    const ls=['src/components/SkrikPage.js','src/components/SkrikPage.css','src/index.js','src/index.html','src/text.py','package.js']
+    const str1 = [
         {
             type: "blankFolder",
             displayAddBlank: false,
