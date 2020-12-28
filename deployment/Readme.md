@@ -2,7 +2,7 @@
 installation & authentication:
 
     1.  install gcloud
-    2.  gcloud component install kubectl
+    2.  gcloud components install kubectl
     3.  gcloud auth login
     4.  gcloud config set project skrik-299012
     5.  gcloud container clusters get-credentials skrik
