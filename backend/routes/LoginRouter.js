@@ -31,7 +31,7 @@ passport.use(new LocalStrategy(
     }
 ))
 
-if(process.env.FB_APP_ID !== undefined) {
+if(process.env.FB_APP_ID !== '') {
     passport.use(new FacebookStrategy({
         clientID: process.env.FB_APP_ID,
         clientSecret: process.env.FB_APP_SECRET,
