@@ -94,6 +94,7 @@ code {
   flex-direction: column;
   margin-top: 10px;
   margin-bottom: 10px;
+  font-weight: bold;
 }
 .menu_modal_input{
   display:inline-block;
@@ -101,22 +102,29 @@ code {
   padding-top:10px;
   margin-top: 10px;
   margin-bottom: 10px;
+  /* border-color: #cccccc; */
+  
 }
 .menu_modal_btns{
   display: flex;
   flex-direction: row;
-  
+  justify-content: flex-end;
 }
 .menu_modal_btn{
-  
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 3px;
-  padding-right: 3px;
+  padding: 5px 10px 5px 10px;
   margin-left: 5px;
-  
-  /* float: right; */
-  
+  border-color: #cccccc;
+  box-shadow: transparent;
+  border-width: 0.5px;
+  border-radius: 5px;
+}
+.menu_btn_confirm{
+  background-color: #48a147;
+  color: white;
+}
+
+.menu_btn_close{
+  background-color: #e5e5e5;
 }
 
 
