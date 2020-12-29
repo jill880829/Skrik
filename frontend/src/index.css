@@ -83,6 +83,15 @@ code {
   background-color: #222222;
   height:100vh;
 }
+.menu_wrapper{
+  background-color:purple;
+  margin-left: 5%;
+  margin-right:5%;
+  height:80%;
+  width:80%;
+  display: inline-block;
+  position: relative; 
+}
 .menu_modal_span{
   display: inline-block;
   font-size: 30px;
@@ -127,9 +136,6 @@ code {
   background-color: #e5e5e5;
 }
 
-
-
-
 .menu_folder{
   background-color: #dddddd;
   height:100px;
@@ -139,9 +145,13 @@ code {
   display: table-cell;
   border-radius: 15%;
 }
+.menu_menu{
+  display: flex;
+}
 
 #menu_add_btn{
-  background-color: #eeeeee;
+  background-color: transparent;
+  border:transparent 0px;
   height:30px;
   width:30px;
   border-radius: 100%;
