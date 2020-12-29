@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const http = require("http");
+const WebSocket = require("ws");
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 const session = require('express-session')
@@ -77,16 +79,16 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-const server = http.createServer(app)
+app2 = express()
+const server = http.createServer(app2)
 const wss = new WebSocket.Server({ server })
-let codes = ''
 
 wss.on('connection', ws => {
   const sendData = (client, data) => {
     client.send(JSON.stringify(data))
   }
 
-  sendData(ws, ['output', codes])
+  // sendData(ws, ['output', codes])
 
   ws.onmessage = (message) => {
     const { data } = message
@@ -95,11 +97,9 @@ wss.on('connection', ws => {
 
     switch (task) {
       case 'input': {
-        codes = payload
-        console.log(codes)
         wss.clients.forEach((client) => {
           if(client.readyState === WebSocket.OPEN) {
-            sendData(client, ['output', codes])
+            sendData(client, ['output', payload])
           }
         })
         break

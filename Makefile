@@ -32,7 +32,7 @@ dbconn:
 	mongo --authenticationDatabase "${DATABASE}" -u "${USERNAME}" "${DBURL}/${DATABASE}" -p "${PASSWORD}"
 
 backend:
-	cd backend && npm start
+	export $(cat backend/.env | xargs) && cd backend && npm start
 
 backend_docker_local:
 	docker-compose -p backend -f ./deployment/local/backend.yml up

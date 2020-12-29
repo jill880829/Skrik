@@ -31,17 +31,27 @@ passport.use(new LocalStrategy(
     }
 ))
 
-passport.use(new FacebookStrategy({
-    clientID: process.env.FB_APP_ID,
-    clientSecret: process.env.FB_APP_SECRET,
-    callbackURL: process.env.FB_CALLBACK_URL
-},
-    function (accessToken, refreshToken, profile, done) {
-        process.nextTick(function () {
-            return done(null, profile);
-        });
-    }
-))
+if(process.env.FB_APP_ID !== '') {
+    passport.use(new FacebookStrategy({
+        clientID: process.env.FB_APP_ID,
+        clientSecret: process.env.FB_APP_SECRET,
+        callbackURL: process.env.FB_CALLBACK_URL
+    },
+        function (accessToken, refreshToken, profile, done) {
+            process.nextTick(function () {
+                return done(null, profile);
+            });
+        }
+    ))
+
+    router.get('/fb', passport.authenticate('facebook'));
+
+    router.get('/fb/callback', passport.authenticate('facebook'),
+    function (req, res) {
+        res.send("success")
+    });
+}
+
 
 passport.serializeUser(function (user, done) {
     console.log(user)
@@ -53,13 +63,6 @@ passport.deserializeUser(function (username, done) {
 })
 
 router.post('/', passport.authenticate('local'), 
-function (req, res) {
-    res.send("success")
-});
-
-router.get('/fb', passport.authenticate('facebook'));
-
-router.get('/fb/callback', passport.authenticate('facebook'),
 function (req, res) {
     res.send("success")
 });
