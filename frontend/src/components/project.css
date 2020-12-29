@@ -17,6 +17,7 @@
 }
 .project_container:hover{
     cursor: pointer;
+    opacity: 0.8;
 }
 .project_wrapper{
     /* background-color:purple; */
