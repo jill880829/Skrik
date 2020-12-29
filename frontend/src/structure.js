@@ -9,6 +9,7 @@ import "./styles.css";
 //import { components } from "react-select/dist/react-select.cjs.dev";
 import useStructure from './useStructure'
 //import rightClick from './components/rightClick'
+import transfer from './functions/transfer'
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -94,7 +95,7 @@ export default function Structure() {
                     <div className="titleFunction">
                         <VscNewFile onClick={() => handleAddNewFile()} />
                         <VscNewFolder onClick={() => handleAddNewFolder()} />
-                        <VscRefresh onClick={() => { alert("Refresh") }} />
+                        <VscRefresh onClick={() => transfer(ls)} />
                         <VscCollapseAll onClick={() => { alert("Collapse All") }} />
                     </div>
                 </IconContext.Provider>
@@ -137,91 +138,11 @@ export default function Structure() {
         }
 
     }
-    const str1 = [
-        {
-            type: "blankFolder",
-            displayAddBlank: false,
-        },
-        {
-            type: "blankFile",
-            displayAddBlank: false,
-        },
-    ]
-    const str = [
-        {
-            type: "blankFolder",
-            displayAddBlank: false,
-        },
-        {
-            type: "folder",
-            name: "src",
-            status: "open",
-            data: [
-                {
-                    type: "blankFolder",
-                    displayAddBlank: false,
-                },
-                {
-                    type: "folder",
-                    name: "components",
-                    status: "open",
-                    data: [
-                        {
-                            type: "blankFolder",
-                            displayAddBlank: false,
-                        },
-                        {
-                            type: "blankFile",
-                            displayAddBlank: false,
-                        },
-                        {
-                            type: "file",
-                            name: "SkrikPage.js",
-                            status: "off",
-                        },
-                        {
-                            type: "file",
-                            name: "SkrikPage.css",
-                            status: "off"
-                        },
-                        "EOF"
-                    ]
-                },
-                {
-                    type: "blankFile",
-                    displayAddBlank: false,
-                },
-                {
-                    type: "file",
-                    name: "index.js",
-                    status: "off"
-                },
-                {
-                    type: "file",
-                    name: "index.html",
-                    status: "off"
-                },
-                {
-                    type: "file",
-                    name: "test.py",
-                    status: "off"
-                },
-                "EOF"
-            ]
-        },
-        {
-            type: "blankFile",
-            displayAddBlank: false,
-        },
-        {
-            type: "file",
-            name: "package.json",
-            status: "off"
-        },
+    
+    const ls=['/src/components/SkrikPage.js','/src/components/SkrikPage.css','/src/index.js','/src/index.html','/src/text.py','/package.js']
+    
 
-    ]
-
-    const { treeStructure, loadStructure, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(str1);
+    const { treeStructure, loadStructure, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(ls));
     const handleclickFile = (event) => {
         let fp = event.target.parentNode.id
         resetStatus()
