@@ -1,0 +1,29 @@
+.profileContainer{
+    margin: 20px;
+    width: 300px;
+}
+.photoContainer{
+    margin: 20px;
+    text-align: center;
+}
+.photo{
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+}
+.detailLine{
+    margin: 20px;
+    display: flex;
+    align-items: left;
+}
+
+
+.dataContainer{
+    flex:1;
+    background-color:lightblue;
+}
+.detailContainer{
+    flex:3;
+    background-color:lightskyblue;
+    width: 300px;
+}
