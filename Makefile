@@ -44,4 +44,20 @@ backend_docker_local_clean:
 	docker-compose -p backend -f ./deployment/local/backend.yml down
 	docker rmi backend_skrik_express
 
+cert:
+	certbot certonly --manual -d skrik.net
+	cp /etc/letsencrypt/live/skrik.net/privkey.pem deployment/k8s/secret/
+	cp /etc/letsencrypt/live/skrik.net/fullchain.pem deployment/k8s/secret/
+	chown chris deployment/k8s/secret/privkey.pem
+	chown chris deployment/k8s/secret/fullchain.pem
+
+cert_deploy:
+	kubectl create secret tls letsencrypt-cert --cert=deployment/k8s/secret/fullchain.pem --key=deployment/k8s/secret/privkey.pem
+
+cert_destroy:
+	kubectl delete secret letsencrypt-cert
+
+cert_renew:
+	certbot renew
+
 .PHONY: backend dbconn db_clean db init

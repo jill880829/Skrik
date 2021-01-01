@@ -1,0 +1,2 @@
+local/mongoDB/init.js
+k8s/secret/*
