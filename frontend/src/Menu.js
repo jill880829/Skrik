@@ -1,8 +1,7 @@
 import React from 'react';
+import Modal from './components/modal';
 
-function add_folder() { 
 
-}
 const initList = [
     {
         id: '0',
@@ -11,17 +10,29 @@ const initList = [
 ];
 
 
-const Menu = () => { 
+
+
+function Menu(){ 
     const [list, setList] = React.useState(initList);
+    const openModal = () => { 
+        console.log('openModal')
+    }
+    
     return (
         <div id='menu_container' >
-            <ul>
-                {list.map((item) => (
-                    <div className='menu_folder' key={item.id}>{item.name}</div>
-                    // <li >{item.name}</li>
-                ))}
-            </ul>
-            <button id='menu_add_btn' onClick={add_folder}>+</button>
+            <button id='menu_add_btn' onClick={openModal}>+</button>
+            <Modal>
+                <span className='menu_modal_span'>Create a project</span>
+                <div className='menu_modal_inputs'>
+                    Project Name <input className='menu_modal_input' type='text' name='name' id='name' required='true'/> 
+                    Collaborators <input className='menu_modal_input'></input>
+                </div>
+                <div className='menu_modal_btns'>
+                    <button className='menu_modal_btn'>Close</button>
+                    <button className='menu_modal_btn'>Confirm</button>
+                </div>
+                
+            </Modal>
         </div>
     )
 }

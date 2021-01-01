@@ -11,16 +11,17 @@
     "codemirror": "^5.58.3",
     "diff": "^5.0.0",
     "git-diff": "^2.0.6",
-    "react": "^17.0.1",
     "material-ui-password-field": "^2.1.2",
-    "react-router-dom": "^5.2.0",
+    "react": "^17.0.1",
     "react-codemirror2": "^7.2.1",
     "react-dom": "^17.0.1",
     "react-icons": "4.1.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "react-select": "^3.1.1",
-    "styled-components": "5.1.0",
+    "react-social-login": "^3.4.10",
     "slice-lines": "^1.0.3",
+    "styled-components": "5.1.0",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
@@ -46,5 +47,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:6001"
 }

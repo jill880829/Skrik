@@ -1,10 +1,11 @@
-import React, { Component } from 'react'
-import { useState, useEffect } from 'react';
+import React from 'react'
+import { useState } from 'react';
 // import useLocalStorage from '../hooks/useLocalStorage'
 import './App.css';
 import Login from './Login';
 import Editor from './Editor';
 import Menu from './Menu';
+import ProfileNew from './ProfileNew'
 import {
   BrowserRouter as Router,
   Switch,
@@ -15,7 +16,7 @@ import {
 
 
 function App() {
-  const [python, setPython] = useState('');
+  //const [python, setPython] = useState('');
   return (
     <Router>
       <div>
@@ -29,6 +30,12 @@ function App() {
             </li>
             <li>
               <Link to="/Menu">Menu</Link>
+            </li>
+            <li>
+              <Link to="/Profile">Profile</Link>
+            </li>
+            <li>
+              <Link>Download</Link>
             </li>
           </ul>
         </nav>
@@ -44,6 +51,9 @@ function App() {
           </Route>
           <Route path="/Menu">
             <Menu/>
+          </Route>
+          <Route path="/Profile">
+            <ProfileNew/>
           </Route>
         </Switch>
       </div>
