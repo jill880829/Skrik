@@ -105,6 +105,15 @@ wss.on('connection', ws => {
         })
         break
       }
+      case 'path': {
+        wss.clients.forEach((client) => {
+          if(client.readyState === WebSocket.OPEN) {
+            console.log("!@#@$#!@#$##!@$#",payload)
+            sendData(client, ['output-path', payload])
+          }
+        })
+        break
+      }
       default:
         break
     }

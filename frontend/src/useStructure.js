@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 
 const useStructure = (str) => {
-    console.log(str)
     const [treeStructure, setTree] = useState(str);
     const [currentFilePath, setCurrentFilePath] = useState([]);
     const resetStatus = () => {
@@ -80,10 +79,14 @@ const useStructure = (str) => {
     const IterComfirmNewFile = (ele, name, isFolder) => {
         for (let i = 0; i < ele.length; i++) {
             if (ele[i].type === 'folder' && ele[i].status === 'open') {
-                if (IterComfirmNewFile(ele[i].data, name, isFolder) === 'find') {
-                    return "find"
+                const result = IterComfirmNewFile(ele[i].data, name, isFolder)
+                if (result.find === 'find') {
+                    const currentFilePath = `${ele[i].name}/${result.path}`
+                    console.log(currentFilePath)
+                    return {"find":"find","path":currentFilePath}
+
                 }
-                else return undefined
+                else return {"find":"unfind","path":""}
             }
             else if (ele[i].type === 'folder' && (ele[i].status === 'innestopen' || ele[i].status === 'innestopenFocus')) {
                 for (let j = 0; j < ele[i].data.length; j++) {
@@ -112,23 +115,27 @@ const useStructure = (str) => {
                                     "EOF"
                                 ]
                             });
-                            return "find"
+                            return {"find":"find","path":""}
                         }
                     }
                     else {
                         if (ele[i].data[j].type === 'blankFile') {
+                            //console.log(ele[i],name)
                             ele[i].data[j].displayAddBlank = false
                             ele[i].data.splice(-1, 0, {
                                 type: "file",
                                 name: name,
                                 status: "off"
                             });
-                            return "find"
+                            const currentFilePath = `${ele[i].name}/${name}` 
+                            console.log(currentFilePath)
+                            return {"find":"find","path":currentFilePath}
                         }
                     }
                 }
             }
         }
+        return {"find":"unfindsdfg","path":""}
     }
     const AddNewFile = (isFolder) => {
         let findInsertPlace = IterAddNewFile(treeStructure, isFolder)
@@ -149,8 +156,10 @@ const useStructure = (str) => {
         setTree([...treeStructure])
     }
     const SaveToTree = (name, isFolder) => {
-        let findInsertPlace = IterComfirmNewFile(treeStructure, name, isFolder)
-        if (findInsertPlace !== 'find') {
+        let result = IterComfirmNewFile(treeStructure, name, isFolder)
+        let returnPath = result.path
+        console.log(result)
+        if (result.find !== 'find') {
             for (let i = 0; i < treeStructure.length; i++) {
                 if (isFolder) {
                     if (treeStructure[i].type === 'blankFolder') {
@@ -182,16 +191,19 @@ const useStructure = (str) => {
                 else {
                     if (treeStructure[i].type === 'blankFile') {
                         treeStructure[i].displayAddBlank = false;
-                        treeStructure.push({
-                            type: "file",
-                            name: name,
-                            status: "off"
-                        });
+                        // treeStructure.push({
+                        //     type: "file",
+                        //     name: name,
+                        //     status: "off"
+                        // });
+                        returnPath = name;
                     }
                 }
             }
         }
         setTree([...treeStructure])
+        returnPath = `/${returnPath}`
+        return returnPath
     }
 
 
@@ -201,7 +213,7 @@ const useStructure = (str) => {
     // }
 
     return {
-        treeStructure, loadStructure, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath
+        treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath
 
     }
 }
