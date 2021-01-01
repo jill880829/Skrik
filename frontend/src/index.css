@@ -183,9 +183,10 @@ code {
 #menu_add_btn{
   background-color: transparent;
   border:transparent 0px;
-  height:30px;
-  width:30px;
+  height:50px;
+  width:50px;
   border-radius: 100%;
+  padding-top:90vh;
 }
 
 

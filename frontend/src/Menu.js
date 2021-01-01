@@ -3,19 +3,25 @@ import Modal from './components/modal';
 // import Project from './components/project'
 import {IconContext} from "react-icons";
 import { FcPlus } from "react-icons/fc";
-import { BsTrash, BsClockHistory } from "react-icons/bs";
+import { BsTrash, BsClockHistory,BsFillPeopleFill } from "react-icons/bs";
 import './components/project.css'
+import Select from 'react-select';
 
 class Project extends Component { 
     render() { 
-        const { id, name, hist, intoProject, deleteProject} = this.props;
+        const { id, name, hist,colab, intoProject, deleteProject} = this.props;
         return (
             <div id={id} key={id} className='project_container' onClick={intoProject}>
                 <div className='project_wrapper' style={{ position: 'relative' }} onclick={this.intoProject}>
                     <p className='project_title'>{name}</p>
                     <div className='project_history'>
                         <IconContext.Provider value={{ color: 'gray', size: '12px', className: 'project_history' }}>
-                            <BsClockHistory /> <span>changed {hist} days ago</span>
+                            <div>
+                                <BsClockHistory /> <span>changed {hist} days ago</span>
+                            </div>
+                            <div>
+                                <BsFillPeopleFill /> <span>{ colab.length} collaborators</span>
+                            </div>
                         </IconContext.Provider>
                     </div>
                     <div className='project_btn' onClick={deleteProject}>
@@ -40,7 +46,8 @@ const initList = [
     {
         id:1,
         name: 'folder1',
-        history:'0'
+        history: '0', 
+        colab:[]
     },
     
 ];
@@ -67,8 +74,8 @@ function Menu(){
             if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].value !== '') {
                 let inputPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1]
                 let newPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1].value;
-                let newColab = e.target.parentNode.parentNode.childNodes[1].childNodes[3].value;
-                
+                let newColab = (e.target.parentNode.parentNode.childNodes[1].childNodes[3].value).split(';');
+                // console.log(e.target.parentNode.parentNode.childNodes[1].childNodes[3])
                 const same = list.filter(project =>{ if(project.name === newPro) return true})
                 if (same.length > 0) {
                     console.log('This project name has already existed!');
@@ -78,7 +85,7 @@ function Menu(){
                 else { 
                     console.log(list.length)
                     console.log(list)
-                    setList([...list, { id: list.length + 1, name: newPro, history: 0 }]) 
+                    setList([...list, { id: list.length + 1, name: newPro, history: 0, colab:newColab}]) 
                     modalRef.current.closeModal();
                 }
             }
@@ -89,35 +96,38 @@ function Menu(){
     }
 
     const deleteProject = (id) => { 
-        // let proID = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.id
         const newList = list.filter(project => project.id !== id)
         setList(newList)
     }
+
+    // const DropdownIndicator = () => null;
     return (
         <div id='menu_container' >
             <div style={{ float: 'left', width: '10%', height: '100%', backgroundColor: 'transparent' }}>
-                <button id='menu_add_btn' onClick={openModal}>
-                    <IconContext.Provider value={{color: 'gray', size: '30px'}}>
-                        <FcPlus/>
-                    </IconContext.Provider>
-                </button>
+                
             </div>
-            <div style={{ float: 'left', width: '90%', height: '100%', padding: '30px'}}>
+            <div style={{ float: 'left', width: '86%', height: '100%', padding: '30px'}}>
                 <div className='menu_menu' >
                     {list.map(project => (
                         <Project
                             id={project.id}
                             name={project.name}
                             hist={project.history}
+                            colab={ project.colab}
                             intoProject={intoProject}
-                            deleteProject={() => deleteProject(project.id)}>
+                            deleteProject={() => deleteProject(project.id)}
+                        >
                         </Project>))
                     }
                 </div>
-                
             </div>
-            {/* <div style={{float:'right',width:'10%',height:'100%',backgroundColor:'transparent'}}></div> */}
-
+            <div style={{ float: 'right', width: '4%', height: '100%', backgroundColor: 'transparent' }}>
+                <button id='menu_add_btn' onClick={openModal}>
+                    <IconContext.Provider value={{color: 'gray', size: '50px'}}>
+                        <FcPlus/>
+                    </IconContext.Provider>
+                </button>
+            </div>
             <Modal ref={modalRef}>
                 <span className='menu_modal_span'>Create a project</span>
                 <div className='menu_modal_inputs'>
@@ -127,7 +137,15 @@ function Menu(){
                     </div>
                     <input className='menu_modal_input' type='text' name='name' id='name' onKeyUp={handleKeyUp} /> 
                     Collaborators
-                    <input className='menu_modal_input'></input>
+                    {/* <Select
+                        components={{ DropdownIndicator }}
+                        closeMenuOnSelect={false}
+                        options={[]}
+                    >
+                    
+                    </Select> */}
+                    <input className='menu_modal_input' ></input>
+                    <p style={{color:'#CCCCCC' ,fontSize:10, lineHeight:0.8}}>* Use ";" to split collaborators</p>
                 </div>
                 <div className='menu_modal_btns'>
                     <button className='menu_modal_btn menu_btn_close' onClick={ ()=>modalRef.current.closeModal()}>Close</button>
