@@ -31,7 +31,12 @@ router.post('/register', urlencodedParser, async function (req, res) {
 });
 
 /* Get profile page and list projectids */
-// username version
+/* 
+NOW :username version
+TODO 
+1. set sha  key:sha value:usename-projectid
+2. Change to session version (find req.session cookie)
+*/
 router.get('/projects', async function (req, res) {
     var parts = url.parse(req.url, true);
     var queryUsername = parts.query["username"];
@@ -47,6 +52,10 @@ router.get('/projects', async function (req, res) {
 });
 
 /* list files (need sort) */
+
+// TODO:
+// 1. use sha to find value
+// 2. ls need to expire old key
 router.get('/ls/:id', async function (req, res) {
     var projectid = req.params.id;
     var result = await QueryProject.listFiles(projectid);

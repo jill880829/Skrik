@@ -26,6 +26,9 @@
 - ws: /api/wss/\<SHA256>/notify
 
 ## Format Spec
+### SHA256 format
+
+`sha256(projectname | secret | counter)`
 
 ### db return format
 
