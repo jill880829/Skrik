@@ -30,18 +30,25 @@ passport.use(new LocalStrategy(
         }
     }
 ))
+if (process.env.FB_APP_ID !== undefined) {
+    passport.use(new FacebookStrategy({
+            clientID: process.env.FB_APP_ID,
+            clientSecret: process.env.FB_APP_SECRET,
+            callbackURL: process.env.FB_CALLBACK_URL
+    },
+        function (accessToken, refreshToken, profile, done) {
+            process.nextTick(function () {
+                return done(null, profile);
+            });
+        }
+    ))
+    router.get('/fb', passport.authenticate('facebook'));
 
-passport.use(new FacebookStrategy({
-    clientID: process.env.FB_APP_ID,
-    clientSecret: process.env.FB_APP_SECRET,
-    callbackURL: process.env.FB_CALLBACK_URL
-},
-    function (accessToken, refreshToken, profile, done) {
-        process.nextTick(function () {
-            return done(null, profile);
-        });
-    }
-))
+    router.get('/fb/callback', passport.authenticate('facebook'),
+    function (req, res) {
+        res.send("success")
+    });
+}
 
 passport.serializeUser(function (user, done) {
     console.log(user)
@@ -57,12 +64,7 @@ function (req, res) {
     res.send("success")
 });
 
-router.get('/fb', passport.authenticate('facebook'));
 
-router.get('/fb/callback', passport.authenticate('facebook'),
-function (req, res) {
-    res.send("success")
-});
 
 module.exports = {
     router: router,

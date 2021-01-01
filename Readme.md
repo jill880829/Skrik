@@ -18,6 +18,7 @@
 - GET /api/login/google
 - GET /api/projects
 - POST /api/create_project
+- GET /api/download_project
 - GET /api/ls/\<SHA256>
 - ws: /api/wss/\<SHA256>
 - ws: /api/wss/\<SHA256>/getfile
@@ -25,6 +26,9 @@
 - ws: /api/wss/\<SHA256>/notify
 
 ## Format Spec
+### SHA256 format
+
+`sha256(projectname | secret | counter)`
 
 ### db return format
 
