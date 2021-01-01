@@ -16,6 +16,7 @@
     "react-icon-library": "^0.1.45",
     "react-icons": "^4.1.0",
     "react-social-login": "^3.4.10",
+    "sweetalert": "^2.1.2",
     "ws": "^7.4.1"
   },
   "devDependencies": {

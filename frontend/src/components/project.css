@@ -9,11 +9,12 @@
     height:100px;
     width:250px;
     border-radius: 10px;
-    /* display: inline; */
+    display: inline-block;
     vertical-align: middle;
     text-align: center;
     padding: 10px 20px 10px 20px;
     margin:10px 20px 10px 20px;
+    z-index: 0;
 }
 .project_container:hover{
     cursor: pointer;
@@ -48,6 +49,7 @@
     height:25px;
     border-radius:100%;
     margin:auto;
+    z-index:-100;
 }
 .project_history{
     color:gray;

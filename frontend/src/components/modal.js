@@ -7,7 +7,8 @@ const Modal = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => {
         return {
             openModal: () => open(),
-            closeModal:() => close()
+            closeModal: () => close(),
+            confirmModal:() =>  confirm()
         }
     });
 
@@ -17,6 +18,11 @@ const Modal = forwardRef((props, ref) => {
     const close = () => {
         setDisplay(false);
     };
+    const confirm = () => {
+        setDisplay(false);
+        console.log('confirm')
+    };
+
     if (display) {
         return ReactDOM.createPortal(
             <div className={'modal-wrapper'}>
