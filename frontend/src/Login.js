@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Grid, TextField } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -14,7 +14,7 @@ import SocialButton from './components/socialButton'
 // import { FaFacebookF, FaGoogle, FaGithub } from "react-icons/fa";
 import { ImFacebook2, ImGoogle, ImGithub } from "react-icons/im";
 import { IconContext } from "react-icons";
-import { Si1Password } from 'react-icons/si';
+//import { Si1Password } from 'react-icons/si';
 
 const CssTextField = withStyles({
     root: {
