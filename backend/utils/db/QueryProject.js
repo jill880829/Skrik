@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const path = require('path');
 const Projects = require('./ProjectSchema');
 const UserData = require('./UserDataSchema');
 const regxstr = /^[ A-Za-z0-9_.-]+$/;
@@ -36,10 +37,19 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
         return { "success": false, "description": "Project Not Found!!!" };
     else if (project.Deleted === true)
         return { "success": false, "description": "Project Has Been Deleted!!!" };
+    
+    // ensure user is valid in project
+    const found = project.Users.find(element => element === username);
+    if (found === undefined)
+        return { "success": false, "description": "not accessable users!" };
 
+    // handle relative path to absolute path and detect error
+    filename = path.resolve('/', filename);
     var file = project.Files.find(function(item){
         return item.FileName === filename;
       });
+    
+    // query file
     if(typeof file === "undefined")
     {
         project.Files.push({ FileName: filename, Deleted: false });
@@ -50,6 +60,7 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
     else if(file.Deleted === true)
         file.Deleted = false;
 
+    // add linechange
     try{
         file.LineChanges.push({Index: linenum, 
                                Type: commit_type, 
@@ -58,7 +69,7 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
                                Deleted: false,
                                User: username,
                                Data: content});
-        project.save();
+        await project.save();
     } catch (err) {
         console.error("[db] error adding LineChange: " + err);
         return { "success": false, "description": "LineChange Creation Failed!!!" };
@@ -68,12 +79,14 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
 
 // delete a file in projectid
 async function deleteFile(projectid, filename, username){
+    if (projectname === undefined || projectname === null)
+        return { "success": false, "description": "Invalid Projectid!!!" };
     projectid = projectid.toLowerCase();
     if (projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!" };
-    if (filename.match(regxfile) === null)
+    if (filename === undefined || filename === null || filename.match(regxfile) === null)
         return { "success": false, "description": "Invalid File Name!!!" };
-    if (username.match(regxstr) === null)
+    if (username === undefined || username === null || username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
     try{
         var project = await Projects.findById(projectid);
@@ -85,7 +98,7 @@ async function deleteFile(projectid, filename, username){
         return { "success": false, "description": "Project Not Found!!!" };
     else if (project.Deleted === true)
         return { "success": false, "description": "Project Has Been Deleted!!!" };
-
+    
     var file = project.Files.find(function(item){
         return item.FileName === filename;
       });
@@ -101,7 +114,7 @@ async function deleteFile(projectid, filename, username){
                                UpdateTime: Date.now(),
                                Deleted: false,
                                User: username});
-        project.save();
+        await project.save();
     } catch (err) {
         console.error("[db] error creating File in project database: ", err);
         return { "success": false, "description": "File Deletion Failed!!!" };
@@ -111,7 +124,7 @@ async function deleteFile(projectid, filename, username){
 
 // create a project
 async function createProject(projectname, usernames){
-    if (projectname.match(regxstr) === null)
+    if (projectname === undefined || projectname === null || projectname.match(regxstr) === null)
         return { "success": false, "description": "Invalid Project Name!!!" };
     
     if (Array.isArray(usernames) === false)
@@ -142,14 +155,14 @@ async function createProject(projectname, usernames){
         var userdata = await UserData.findOne({Username: username});
         userdata.ProjectIds.push(project._id);
         try{
-            userdata.save();
+            await userdata.save();
         } catch (err){
             console.error(`[db] error adding projectid in ${userdata}: ` + err);
             return { "success": false, "description": `Store id Failed in Username: ${userdata}!!!` };
         }
     }
     try{
-        project.save();
+        await project.save();
     } catch (err)
     {
         console.error("[db] error querying user in User collection: " + err);
@@ -191,7 +204,7 @@ async function deleteProject(projectid){
         }
 
         try{
-            userdata.save();
+            await userdata.save();
         } catch (err){
             console.error(`[db] error adding projectid in ${userdata}: ` + err);
             return { "success": false, "description": `Store id Failed in Username: ${userdata}!!!` };
@@ -199,7 +212,7 @@ async function deleteProject(projectid){
     }
 
     try{
-        project.save();
+        await project.save();
     } catch (err) {
         console.error("[db] error saving project in project database: " + err);
         return { "success": false, "description": "Project Deletion Failed!!!" };
@@ -209,6 +222,8 @@ async function deleteProject(projectid){
 }
 
 async function listFiles(projectid){
+    if (projectid === null || projectid === undefined )
+        return { "success": false, "description": "Invalid Projectid!!!", "files": null  };
     projectid = projectid.toLowerCase();
     if (projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!", "files": null  };
@@ -225,7 +240,8 @@ async function listFiles(projectid){
     
     filenames = [];
     project.Files.forEach(function(file){
-        filenames.push(file.FileName);
+        if (file.Deleted === false)
+            filenames.push(file.FileName);
     });
     return { "success": true, "description": "List Files!!!", "files": filenames };
 
@@ -270,6 +286,11 @@ async function getFile(projectid, filename){
     }
 
     return { "success": true, "description": "Finish Getting File !!!", "content": data };
+}
+
+// packet the project and 
+async function generate_Project_zip(projectid){
+// TODO
 }
 
 module.exports = {createProject: createProject,

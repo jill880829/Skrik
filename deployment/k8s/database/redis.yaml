@@ -1,0 +1,51 @@
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: default
+  labels:
+    app: redis
+spec:
+  selector:
+    matchLabels:
+      app: redis
+#   revisionHistoryLimit: 10
+  serviceName: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+        containers:
+        - name: redis
+          image: redis:alpine
+          imagePullPolicy: IfNotPresent
+          command:
+          - redis-server
+          args: ["--requirepass", "${REDIS_PASSWORD}"]
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+          - name: redis-storage
+            mountPath: /var/lib/redis
+        volumes:
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: redis-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: default
+spec:
+  type: ClusterIP
+  selector:
+    app: redis
+  ports:
+  - name: redis
+    protocol: TCP
+    port: 6379
+    targetPort: 6379

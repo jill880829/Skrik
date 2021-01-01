@@ -13,10 +13,10 @@ var QueryUser = require('../utils/db/QueryUser')
 passport.use(new LocalStrategy(
     async function (username, password, done) {
         try {
-            var result = await QueryUser.authUser(username, password);
+            var result = await QueryUser.findUser(username, password);
 
-            console.log("get user: " + username + " pass: " + password + ", login sucess: " + JSON.stringify(result))
-            if (result.success === true) {
+            console.log("get user: " + username + " pass: " + password + ", login sucess: " + result)
+            if (result === true) {
                 return done(null, { username: username })
                 // return {username: username}
             }
@@ -30,12 +30,11 @@ passport.use(new LocalStrategy(
         }
     }
 ))
-
-if(process.env.FB_APP_ID !== undefined) {
+if (process.env.FB_APP_ID !== undefined) {
     passport.use(new FacebookStrategy({
-        clientID: process.env.FB_APP_ID,
-        clientSecret: process.env.FB_APP_SECRET,
-        callbackURL: process.env.FB_CALLBACK_URL
+            clientID: process.env.FB_APP_ID,
+            clientSecret: process.env.FB_APP_SECRET,
+            callbackURL: process.env.FB_CALLBACK_URL
     },
         function (accessToken, refreshToken, profile, done) {
             process.nextTick(function () {
@@ -43,7 +42,6 @@ if(process.env.FB_APP_ID !== undefined) {
             });
         }
     ))
-
     router.get('/fb', passport.authenticate('facebook'));
 
     router.get('/fb/callback', passport.authenticate('facebook'),
@@ -51,7 +49,6 @@ if(process.env.FB_APP_ID !== undefined) {
         res.send("success")
     });
 }
-
 
 passport.serializeUser(function (user, done) {
     console.log(user)
@@ -66,6 +63,8 @@ router.post('/', passport.authenticate('local'),
 function (req, res) {
     res.send("success")
 });
+
+
 
 module.exports = {
     router: router,

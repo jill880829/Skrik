@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: skrik-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: anonymouskuo-com
+spec:
+  tls:
+  - hosts:
+    - skrik.net # Your host. CHANGE ME
+    secretName: letsencrypt-cert # Name of the secret
+  rules:
+  - host: skrik.net # domain name
+    http:
+      paths:
+      # The * is needed so that all traffic gets redirected to nginx
+      - path: /*
+        backend:
+          serviceName: nginx
+          servicePort: 80

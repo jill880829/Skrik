@@ -3,8 +3,14 @@
     "version": "0.0.0",
     "private": true,
     "scripts": {
+<<<<<<< HEAD
+        "start": "node ./bin/www",
+        "test_db": "node ./utils/db/test_db.js",
+        "test_api": "node ./routes/test_api.js"
+=======
         "start": "node ./bin/www.js",
         "test_db": "node ./utils/db/test_db.js"
+>>>>>>> abfe9bc24d8b13a8cf4525169f1cf7359c435755
     },
     "dependencies": {
         "body-parser": "^1.19.0",
