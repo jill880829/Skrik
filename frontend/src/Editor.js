@@ -7,12 +7,14 @@ import 'codemirror/mode/javascript/javascript'
 import 'codemirror/mode/css/css'
 import 'codemirror/mode/verilog/verilog'
 import 'codemirror/mode/clike/clike'
+import sliceLines from 'slice-lines'
+import { diffLines } from 'diff'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
 import CodeSelect from './components/codeSelect'
 import FileStructure from './structure'
-import { diffLines } from 'diff'
-import sliceLines from 'slice-lines'
 import transfer from './functions/transfer'
+import useStructure from './useStructure'
+
 const client = new WebSocket('ws://localhost:4000')
 
 const codingOptions = [
@@ -25,12 +27,10 @@ const codingOptions = [
 ]
 
 export default function Editor(props) {
-    //const { codes, opened, sendCodes } = useEdit();
     const ls=['/src/components/SkrikPage.js','/src/components/SkrikPage.css','/src/index.js','/src/index.html','/src/text.py','/package.js']
+    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(ls));
     const [filesStructure, setFile] = useState(ls);
-    const [tree,setTree] = useState(transfer(ls));
     const [language, setLan] = useState('python');
-    const [pathChanged,setPath] = useState("")
     
     function onChangeCode(value) {
         setLan(value.value);
@@ -45,7 +45,6 @@ export default function Editor(props) {
     client.onmessage = (message) => {
         const { data } = message
         const [task, update] = JSON.parse(data)
-        console.log(update)
         if (task === 'output') {
             let tmp = codes;
             const content = update.content
@@ -64,7 +63,6 @@ export default function Editor(props) {
         else if(task === 'output-path'){
             setFile([...filesStructure,update])
             setTree(transfer([...filesStructure,update]))
-            console.log(update)
         }
     }
 
@@ -97,15 +95,15 @@ export default function Editor(props) {
     }
 
     const sendNewFile = (ls) => {
-        setPath(ls)
         sendData(['path', ls])
     }
     return (
         <div>
-            <span>{pathChanged}</span>
             <div className='page_container'>
                 <div id='folder_structure'>
-                    <FileStructure returnNewFile={sendNewFile} updatefile={tree}/>
+                    <FileStructure returnNewFile={sendNewFile} treeStructure={treeStructure}
+                    setTree={setTree} resetStatus={resetStatus} onClickFile={onClickFile} onClickFolder={onClickFolder} 
+                    AddNewFile={AddNewFile} SaveToTree={SaveToTree} currentFilePath= {currentFilePath}/>
                 </div>
                 <div id='editor_container'>
                     <div id='editor_title'>

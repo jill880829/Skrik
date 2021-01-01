@@ -6,11 +6,6 @@ import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-ico
 import { VscNewFile, VscNewFolder, VscRefresh, VscCollapseAll } from "react-icons/vsc";
 import { SiCplusplus, SiJson } from "react-icons/si";
 import "./styles.css";
-//import { components } from "react-select/dist/react-select.cjs.dev";
-import useStructure from './useStructure'
-//import rightClick from './components/rightClick'
-
-
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -30,10 +25,8 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 
-export default function Structure({returnNewFile,updatefile}) {
-    const ls=['/src/components/SkrikPage.js','/src/components/SkrikPage.css','/src/index.js','/src/index.html','/src/text.py','/package.js']
-    const { treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(updatefile);
-    //const [ fileStructure,setfileStructure ] = useState(ls)
+export default function Structure({returnNewFile,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
+    
     const File = ({ name, filepath, focusOn }) => {
         let ext = name.split(".")[1];
 
@@ -143,25 +136,6 @@ export default function Structure({returnNewFile,updatefile}) {
         }
 
     }
-    // console.log(updatefile)
-    // console.log(treeStructure)
-    // if(updatefile!==""&&updatefile!==undefined){
-    //     //setfileStructure([...fileStructure,updatefile])
-    //     let findfile = false
-    //     for(let i=0;i<fileStructure;i++){
-    //         if(fileStructure===updatefile){
-    //             findfile = true
-    //             break;
-    //         }
-    //     }
-    //     if(!findfile){
-    //         setfileStructure([...fileStructure,updatefile])
-    //     }
-    // }
-    
-    
-    
-    
     
     const handleclickFile = (event) => {
         let fp = event.target.parentNode.id
