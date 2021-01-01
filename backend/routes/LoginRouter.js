@@ -13,10 +13,10 @@ var QueryUser = require('../utils/db/QueryUser')
 passport.use(new LocalStrategy(
     async function (username, password, done) {
         try {
-            var result = await QueryUser.findUser(username, password);
+            var result = await QueryUser.authUser(username, password);
 
             console.log("get user: " + username + " pass: " + password + ", login sucess: " + result)
-            if (result === true) {
+            if (result.success === true) {
                 return done(null, { username: username })
                 // return {username: username}
             }
