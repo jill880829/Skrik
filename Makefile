@@ -34,6 +34,9 @@ dbconn:
 backend:
 	export $(cat backend/.env | xargs) && cd backend && npm start
 
+backend_yarn:
+	export $(cat backend/.env | xargs) && cd backend && yarn start
+
 backend_docker_local:
 	docker-compose -p backend -f ./deployment/local/backend.yml up
 

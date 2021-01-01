@@ -13,10 +13,10 @@ var QueryUser = require('../utils/db/QueryUser')
 passport.use(new LocalStrategy(
     async function (username, password, done) {
         try {
-            var result = await QueryUser.findUser(username, password);
+            var result = await QueryUser.authUser(username, password);
 
-            console.log("get user: " + username + " pass: " + password + ", login sucess: " + result)
-            if (result === true) {
+            console.log("get user: " + username + " pass: " + password + ", login sucess: " + JSON.stringify(result))
+            if (result.success === true) {
                 return done(null, { username: username })
                 // return {username: username}
             }
@@ -31,7 +31,7 @@ passport.use(new LocalStrategy(
     }
 ))
 
-if(process.env.FB_APP_ID !== '') {
+if(process.env.FB_APP_ID !== undefined) {
     passport.use(new FacebookStrategy({
         clientID: process.env.FB_APP_ID,
         clientSecret: process.env.FB_APP_SECRET,

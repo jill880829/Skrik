@@ -21,6 +21,7 @@ var password = process.env.PASSWORD;
 var database = process.env.DATABASE;
 var dburl = process.env.DBURL;
 const mongoDB = `mongodb://${username}:${password}@${dburl}/${database}`
+console.log("trying to connect to " + mongoDB + "...")
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
