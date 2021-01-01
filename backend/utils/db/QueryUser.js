@@ -7,9 +7,9 @@ const regxstr = /^[ A-Za-z0-9_.-]+$/;
 
 // register use
 async function createUser(username, password){
-    if (username.match(regxstr) === null)
+    if (username === null || username === undefined || username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
-    if (password.match(regxstr) === null)
+    if (password === null || password === undefined || password.match(regxstr) === null)
         return { "success": false, "description": "Invalid Password!!!" };
     
     try{
@@ -34,9 +34,9 @@ async function createUser(username, password){
 
 // login authentication
 async function authUser(username, password){
-    if (username.match(regxstr) === null)
+    if (username === null || username === undefined || username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
-    if (password.match(regxstr) === null)
+    if (password === null || password === undefined || password.match(regxstr) === null)
         return { "success": false, "description": "Invalid Password!!!" };
     
     try{
@@ -56,16 +56,17 @@ async function authUser(username, password){
 
 // list project ids in user profile page
 async function listProjectids(username){
-    if (username.match(regxstr) === null)
+    if (username === null || username === undefined || username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!", "ids": null };
 
     try{
-        var userdata = await UserData.find({Username: username});
+        var userdata = await UserData.findOne({Username: username});
     } catch (err) {
         console.error("[db] error querying user in User collection: " + err);
         return { "success": false, "description": "Querying user Failed!!!", "ids": null };
-    }   
-
+    }
+    if (userdata === null)
+        return { "success": false, "description": "Username not exsisted", "ids": null };
     return { "success": true, "description": "List Project ids", "ids": userdata.ProjectIds };
 }
 
