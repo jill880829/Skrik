@@ -106,8 +106,7 @@ wss.on('connection', ws => {
         })
         break
       }
-<<<<<<< Updated upstream
-=======
+
       case 'path': {
         wss.clients.forEach((client) => {
           if(client.readyState === WebSocket.OPEN) {
@@ -116,7 +115,7 @@ wss.on('connection', ws => {
         })
         break
       }
->>>>>>> Stashed changes
+
       default:
         break
     }

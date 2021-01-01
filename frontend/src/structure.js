@@ -6,10 +6,6 @@ import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-ico
 import { VscNewFile, VscNewFolder, VscRefresh, VscCollapseAll } from "react-icons/vsc";
 import { SiCplusplus, SiJson } from "react-icons/si";
 import "./styles.css";
-//import { components } from "react-select/dist/react-select.cjs.dev";
-import useStructure from './useStructure'
-//import rightClick from './components/rightClick'
-import transfer from './functions/transfer'
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -29,8 +25,8 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 
-export default function Structure() {
-
+export default function Structure({returnNewFile,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
+    
     const File = ({ name, filepath, focusOn }) => {
         let ext = name.split(".")[1];
 
@@ -41,7 +37,6 @@ export default function Structure() {
             </div>
         );
     };
-
     const Folder = ({ name, children, folderpath, focusOn }) => {
         const [isOpen, setIsOpen] = useState(false);
 
@@ -78,7 +73,10 @@ export default function Structure() {
     const handlePressEnter = (event, isFolder) => {
         if (event.key === 'Enter') {
             let newFileName = event.target.value
-            SaveToTree(newFileName, isFolder)
+            let path = SaveToTree(newFileName, isFolder)
+            if(!isFolder){
+                returnNewFile(path)
+            }
         }
     }
     const handleAddNewFile = () => {
@@ -95,7 +93,7 @@ export default function Structure() {
                     <div className="titleFunction">
                         <VscNewFile onClick={() => handleAddNewFile()} />
                         <VscNewFolder onClick={() => handleAddNewFolder()} />
-                        <VscRefresh onClick={() => transfer(ls)} />
+                        <VscRefresh  />
                         <VscCollapseAll onClick={() => { alert("Collapse All") }} />
                     </div>
                 </IconContext.Provider>
@@ -139,10 +137,6 @@ export default function Structure() {
 
     }
     
-    const ls=['/src/components/SkrikPage.js','/src/components/SkrikPage.css','/src/index.js','/src/index.html','/src/text.py','/package.js']
-    
-
-    const { treeStructure, loadStructure, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(ls));
     const handleclickFile = (event) => {
         let fp = event.target.parentNode.id
         resetStatus()
