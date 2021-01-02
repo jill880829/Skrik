@@ -25,7 +25,7 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 
-export default function Structure({returnNewFile,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
+export default function Structure({returnNewFile,returnClickFile,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
     
     const File = ({ name, filepath, focusOn }) => {
         let ext = name.split(".")[1];
@@ -33,7 +33,10 @@ export default function Structure({returnNewFile,treeStructure, setTree, resetSt
         return (
             <div id={filepath} className={focusOn ? "fileFocus" : "file"} filepath={filepath} key={filepath}>
                 {FILE_ICONS[ext] || <AiOutlineFile />}
-                <span className="fileSpan" onClick={(event) => handleclickFile(event)} key={filepath + ' span'}>{name}</span>
+                <span className="fileSpan" 
+                onClick={(event) => handleclickFile(event)} 
+                onDoubleClick = {()=>{console.log("DBCLICK")}}
+                key={filepath + ' span'}>{name}</span>
             </div>
         );
     };
@@ -140,7 +143,8 @@ export default function Structure({returnNewFile,treeStructure, setTree, resetSt
     const handleclickFile = (event) => {
         let fp = event.target.parentNode.id
         resetStatus()
-        onClickFile(String(fp))
+        const filename = onClickFile(String(fp))
+        returnClickFile(filename)
     }
     const handleclickFolder = (event) => {
         let fp = event.target.parentNode.parentNode.id

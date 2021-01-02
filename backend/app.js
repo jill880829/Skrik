@@ -115,6 +115,11 @@ wss.on('connection', ws => {
         break
       }
 
+      case 'file': {
+        
+        break
+      }
+
       default:
         break
     }

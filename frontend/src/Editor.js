@@ -10,10 +10,24 @@ import 'codemirror/mode/clike/clike'
 import sliceLines from 'slice-lines'
 import { diffLines } from 'diff'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
+import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
+import { AiOutlineFile} from "react-icons/ai";
+import { SiCplusplus, SiJson } from "react-icons/si";
 import CodeSelect from './components/codeSelect'
 import FileStructure from './structure'
 import transfer from './functions/transfer'
 import useStructure from './useStructure'
+
+
+const FILE_ICONS = {
+    js: <DiJavascript1 />,
+    css: <DiCss3Full />,
+    html: <DiHtml5 />,
+    jsx: <DiReact />,
+    py: <DiPython />,
+    cpp: <SiCplusplus />,
+    json: <SiJson />
+};
 
 const client = new WebSocket('ws://localhost:4000')
 
@@ -31,6 +45,7 @@ export default function Editor(props) {
     const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(ls));
     const [filesStructure, setFile] = useState(ls);
     const [language, setLan] = useState('python');
+    const [fileName, setFileName] = useState('Untitled')
     
     function onChangeCode(value) {
         setLan(value.value);
@@ -63,6 +78,12 @@ export default function Editor(props) {
         else if(task === 'output-path'){
             setFile([...filesStructure,update])
             setTree(transfer([...filesStructure,update]))
+        }
+        else if(task === 'file'){
+            console.log(update)
+            const filenamesplit = update.split('/')
+            const filename = filenamesplit[filenamesplit.length-1]
+            
         }
     }
 
@@ -97,17 +118,26 @@ export default function Editor(props) {
     const sendNewFile = (ls) => {
         sendData(['path', ls])
     }
+    const requestFileContext = (ls) => {
+        sendData(['file', ls])
+        const filenamesplit = ls.split('/')
+        setFileName(filenamesplit[filenamesplit.length-1])
+    }
+    const ext = fileName.split(".")[1];
     return (
         <div>
             <div className='page_container'>
                 <div id='folder_structure'>
-                    <FileStructure returnNewFile={sendNewFile} treeStructure={treeStructure}
+                    <FileStructure returnNewFile={sendNewFile} returnClickFile={requestFileContext} treeStructure={treeStructure}
                     setTree={setTree} resetStatus={resetStatus} onClickFile={onClickFile} onClickFolder={onClickFolder} 
                     AddNewFile={AddNewFile} SaveToTree={SaveToTree} currentFilePath= {currentFilePath}/>
                 </div>
                 <div id='editor_container'>
                     <div id='editor_title'>
-                        File Name
+                        <div>
+                            {FILE_ICONS[ext] || <AiOutlineFile />}
+                            <span style={{marginLeft:"10px"}}>{fileName}</span>
+                        </div>
                         <CodeSelect options={codingOptions} onChange={onChangeCode} />
                     </div>
 
