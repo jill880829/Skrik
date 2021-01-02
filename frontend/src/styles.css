@@ -45,21 +45,21 @@
 }
 .fileFocus .fileSpan:hover{
   cursor:pointer;
-  color:#1212FF;
+  color:rgb(250, 226, 9);
 }
 .file .fileSpan{
   margin-left: 5px;
 }
 .file .fileSpan:hover{
   cursor:pointer;
-  color:#1212FF;
+  color:rgb(250, 226, 9);
 }
 .file .inputSpan{
   margin-left: 5px;
 }
 .file .inputSpan:hover{
   cursor:text;
-  color:#1212FF;
+  color:rgb(250, 226, 9);
 }
 .folder{
   padding-left: 20px;
@@ -73,7 +73,7 @@
 }
 .folder > .folder--label > .folderSpan:hover{
   cursor:pointer;
-  color:#1212FF;
+  color:rgb(250, 226, 9);
 }
 .folderFocus{
   padding-left: 20px;
@@ -89,5 +89,5 @@
 }
 .folderFocus > .folder--label > .folderSpan:hover{
   cursor:pointer;
-  color:#1212FF;
+  color:rgb(250, 226, 9);
 }
