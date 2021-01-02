@@ -11,11 +11,12 @@ import sliceLines from 'slice-lines'
 import { diffLines } from 'diff'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
-import { AiOutlineFile} from "react-icons/ai";
 import { SiCplusplus, SiJson } from "react-icons/si";
+import { AiOutlineFile} from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
-import FileStructure from './structure'
 import transfer from './functions/transfer'
+import rmduplicate from './functions/rmduplicate'
+import FileStructure from './structure'
 import useStructure from './useStructure'
 
 
@@ -41,8 +42,8 @@ const codingOptions = [
 ]
 
 export default function Editor(props) {
-    const ls=['/src/components/SkrikPage.js','/src/components/SkrikPage.css','/src/index.js','/src/index.html','/src/text.py','/package.js']
-    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(ls));
+    const ls=['/src/components/SkrikPage.js','/src/components/SkrikPage.css','/src/index.js','/src/index.html','/src/text.py','/package.js','/empty/empty2/']
+    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(rmduplicate(ls)));
     const [filesStructure, setFile] = useState(ls);
     const [language, setLan] = useState('python');
     const [fileName, setFileName] = useState('Untitled')
@@ -76,14 +77,10 @@ export default function Editor(props) {
             setCodes(tmp)
         }
         else if(task === 'output-path'){
-            setFile([...filesStructure,update])
-            setTree(transfer([...filesStructure,update]))
-        }
-        else if(task === 'file'){
-            console.log(update)
-            const filenamesplit = update.split('/')
-            const filename = filenamesplit[filenamesplit.length-1]
-            
+            console.log(filesStructure,update)
+            const rmdup = rmduplicate([...filesStructure,update])
+            setFile([...rmdup])
+            setTree(transfer([...rmdup]))
         }
     }
 
@@ -123,9 +120,14 @@ export default function Editor(props) {
         const filenamesplit = ls.split('/')
         setFileName(filenamesplit[filenamesplit.length-1])
     }
+    const deb = (ls) => {
+        rmduplicate(ls)
+        console.log(transfer(rmduplicate(ls)))
+    }
     const ext = fileName.split(".")[1];
     return (
         <div>
+            <span onClick={()=>deb(ls)}>debugger</span>
             <div className='page_container'>
                 <div id='folder_structure'>
                     <FileStructure returnNewFile={sendNewFile} returnClickFile={requestFileContext} treeStructure={treeStructure}

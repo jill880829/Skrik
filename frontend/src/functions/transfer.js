@@ -4,8 +4,12 @@ const transfer = (ls, _keys) => {
         let data = []
         for (let i = 0; i < ls.length; i++) {
             let tokens = ls[i].split('/')[0]
+            const _split = ls[i].split('/') 
             let content = ls[i].split('/').slice(1)
             let contentjoin = content.join('/')
+            if(_split[_split.length-1]===''&&_split.length===2){
+                tokens = tokens+'/'
+            }
             if (copyls.hasOwnProperty(tokens)) {
                 copyls[tokens].push(contentjoin)
             }
@@ -28,7 +32,7 @@ const transfer = (ls, _keys) => {
                 displayAddBlank: false,
             })
             for (let k = 0; k < data.length; k++) {
-                if (data[k].type === "file") {
+                if (data[k].type === "file"||k===data.length-1) {
                     data.splice(k, 0, {
                         type: "blankFile",
                         displayAddBlank: false,
@@ -45,11 +49,26 @@ const transfer = (ls, _keys) => {
         }
     }
     else {
-        return ({
-            type: "file",
-            name: _keys,
-            status: "off",
-        })
+        if(_keys[_keys.length-1]==='/'){
+            return ({
+                type: "folder",
+                name: _keys.substring(0,_keys.length-1),
+                status: "close",
+                data: [{
+                    type: "blankFolder",
+                    displayAddBlank: false,
+                },{
+                    type: "blankFile",
+                    displayAddBlank: false,
+                },"EOF"]
+            })
+        }
+        else
+            return ({
+                type: "file",
+                name: _keys,
+                status: "off",
+            })
     }
 }
 export default transfer
