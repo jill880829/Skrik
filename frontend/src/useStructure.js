@@ -122,7 +122,7 @@ const useStructure = (str) => {
                                     "EOF"
                                 ]
                             });
-                            return {"find":"find","path":""}
+                            return {"find":"find","path":`${ele[i].name}/${name}/`}
                         }
                     }
                     else {
@@ -134,9 +134,11 @@ const useStructure = (str) => {
                 }
             }
         }
+        let returnName
         for(let i=0;i<ele.length;i++){
             if(isFolder){
                 if (ele[i].type === 'blankFolder') {
+                    returnName = name+'/'
                     ele[i].displayAddBlank = false;
                     let cnt = 0
                     for (let k = 0; k < ele.length; k++) {
@@ -165,11 +167,11 @@ const useStructure = (str) => {
             else {
                 if (ele[i].type === 'blankFile') {
                     ele[i].displayAddBlank = false;
-                    //returnPath = name;
+                    returnName = name;
                 }
             }
         }
-        return {"find":"find","path":name}
+        return {"find":"find","path":returnName}
     }
     const AddNewFile = (isFolder) => {
         let findInsertPlace = IterAddNewFile(treeStructure, isFolder)

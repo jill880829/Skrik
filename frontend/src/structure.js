@@ -77,9 +77,13 @@ export default function Structure({returnNewFile,returnClickFile,treeStructure, 
         if (event.key === 'Enter') {
             let newFileName = event.target.value
             let path = SaveToTree(newFileName, isFolder)
-            if(!isFolder){
-                returnNewFile(path)
-            }
+            // if(!isFolder){
+            //     returnNewFile(path)
+            // }
+            // if(isFolder){
+            //     console.log(path)
+            // }
+            returnNewFile(path)
         }
     }
     const handleAddNewFile = () => {

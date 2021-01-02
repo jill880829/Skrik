@@ -12,7 +12,7 @@ import { diffLines } from 'diff'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { SiCplusplus, SiJson } from "react-icons/si";
-import { AiOutlineFile} from "react-icons/ai";
+import { AiOutlineFile, AiFillRest} from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
@@ -43,7 +43,7 @@ const codingOptions = [
 
 export default function Editor(props) {
     const ls=['/src/components/SkrikPage.js','/src/components/SkrikPage.css','/src/index.js','/src/index.html','/src/text.py','/package.js','/empty/empty2/']
-    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(rmduplicate(ls)));
+    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(rmduplicate(ls).list));
     const [filesStructure, setFile] = useState(ls);
     const [language, setLan] = useState('python');
     const [fileName, setFileName] = useState('Untitled')
@@ -79,8 +79,11 @@ export default function Editor(props) {
         else if(task === 'output-path'){
             console.log(filesStructure,update)
             const rmdup = rmduplicate([...filesStructure,update])
-            setFile([...rmdup])
-            setTree(transfer([...rmdup]))
+            if(rmdup.duplicate){
+                console.log("EXISTS")
+            }
+            setFile([...rmdup.list])
+            setTree(transfer([...rmdup.list]))
         }
     }
 
@@ -122,7 +125,7 @@ export default function Editor(props) {
     }
     const deb = (ls) => {
         rmduplicate(ls)
-        console.log(transfer(rmduplicate(ls)))
+        console.log(transfer(rmduplicate(ls).list))
     }
     const ext = fileName.split(".")[1];
     return (
