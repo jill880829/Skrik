@@ -1,14 +1,5 @@
-const redis = require('redis');
-const client = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_URL);
+const client = require("../redis")
 const Bluebird = require('bluebird');
-// const client = redis.createClient(6379,'127.0.0.1');
-// client.auth('password')
-// redis setup
-
-
-client.on('connect', () => {
-    console.log('Redis client connected');
-  });
 
 function storeID(hash, username, id){
     try {

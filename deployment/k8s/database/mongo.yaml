@@ -32,7 +32,7 @@ spec:
           name: mongo
         volumeMounts:
           - name: mongo-persistent-storage
-            mountPath: /var/lib/mysql
+            mountPath: /data/db
       volumes:
         - name: mongo-persistent-storage
           persistentVolumeClaim:

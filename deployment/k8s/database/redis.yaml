@@ -23,16 +23,22 @@ spec:
           imagePullPolicy: IfNotPresent
           command:
           - redis-server
-          args: ["--requirepass", "${REDIS_PASSWORD}"]
+          args: ["/etc/redis/redis.conf"]
           ports:
             - containerPort: 6379
           volumeMounts:
           - name: redis-storage
             mountPath: /var/lib/redis
+          - name: redis-conf
+            mountPath: /etc/redis
+            readOnly: true
         volumes:
         - name: redis-storage
           persistentVolumeClaim:
             claimName: redis-pvc
+        - name: redis-conf
+          secret:
+            secretName: redis-secret
 
 ---
 apiVersion: v1
