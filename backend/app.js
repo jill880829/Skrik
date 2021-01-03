@@ -3,9 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var redisClient = require('./utils/redis')
 const http = require("http");
 const WebSocket = require("ws");
-const redis = require('redis')
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 const session = require('express-session')  
@@ -38,18 +38,15 @@ if (
     empty(process.env.MONGO_URL, "MONGO_URL") ||
     empty(process.env.PROJECT_SECRET, "PROJECT_SECRET") ||
     empty(process.env.SESSION_SECRET, "SESSION_SECRET") ||
-    empty(process.env.LOGIN_URL, "LOGIN_URL") ||
-    empty(process.env.FB_APP_ID, "FB_APP_ID") ||
-    empty(process.env.FB_APP_SECRET, "FB_APP_SECRET") ||
+    // empty(process.env.LOGIN_URL, "LOGIN_URL") ||
+    // empty(process.env.FB_APP_ID, "FB_APP_ID") ||
+    // empty(process.env.FB_APP_SECRET, "FB_APP_SECRET") ||
     empty(process.env.HTTP_PORT, "HTTP_PORT") ||
     empty(process.env.SOCKETIO_PORT, "SOCKETIO_PORT") ||
     empty(process.env.REDIS_URL, "REDIS_URL") ||
     empty(process.env.REDIS_PASSWORD, "REDIS_PASSWORD")
 ){
-    // throw "MISS_ENV";
-    while(true) {
-        
-    }
+    throw "MISS_ENV";
 }
 
 // mongo setup
@@ -66,8 +63,13 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 mongoose.connect(mongoDB);
 
+mongoose.connection.on('connected', function () {
+    console.error('[db] db connected.');
+})
+
 mongoose.connection.on('disconnected', function () {
     console.error('[db] db connection dropped.');
+    mongoose.connect(mongoDB);
 })
 
 mongoose.connection.on('error', function (err) {
@@ -75,8 +77,6 @@ mongoose.connection.on('error', function (err) {
 })
 
 // session and body-parser init
-let redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_URL);
-// redisClient.auth(process.env.REDIS_PASSWORD)
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(session({

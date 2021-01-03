@@ -65,6 +65,11 @@ deploy_db_conf:
 		--from-literal=MONGO_INITDB_ROOT_PASSWORD="$(MONGO_INITDB_ROOT_PASSWORD)" \
 		--from-literal=MONGO_INITDB_DATABASE="$(MONGO_INITDB_DATABASE)"
 
+deploy_redis_conf:
+	kubectl delete secret redis-secret
+	kubectl create secret generic redis-secret \
+		--from-literal=redis.conf="requirepass $(REDIS_PASSWORD)"
+
 deploy_mongo_express_conf:
 	kubectl delete secret mongo-express-secret
 	kubectl create secret generic mongo-express-secret \
@@ -72,7 +77,6 @@ deploy_mongo_express_conf:
 		--from-literal=ME_CONFIG_MONGODB_ADMINPASSWORD="$(MONGO_INITDB_ROOT_PASSWORD)" \
 		--from-literal=ME_CONFIG_BASICAUTH_USERNAME="$(MONGO_WEB_USERNAME)" \
 		--from-literal=ME_CONFIG_BASICAUTH_PASSWORD="$(MONGO_WEB_PASSWORD)"
-
 
 cert:
 	certbot certonly --manual -d skrik.net
