@@ -10,10 +10,25 @@ import 'codemirror/mode/clike/clike'
 import sliceLines from 'slice-lines'
 import { diffLines } from 'diff'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
+import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
+import { SiCplusplus, SiJson } from "react-icons/si";
+import { AiOutlineFile, AiFillRest} from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
-import FileStructure from './structure'
 import transfer from './functions/transfer'
+import rmduplicate from './functions/rmduplicate'
+import FileStructure from './structure'
 import useStructure from './useStructure'
+
+
+const FILE_ICONS = {
+    js: <DiJavascript1 />,
+    css: <DiCss3Full />,
+    html: <DiHtml5 />,
+    jsx: <DiReact />,
+    py: <DiPython />,
+    cpp: <SiCplusplus />,
+    json: <SiJson />
+};
 
 const client = new WebSocket('ws://localhost:4000')
 
@@ -27,10 +42,11 @@ const codingOptions = [
 ]
 
 export default function Editor(props) {
-    const ls=['/src/components/SkrikPage.js','/src/components/SkrikPage.css','/src/index.js','/src/index.html','/src/text.py','/package.js']
-    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(ls));
+    const ls=['/src/components/SkrikPage.js','/src/components/SkrikPage.css','/src/index.js','/src/index.html','/src/text.py','/package.js','/empty/empty2/']
+    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(rmduplicate(ls).list));
     const [filesStructure, setFile] = useState(ls);
     const [language, setLan] = useState('python');
+    const [fileName, setFileName] = useState('Untitled')
     
     function onChangeCode(value) {
         setLan(value.value);
@@ -61,8 +77,13 @@ export default function Editor(props) {
             setCodes(tmp)
         }
         else if(task === 'output-path'){
-            setFile([...filesStructure,update])
-            setTree(transfer([...filesStructure,update]))
+            console.log(filesStructure,update)
+            const rmdup = rmduplicate([...filesStructure,update])
+            if(rmdup.duplicate){
+                console.log("EXISTS")
+            }
+            setFile([...rmdup.list])
+            setTree(transfer([...rmdup.list]))
         }
     }
 
@@ -97,17 +118,31 @@ export default function Editor(props) {
     const sendNewFile = (ls) => {
         sendData(['path', ls])
     }
+    const requestFileContext = (ls) => {
+        sendData(['file', ls])
+        const filenamesplit = ls.split('/')
+        setFileName(filenamesplit[filenamesplit.length-1])
+    }
+    const deb = (ls) => {
+        rmduplicate(ls)
+        console.log(transfer(rmduplicate(ls).list))
+    }
+    const ext = fileName.split(".")[1];
     return (
         <div>
+            <span onClick={()=>deb(ls)}>debugger</span>
             <div className='page_container'>
                 <div id='folder_structure'>
-                    <FileStructure returnNewFile={sendNewFile} treeStructure={treeStructure}
+                    <FileStructure returnNewFile={sendNewFile} returnClickFile={requestFileContext} treeStructure={treeStructure}
                     setTree={setTree} resetStatus={resetStatus} onClickFile={onClickFile} onClickFolder={onClickFolder} 
                     AddNewFile={AddNewFile} SaveToTree={SaveToTree} currentFilePath= {currentFilePath}/>
                 </div>
                 <div id='editor_container'>
                     <div id='editor_title'>
-                        File Name
+                        <div>
+                            {FILE_ICONS[ext] || <AiOutlineFile />}
+                            <span style={{marginLeft:"10px"}}>{fileName}</span>
+                        </div>
                         <CodeSelect options={codingOptions} onChange={onChangeCode} />
                     </div>
 

@@ -223,7 +223,10 @@ code {
   background-color: hsl(225, 6%, 25%);
   
 }
-
+#folder_structure {
+  background-color: hsl(225, 6%, 13%);
+  color: white;
+}
 #editor_title {
   display: flex;
   justify-content: space-between;
