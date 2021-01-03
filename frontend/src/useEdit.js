@@ -53,6 +53,9 @@ const useEdit = () => {
         count_line += part.count
       }
     })
+    // console.log(codes)
+    // console.log(code)
+    // console.log(diff)
     sendData(['input', {author: 'a', content: diff_code}])
   }
 

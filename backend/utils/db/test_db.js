@@ -3,10 +3,10 @@ const QueryProject = require('./QueryProject');
 const QueryUser = require('./QueryUser');
 
 // mongo setup
-var username = process.env.USERNAME || 'skrik';
-var password = process.env.PASSWORD || 'qrghfvbhfggiyreghruqoqhfriegyireygr';
-var database = process.env.DATABASE || 'skrik';
-var dburl = process.env.DBURL || 'localhost:27017';
+var username = "Skrik User";
+var password = "password";
+var database = "skrik";
+var dburl = "localhost:27017";
 const mongoDB = `mongodb://${username}:${password}@${dburl}/${database}`
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -35,6 +35,7 @@ async function init(){
     console.log(a);
     var a = await QueryProject.createProject('projectzero', ['a','b']);
     console.log(a);
+    
 }
 
 async function test(){
@@ -46,5 +47,5 @@ async function test(){
     // console.log(a);
     
 }
-// init();
-test();
+init();
+// test();

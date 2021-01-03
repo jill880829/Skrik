@@ -54,6 +54,9 @@ export default function Editor(props) {
                             theme: 'material-darker',
                             lineNumbers: true,
                             cursorHeight: 0.85,
+                            indentUnit: 0,
+                            smartIndent:false,
+                            electricChars:false
                         }}
                         placeholder='Select a code mode...'
                         defaultValue={{ label: "Select a code mode...", value: 0 }}
