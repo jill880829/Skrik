@@ -9,17 +9,16 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session);
-
 var loginRouter = require('./routes/LoginRouter');
 var apiRouter = require('./routes/ApiRouter');
 
 var app = express();
 
 // mongo setup
-var username = process.env.USERNAME;
-var password = process.env.PASSWORD;
-var database = process.env.DATABASE;
-var dburl = process.env.DBURL;
+var username = process.env.USERNAME || 'Skrik User';
+var password = process.env.PASSWORD || 'password';
+var database = process.env.DATABASE || 'skrik';
+var dburl = process.env.DBURL || 'localhost:27017';
 const mongoDB = `mongodb://${username}:${password}@${dburl}/${database}`
 console.log("trying to connect to " + mongoDB + "...")
 mongoose.set('useNewUrlParser', true);

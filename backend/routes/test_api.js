@@ -1,5 +1,7 @@
 var http = require('http');
 var express = require('express');
+// const redis = require('redis');
+// const client = redis.createClient();
 
 var app = express();
 var debug = require('debug')('backend:server');

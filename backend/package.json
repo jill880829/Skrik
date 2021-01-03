@@ -4,7 +4,8 @@
     "private": true,
     "scripts": {
         "start": "node ./bin/www.js",
-        "test_db": "node ./utils/db/test_db.js"
+        "test_db": "node ./utils/db/test_db.js",
+        "test_api": "node ./routes/test_api.js"
     },
     "dependencies": {
         "body-parser": "^1.19.0",

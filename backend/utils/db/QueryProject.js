@@ -123,13 +123,14 @@ async function deleteFile(projectid, filename, username){
 }
 
 // create a project
-async function createProject(projectname, usernames){
+async function createProject(projectname, colabs, owner){
     if (projectname === undefined || projectname === null || projectname.match(regxstr) === null)
         return { "success": false, "description": "Invalid Project Name!!!" };
     
-    if (Array.isArray(usernames) === false)
+    if (Array.isArray(colabs) === false)
         return { "success": false, "description": "Username List Should Be Array!!!" };
-    for (let username of usernames)
+    colabs.push(owner);
+    for (let username of colabs)
     {
         if (username.match(regxstr) === null)
             return { "success": false, "description": "Invalid User Name!!!" };
@@ -144,13 +145,13 @@ async function createProject(projectname, usernames){
             return { "success": false, "description": `Username: \"${username}\" Not Found!!!` };
     }
     try{  
-        var project = await Projects.create({ ProjectName: projectname, Users: usernames, Deleted: false });
+        var project = await Projects.create({ ProjectName: owner + '/' + projectname, Users: colabs, Deleted: false });
     } catch (err) {
         console.error("[db] error creating project in project database: " + err);
         return { "success": false, "description": "Project creation Failed!!!" };
     }
     
-    for (let username of usernames)
+    for (let username of colabs)
     {
         var userdata = await UserData.findOne({Username: username});
         userdata.ProjectIds.push(project._id);
@@ -278,16 +279,48 @@ async function getFile(projectid, filename){
     for (let linechange of file.LineChanges)
     {
         if(linechange.Type === "insert")
-            data.splice(linechange.linenum - 1, 0, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
+            data.splice(linechange.Index - 1, 0, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
         else if(linechange.Type === "drop")
             data = [];
         else
-            data.splice(linechange.linenum - 1, 1);
+            data.splice(linechange.Index - 1, 1);
     }
-
     return { "success": true, "description": "Finish Getting File !!!", "content": data };
 }
 
+async function getProjectUsers(projectid){
+    projectid = projectid.toLowerCase();
+    if (projectid.match(regxhex) === null || projectid.length !== 24)
+        return { "success": false, "description": "Invalid Projectid!!!" };
+    try {
+        var project = await Projects.findById(projectid);
+    } catch (err) {
+        console.error("[db] error deleting project in project database: " + err);
+        return { "success": false, "description": "Project Querying Failed!!!" };
+    }
+    if(project === null)
+        return { "success": false, "description": "Project Not Found!!!" };
+    else if (project.Deleted === true)
+        return { "success": false, "description": "Project Has Been Deleted!!!" };
+    return { "success": true, "description": "Project Querying Finished!!!", "users":  project.Users};
+}
+
+async function getProjectName(projectid){
+    projectid = projectid.toLowerCase();
+    if (projectid.match(regxhex) === null || projectid.length !== 24)
+        return { "success": false, "description": "Invalid Projectid!!!" };
+    try {
+        var project = await Projects.findById(projectid);
+    } catch (err) {
+        console.error("[db] error deleting project in project database: " + err);
+        return { "success": false, "description": "Project Querying Failed!!!" };
+    }
+    if(project === null)
+        return { "success": false, "description": "Project Not Found!!!" };
+    else if (project.Deleted === true)
+        return { "success": false, "description": "Project Has Been Deleted!!!" };
+    return { "success": true, "description": "Project Querying Finished!!!", "name":  project.ProjectName};
+}
 // packet the project and 
 async function generate_Project_zip(projectid){
 // TODO
@@ -297,5 +330,7 @@ module.exports = {createProject: createProject,
                   deleteProject: deleteProject,
                   deleteFile: deleteFile, 
                   addLineChange: addLineChange,
-                  listFiles:listFiles,
-                  getFile:getFile };
+                  listFiles: listFiles,
+                  getFile: getFile,
+                  getProjectUsers: getProjectUsers,
+                  getProjectName: getProjectName};
