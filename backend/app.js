@@ -23,17 +23,10 @@ const filename = "test_file"
 ///
 
 // mongo setup
-<<<<<<< HEAD
 var username = process.env.USERNAME || 'Skrik User';
 var password = process.env.PASSWORD || 'password';
 var database = process.env.DATABASE || 'skrik';
 var dburl = process.env.DBURL || 'localhost:27017';
-=======
-var username = "Skrik User"; //process.env.USERNAME;
-var password = process.env.PASSWORD;
-var database = process.env.DATABASE;
-var dburl = process.env.DBURL;
->>>>>>> origin/send-data-to-db
 const mongoDB = `mongodb://${username}:${password}@${dburl}/${database}`
 console.log("trying to connect to " + mongoDB + "...")
 mongoose.set('useNewUrlParser', true);

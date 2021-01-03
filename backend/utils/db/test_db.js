@@ -3,18 +3,11 @@ const QueryProject = require('./QueryProject');
 const QueryUser = require('./QueryUser');
 
 // mongo setup
-<<<<<<< HEAD
 
 var username = process.env.USERNAME || 'Skrik User';
 var password = process.env.PASSWORD || 'password';
 var database = process.env.DATABASE || 'skrik';
 var dburl = process.env.DBURL || 'localhost:27017';
-=======
-var username = "Skrik User";
-var password = "password";
-var database = "skrik";
-var dburl = "localhost:27017";
->>>>>>> origin/send-data-to-db
 const mongoDB = `mongodb://${username}:${password}@${dburl}/${database}`
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -103,7 +96,6 @@ async function test(){
     // console.log(a);
     
 }
-<<<<<<< HEAD
 
 async function test_v2(){
     /// add some commit
@@ -118,7 +110,3 @@ async function test_v2(){
 // test();
 // init_v2();
 test_v2();
-=======
-init();
-// test();
->>>>>>> origin/send-data-to-db
