@@ -20,7 +20,7 @@ class Project extends Component {
                                 <BsClockHistory /> <span>changed {hist} days ago</span>
                             </div>
                             <div>
-                                <BsFillPeopleFill /> <span>{colab.length} collaborators</span>
+                                <BsFillPeopleFill /> <span>{colab.length-1} collaborators</span>
                             </div>
                         </IconContext.Provider>
                     </div>
@@ -51,7 +51,7 @@ const initList = [
     },
 
 ];
-//const ls = [{ "id_hash": "sdf", "project_name": "Skrik", "project_users": ["abc", "def"] }, { "id_hash": "sddfvf", "project_name": "Kan", "project_users": ["tyb", "pxo"] }]
+
 const ls = []
 const transfer = (ele) => {
     return ele.map(element => ({
@@ -61,6 +61,7 @@ const transfer = (ele) => {
         'colab':element.project_users,
     }));
 }
+
 function Menu() {
     const [list, setList] = useState(transfer(ls));
 
@@ -73,8 +74,6 @@ function Menu() {
             })
         })
         const backendList = await result.json()
-        console.log(backendList)
-        console.log(transfer(backendList))
         setList([...transfer(backendList)])
     }, [])
 
@@ -107,6 +106,32 @@ function Menu() {
                 else {
                     console.log(list.length)
                     console.log(list)
+                    const newProject = {
+                        'project_name': newPro,
+                        'colabs':newColab,
+                    }
+                    fetch('/api/create_project', {
+                        method: 'POST', // or 'PUT'
+                        body: JSON.stringify(newProject),
+                        headers: new Headers({
+                            'Content-Type': 'application/json'
+                        })
+                    }).then(res=>{
+                        console.log(res.status)
+                        if (res.status === 403) {
+                            console.log("403")
+                        }
+                        else if (res.status === 500) {
+                            console.log("500")
+                        }
+                        else if (res.status === 200) {
+                            console.log("success")
+                        }
+                        else {
+                            console.log("ERROR")
+                        }
+                    })
+                    
                     setList([...list, { id: list.length + 1, name: newPro, history: 0, colab: newColab }])
                     modalRef.current.closeModal();
                 }
@@ -145,7 +170,6 @@ function Menu() {
                 </div>
             </div>
             <div style={{ float: 'right', width: '4%', height: '100%', backgroundColor: 'transparent' }}>
-                <span onClick={() => transfer(ls)}>debug</span>
                 <button id='menu_add_btn' onClick={openModal}>
                     <IconContext.Provider value={{ color: 'gray', size: '50px' }}>
                         <FcPlus />

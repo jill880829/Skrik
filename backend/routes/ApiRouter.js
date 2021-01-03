@@ -127,8 +127,8 @@ router.get('/ls/:idsha', async function (req, res) {
 /* create project */
 router.post('/create_project', jsonParser, async function (req, res) {
     var owner = req.session.passport.user;
-    var projectname = req.body.name;
-    var colabs = req.body.usernames;
+    var projectname = req.body.project_name;
+    var colabs = req.body.colabs;
     var result = await QueryProject.createProject(projectname, colabs, owner);
     if (result["success"] === false) 
     {
