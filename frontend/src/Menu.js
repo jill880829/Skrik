@@ -1,18 +1,18 @@
-import React, { useState, Component } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import Modal from './components/modal';
 // import Project from './components/project'
-import {IconContext} from "react-icons";
+import { IconContext } from "react-icons";
 import { FcPlus } from "react-icons/fc";
-import { BsTrash, BsClockHistory,BsFillPeopleFill } from "react-icons/bs";
+import { BsTrash, BsClockHistory, BsFillPeopleFill } from "react-icons/bs";
 import './components/project.css'
 import Select from 'react-select';
 
-class Project extends Component { 
-    render() { 
-        const { id, name, hist,colab, intoProject, deleteProject} = this.props;
+class Project extends Component {
+    render() {
+        const { id,key, name, hist, colab, intoProject, deleteProject } = this.props;
         return (
-            <div id={id} key={id} className='project_container' onClick={intoProject}>
-                <div className='project_wrapper' style={{ position: 'relative' }} onclick={this.intoProject}>
+            <div id={id} key={key} className='project_container' onClick={intoProject}>
+                <div className='project_wrapper' style={{ position: 'relative' }} onClick={this.intoProject}>
                     <p className='project_title'>{name}</p>
                     <div className='project_history'>
                         <IconContext.Provider value={{ color: 'gray', size: '12px', className: 'project_history' }}>
@@ -20,7 +20,7 @@ class Project extends Component {
                                 <BsClockHistory /> <span>changed {hist} days ago</span>
                             </div>
                             <div>
-                                <BsFillPeopleFill /> <span>{ colab.length} collaborators</span>
+                                <BsFillPeopleFill /> <span>{colab.length} collaborators</span>
                             </div>
                         </IconContext.Provider>
                     </div>
@@ -44,58 +44,76 @@ class Project extends Component {
 
 const initList = [
     {
-        id:1,
+        id: 1,
         name: 'folder1',
-        history: '0', 
-        colab:[]
+        history: '0',
+        colab: []
     },
-    
-];
 
-function Menu(){ 
-    const [list, setList] = useState(initList);
-    
-    
+];
+const ls = [{ "id_hash": "sdf", "project_name": "Skrik", "users": ["abc", "def"] }, { "id_hash": "sddfvf", "project_name": "Kan", "users": ["tyb", "pxo"] }]
+const transfer = (ele) => {
+    return ele.map(element => ({
+        'id': element.id_hash,
+        'name': element.project_name,
+        'history':'0',
+        'colab':element.users
+    }));
+}
+function Menu() {
+    const [list, setList] = useState(transfer(ls));
+
+    // useEffect( async () => {
+    //     const result = await
+    //     fetch('/api/projects', {
+    //         method: 'GET',
+    //         headers: new Headers({
+    //             'Content-Type': 'application/json'
+    //         })
+    //     })
+    //     [{"id_hash": string, "project_name": string, "users": [string]}]
+    // }, [])
+
     const modalRef = React.useRef();
-    
-    const openModal = () => { 
+
+    const openModal = () => {
         modalRef.current.openModal();
     }
-    const intoProject = (e) => { 
+    const intoProject = (e) => {
         console.log('into project')
     }
-    const handleKeyUp = (e) => { 
-        if (e.key === 'Enter' && e.target.value !== "") { 
+    const handleKeyUp = (e) => {
+        if (e.key === 'Enter' && e.target.value !== "") {
             console.log(e.target.value)
         }
-    }    
-    const confirmModal = (e) => { 
-        if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].nodeName.toLowerCase() === 'input') { 
+    }
+    const confirmModal = (e) => {
+        if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].nodeName.toLowerCase() === 'input') {
             if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].value !== '') {
                 let inputPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1]
                 let newPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1].value;
                 let newColab = (e.target.parentNode.parentNode.childNodes[1].childNodes[3].value).split(';');
                 // console.log(e.target.parentNode.parentNode.childNodes[1].childNodes[3])
-                const same = list.filter(project =>{ if(project.name === newPro) return true})
+                const same = list.filter(project => { if (project.name === newPro) return true })
                 if (same.length > 0) {
                     console.log('This project name has already existed!');
                     inputPro.classList.add('menu_modal_input_warning');
-                    inputPro.parentNode.childNodes[0].childNodes[1].className='menu_modal_warning_visible'
+                    inputPro.parentNode.childNodes[0].childNodes[1].className = 'menu_modal_warning_visible'
                 }
-                else { 
+                else {
                     console.log(list.length)
                     console.log(list)
-                    setList([...list, { id: list.length + 1, name: newPro, history: 0, colab:newColab}]) 
+                    setList([...list, { id: list.length + 1, name: newPro, history: 0, colab: newColab }])
                     modalRef.current.closeModal();
                 }
             }
-            else { 
+            else {
                 console.log('cant create!')
             }
         }
     }
 
-    const deleteProject = (id) => { 
+    const deleteProject = (id) => {
         const newList = list.filter(project => project.id !== id)
         setList(newList)
     }
@@ -104,16 +122,17 @@ function Menu(){
     return (
         <div id='menu_container' >
             <div style={{ float: 'left', width: '10%', height: '100%', backgroundColor: 'transparent' }}>
-                
+
             </div>
-            <div style={{ float: 'left', width: '86%', height: '100%', padding: '30px'}}>
+            <div style={{ float: 'left', width: '86%', height: '100%', padding: '30px' }}>
                 <div className='menu_menu' >
                     {list.map(project => (
                         <Project
                             id={project.id}
+                            key={project.id}
                             name={project.name}
                             hist={project.history}
-                            colab={ project.colab}
+                            colab={project.colab}
                             intoProject={intoProject}
                             deleteProject={() => deleteProject(project.id)}
                         >
@@ -122,9 +141,10 @@ function Menu(){
                 </div>
             </div>
             <div style={{ float: 'right', width: '4%', height: '100%', backgroundColor: 'transparent' }}>
+                <span onClick={() => transfer(ls)}>debug</span>
                 <button id='menu_add_btn' onClick={openModal}>
-                    <IconContext.Provider value={{color: 'gray', size: '50px'}}>
-                        <FcPlus/>
+                    <IconContext.Provider value={{ color: 'gray', size: '50px' }}>
+                        <FcPlus />
                     </IconContext.Provider>
                 </button>
             </div>
@@ -132,10 +152,10 @@ function Menu(){
                 <span className='menu_modal_span'>Create a project</span>
                 <div className='menu_modal_inputs'>
                     <div>
-                        <p style={{display:'inline-block'}}>Project Name</p>
+                        <p style={{ display: 'inline-block' }}>Project Name</p>
                         <p className='menu_modal_warning_hidden'>* Project Name error!</p>
                     </div>
-                    <input className='menu_modal_input' type='text' name='name' id='name' onKeyUp={handleKeyUp} /> 
+                    <input className='menu_modal_input' type='text' name='name' id='name' onKeyUp={handleKeyUp} />
                     Collaborators
                     {/* <Select
                         components={{ DropdownIndicator }}
@@ -145,10 +165,10 @@ function Menu(){
                     
                     </Select> */}
                     <input className='menu_modal_input' ></input>
-                    <p style={{color:'#CCCCCC' ,fontSize:10, lineHeight:0.8}}>* Use ";" to split collaborators</p>
+                    <p style={{ color: '#CCCCCC', fontSize: 10, lineHeight: 0.8 }}>* Use ";" to split collaborators</p>
                 </div>
                 <div className='menu_modal_btns'>
-                    <button className='menu_modal_btn menu_btn_close' onClick={ ()=>modalRef.current.closeModal()}>Close</button>
+                    <button className='menu_modal_btn menu_btn_close' onClick={() => modalRef.current.closeModal()}>Close</button>
                     <button className='menu_modal_btn menu_btn_confirm' onClick={confirmModal}>Confirm</button>
                 </div>
             </Modal>

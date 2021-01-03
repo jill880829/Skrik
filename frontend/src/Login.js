@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Lock from '@material-ui/icons/Lock';
-
+import { Route, Link, Switch } from "react-router-dom"
 // import GoogleLogin from 'react-google-login';
 // import FacebookLogin from 'react-facebook-login';
 
@@ -31,33 +31,33 @@ const CssTextField = withStyles({
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    
+
     const handleSocialLogin = (user) => { console.log(user) }
 
     const handleSocialLoginFailure = (err) => { console.error(err) }
-    
+
     const postData = () => {
-        console.log(username,password)
-        const data = {"username":username,"password":password}
+        console.log(username, password)
+        const data = { "username": username, "password": password }
         fetch('/api/login', {
             method: 'POST', // or 'PUT'
-            body: JSON.stringify(data), 
+            body: JSON.stringify(data),
             headers: new Headers({
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             })
-          }).then(res => {
-              console.log(res.status)
-              if(res.status===401){
+        }).then(res => {
+            console.log(res.status)
+            if (res.status === 401) {
                 alert("Username or password wrong! Please check!")
-              }
-              else if(res.status===200){
-                alert("Jump to project, not finish yet!")
-              }
-              else{
-                  console.log("ERROR")
-              }
-            })
-          .catch(error => console.error('Error:Login Error'))
+            }
+            else if (res.status === 200) {
+                window.location.href = '/Menu'
+            }
+            else {
+                console.log("ERROR")
+            }
+        })
+            .catch(error => console.error('Error:Login Error'))
     }
     return (
         <div>
@@ -83,7 +83,7 @@ const Login = () => {
                             label='Username'
                             margin='normal'
                             variant="outlined"
-                            onChange={(event)=>{setUsername(event.target.value)}}
+                            onChange={(event) => { setUsername(event.target.value) }}
                             InputLabelProps={{ style: { color: "#a2693b", } }}
                             InputProps={{
                                 style: { color: "#a2693b", letterSpacing: 1 },
@@ -96,7 +96,7 @@ const Login = () => {
                             type="password"
                             margin='normal'
                             variant="outlined"
-                            onChange={(event)=>{setPassword(event.target.value)}}
+                            onChange={(event) => { setPassword(event.target.value) }}
                             InputLabelProps={{ style: { color: "#a2693b" } }}
                             InputProps={{
                                 style: { color: "#a2693b", letterSpacing: 1, size: 30 },
