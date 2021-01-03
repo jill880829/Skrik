@@ -2,7 +2,7 @@
 include backend/.env
 export $(shell sed 's/=.*//' backend/.env)
 
-NOW := v0.0.1
+NOW := v0.0.2
 PROJECT_ID := skrik-299012
 
 init:

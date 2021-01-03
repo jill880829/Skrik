@@ -5,10 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const http = require("http");
 const WebSocket = require("ws");
+const redis = require('redis')
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
-const session = require('express-session')
-const MongoStore = require('connect-mongo')(session);
+const session = require('express-session')  
+const RedisStore = require('connect-redis')(session);
 
 var loginRouter = require('./routes/LoginRouter');
 var apiRouter = require('./routes/ApiRouter');
@@ -41,7 +42,9 @@ if (
     empty(process.env.FB_APP_ID, "FB_APP_ID") ||
     empty(process.env.FB_APP_SECRET, "FB_APP_SECRET") ||
     empty(process.env.HTTP_PORT, "HTTP_PORT") ||
-    empty(process.env.SOCKETIO_PORT, "SOCKETIO_PORT")
+    empty(process.env.SOCKETIO_PORT, "SOCKETIO_PORT") ||
+    empty(process.env.REDIS_URL, "REDIS_URL") ||
+    empty(process.env.REDIS_PASSWORD, "REDIS_PASSWORD")
 ){
     // throw "MISS_ENV";
     while(true) {
@@ -54,7 +57,8 @@ var username = process.env.MONGO_USERNAME;
 var password = process.env.MONGO_PASSWORD;
 var database = process.env.MONGO_DATABASE;
 var dburl = process.env.MONGO_URL;
-const mongoDB = `mongodb://${username}:${password}@${dburl}/${database}`
+var dbport = process.env.MONGO_PORT;
+const mongoDB = `mongodb://${username}:${password}@${dburl}:${dbport}/${database}`
 console.log("trying to connect to " + mongoDB + "...")
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -71,13 +75,15 @@ mongoose.connection.on('error', function (err) {
 })
 
 // session and body-parser init
+let redisClient = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_URL);
+// redisClient.auth(process.env.REDIS_PASSWORD)
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(session({
     name: "PHPSESSID",
-    secret: process.env.SESSION_SECRET || "session secret",
+    secret: process.env.SESSION_SECRET,
     resave: 'false',
-    store: new MongoStore({ mongooseConnection: mongoose.connection }),
+    store: new RedisStore({ client: redisClient }),
     saveUninitialized: 'false',
     cookie: {
         maxAge: 60 * 60 * 1000
@@ -258,7 +264,7 @@ wss.on('connection', ws => {
 const socketio_port = process.env.SOCKETIO_PORT
 
 server.listen(socketio_port, () => {
-    console.log(`Listening on http://localhost:${socketio_port}`)
+    console.log(`http server listening on ${socketio_port}`)
 })
 
 module.exports = app;
