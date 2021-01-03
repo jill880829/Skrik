@@ -12,3 +12,9 @@ forward port:
 
     1.  kubectl get pods  (check mongo pod name)
     2.  kubectl port-forward <pod-name> 27017:27017
+
+docker ports:
+
+    1. mongo:           27017
+    2. mongo-express:   8081
+    3. redis:           6379

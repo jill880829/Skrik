@@ -15,37 +15,69 @@ db:
 	fi
 	docker-compose -f ./deployment/local/database.yml up
 
-db_docker:
-	export NAME=mongo && \
-	docker build \
-		-f deployment/local/mongoDB/Dockerfile \
-		-t asia.gcr.io/$(PROJECT_ID)/$$(echo $$NAME) . && \
-	docker tag asia.gcr.io/$(PROJECT_ID)/$$(echo $$NAME) asia.gcr.io/$(PROJECT_ID)/$$(echo $$NAME):$(NOW) && \
-	docker push asia.gcr.io/$(PROJECT_ID)/$$(echo $$NAME):$(NOW)
-	@echo asia.gcr.io/$(PROJECT_ID)/$$(echo $$NAME):$(NOW)
-
 db_clean:
 	docker-compose -f ./deployment/local/database.yml down
 	docker rmi local_skrik_mongo
 
 dbconn:
-	mongo --authenticationDatabase "${DATABASE}" -u "${USERNAME}" "${DBURL}/${DATABASE}" -p "${PASSWORD}"
+	mongo --authenticationDatabase "$(MONGO_DATABASE)" -u "$(MONGO_USERNAME)" "$(MONGO_URL)/$(MONGO_DATABASE)" -p "$(MONGO_PASSWORD)"
 
 backend:
-	export $(cat backend/.env | xargs) && cd backend && npm start
+	export $$(cat backend/.env | xargs) && export MONGO_USERNAME="$(MONGO_USERNAME)" && cd backend && npm start
 
 backend_yarn:
-	export $(cat backend/.env | xargs) && cd backend && yarn start
+	export $$(cat backend/.env | xargs) && export MONGO_USERNAME="$(MONGO_USERNAME)" && cd backend && yarn start
 
-backend_docker_local:
-	docker-compose -p backend -f ./deployment/local/backend.yml up
+deploy_db_build:
+	export DOCKER_NAME=mongo && \
+	docker build \
+		-f deployment/local/mongoDB/Dockerfile \
+		-t asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME) . && \
+	docker tag asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME) asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW) && \
+	docker push asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW) && \
+	echo asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW)
 
-backend_docker_local_clean:
-	docker-compose -p backend -f ./deployment/local/backend.yml down
-	docker rmi backend_skrik_express
+deploy_backend_build:
+	export DOCKER_NAME=backend && \
+	docker build \
+		-f deployment/local/backend_server/Dockerfile \
+		-t asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME) . && \
+	docker tag asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME) asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW) && \
+	docker push asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW) && \
+	echo asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW)
+
+deploy_backend_conf:
+	kubectl delete secret backend-secret
+	kubectl create secret generic backend-secret \
+		--from-literal=MONGO_USERNAME="$(MONGO_USERNAME)" \
+		--from-literal=MONGO_PASSWORD="$(MONGO_PASSWORD)" \
+		--from-literal=MONGO_DATABASE="$(MONGO_DATABASE)" \
+		--from-literal=PROJECT_SECRET="$(PROJECT_SECRET)" \
+		--from-literal=SESSION_SECRET="$(SESSION_SECRET)" \
+		--from-literal=FB_APP_ID="$(FB_APP_ID)" \
+		--from-literal=FB_APP_SECRET="$(FB_APP_SECRET)" \
+		--from-literal=REDIS_PASSWORD="$(REDIS_PASSWORD)"
+
+deploy_db_conf:
+	kubectl delete secret mongo-secret
+	kubectl create secret generic mongo-secret \
+		--from-literal=MONGO_INITDB_ROOT_USERNAME="$(MONGO_INITDB_ROOT_USERNAME)" \
+		--from-literal=MONGO_INITDB_ROOT_PASSWORD="$(MONGO_INITDB_ROOT_PASSWORD)" \
+		--from-literal=MONGO_INITDB_DATABASE="$(MONGO_INITDB_DATABASE)"
+
+deploy_mongo_express_conf:
+	kubectl delete secret mongo-express-secret
+	kubectl create secret generic mongo-express-secret \
+		--from-literal=ME_CONFIG_MONGODB_ADMINUSERNAME="$(MONGO_INITDB_ROOT_USERNAME)" \
+		--from-literal=ME_CONFIG_MONGODB_ADMINPASSWORD="$(MONGO_INITDB_ROOT_PASSWORD)" \
+		--from-literal=ME_CONFIG_BASICAUTH_USERNAME="$(MONGO_WEB_USERNAME)" \
+		--from-literal=ME_CONFIG_BASICAUTH_PASSWORD="$(MONGO_WEB_PASSWORD)"
+
 
 cert:
 	certbot certonly --manual -d skrik.net
+
+cert_fetch:
 	cp /etc/letsencrypt/live/skrik.net/privkey.pem deployment/k8s/secret/
 	cp /etc/letsencrypt/live/skrik.net/fullchain.pem deployment/k8s/secret/
 	chown chris deployment/k8s/secret/privkey.pem

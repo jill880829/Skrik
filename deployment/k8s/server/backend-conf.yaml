@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: default
+  name: backend-config
+  labels:
+    app: backend-config
+data:
+  MONGO_URL: |
+    mongo:27017
+  LOGIN_URL: |
+    https://skrik.net/api/login
+  REDIS_URL: |
+    redis:6379
+  HTTP_PORT: |
+    3001
+  SOCKETIO_PORT: |
+    3002

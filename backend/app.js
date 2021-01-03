@@ -9,24 +9,51 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session);
+
 var loginRouter = require('./routes/LoginRouter');
 var apiRouter = require('./routes/ApiRouter');
+const QueryProject = require('./utils/db/QueryProject');
+const QueryUser = require('./utils/db/QueryUser');
 
 var app = express();
 
-/// db_api
-const QueryProject = require('./utils/db/QueryProject');
-const QueryUser = require('./utils/db/QueryUser');
 const { text } = require('body-parser');
 const projectid = "5ff17b374b87d05f09acb6aa";
 const filename = "test_file"
-///
+
+function empty(a, name) {
+    let t = (a === undefined || a === "")
+    if(t == true) {
+        console.error("[env] missing environment variable: " + name)
+    }
+    return t
+}
+
+// environment check
+if (
+    empty(process.env.MONGO_USERNAME, "MONGO_USERNAME") ||
+    empty(process.env.MONGO_PASSWORD, "MONGO_PASSWORD") ||
+    empty(process.env.MONGO_DATABASE, "MONGO_DATABASE") ||
+    empty(process.env.MONGO_URL, "MONGO_URL") ||
+    empty(process.env.PROJECT_SECRET, "PROJECT_SECRET") ||
+    empty(process.env.SESSION_SECRET, "SESSION_SECRET") ||
+    empty(process.env.LOGIN_URL, "LOGIN_URL") ||
+    empty(process.env.FB_APP_ID, "FB_APP_ID") ||
+    empty(process.env.FB_APP_SECRET, "FB_APP_SECRET") ||
+    empty(process.env.HTTP_PORT, "HTTP_PORT") ||
+    empty(process.env.SOCKETIO_PORT, "SOCKETIO_PORT")
+){
+    // throw "MISS_ENV";
+    while(true) {
+        
+    }
+}
 
 // mongo setup
-var username = process.env.USERNAME || 'Skrik User';
-var password = process.env.PASSWORD || 'password';
-var database = process.env.DATABASE || 'skrik';
-var dburl = process.env.DBURL || 'localhost:27017';
+var username = process.env.MONGO_USERNAME;
+var password = process.env.MONGO_PASSWORD;
+var database = process.env.MONGO_DATABASE;
+var dburl = process.env.MONGO_URL;
 const mongoDB = `mongodb://${username}:${password}@${dburl}/${database}`
 console.log("trying to connect to " + mongoDB + "...")
 mongoose.set('useNewUrlParser', true);
@@ -228,10 +255,10 @@ wss.on('connection', ws => {
         }
     }
 })
-const PORT = process.env.SOCKETIO_PORT || 4000
+const socketio_port = process.env.SOCKETIO_PORT
 
-server.listen(PORT, () => {
-    console.log(`Listening on http://localhost:${PORT}`)
+server.listen(socketio_port, () => {
+    console.log(`Listening on http://localhost:${socketio_port}`)
 })
 
 module.exports = app;

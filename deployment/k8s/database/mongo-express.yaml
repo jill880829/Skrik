@@ -21,17 +21,12 @@ spec:
         ports:
         - containerPort: 8081
           name: mongo-express
+        envFrom:
+        - secretRef:
+            name: mongo-express-secret
         env:
           - name: ME_CONFIG_MONGODB_SERVER
-            value: mongo.default.svc.cluster.local
-          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
-            value: ${MONGO_INITDB_ROOT_USERNAME}
-          - name: ME_CONFIG_MONGODB_ADMINPASSWORD
-            value: ${MONGO_INITDB_ROOT_PASSWORD}
-          - name: ME_CONFIG_BASICAUTH_USERNAME
-            value: ${MONGO_WEB_USERNAME}
-          - name: ME_CONFIG_BASICAUTH_PASSWORD
-            value: ${MONGO_WEB_PASSWORD}
+            value: mongo
 
 ---
 apiVersion: v1
@@ -45,6 +40,7 @@ spec:
   selector:
     app: mongo-express
   ports:
-  - protocol: "TCP"
+  - name: mongo-express
+    protocol: "TCP"
     port: 8081
     targetPort: 8081

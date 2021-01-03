@@ -19,13 +19,14 @@ spec:
       containers:
       - name: mongo
         image: asia.gcr.io/skrik-299012/mongo:v0.0.1
-        env:
-          - name: MONGO_INITDB_ROOT_USERNAME
-            value: ${MONGO_INITDB_ROOT_USERNAME}
-          - name: MONGO_INITDB_ROOT_PASSWORD
-            value: ${MONGO_INITDB_ROOT_PASSWORD}
-          - name: MONGO_INITDB_DATABASE
-            value: ${MONGO_INITDB_DATABASE}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "50m"
+        envFrom:
+        - secretRef:
+            name: mongo-secret
         ports:
         - containerPort: 27017
           name: mongo

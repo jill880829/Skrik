@@ -7,10 +7,20 @@ metadata:
     app: nginx-config
 data:
   default.conf: |
+    upstream backend {
+      server backend:3001;
+    }
+
     server {
       listen 80;
       listen [::]:80;
       server_name  _;
+
+      location /api/ {
+        add_header Content-Type application/json; # Prevents download
+        proxy_pass http://backend/api/;
+      }
+
       location / {
         add_header Content-Type text/plain; # Prevents download
         return 200 "Hello world! Kubernetes + Let's encrypt demo.";

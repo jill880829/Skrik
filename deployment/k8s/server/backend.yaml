@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: backend
+        image: asia.gcr.io/skrik-299012/backend:v0.0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3001
+          name: http
+        - containerPort: 3002
+          name: socketio
+        envFrom:
+        - configMapRef:
+            name: backend-config
+        - secretRef:
+            name: backend-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: default
+  labels:
+    app: backend
+spec:
+  selector:
+    app: backend
+  ports:
+    - name: http-port
+      protocol: TCP
+      port: 3001
+      targetPort: 3001
+    - name: socketio-port
+      protocol: TCP
+      port: 3002
+      targetPort: 3002
+  clusterIP: None

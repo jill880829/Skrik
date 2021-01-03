@@ -12,20 +12,21 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+var http_port = normalizePort(process.env.HTTP_PORT);
+app.set('port', http_port);
 
 /**
  * Create HTTP server.
  */
 
 var server = http.createServer(app);
+console.log(`http server listening on ${http_port}`)
 
 /**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(http_port);
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -58,9 +59,9 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof http_port === 'string'
+    ? 'Pipe ' + http_port
+    : 'Port ' + http_port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {

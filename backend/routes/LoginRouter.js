@@ -34,7 +34,7 @@ if (process.env.FB_APP_ID !== undefined) {
     passport.use(new FacebookStrategy({
             clientID: process.env.FB_APP_ID,
             clientSecret: process.env.FB_APP_SECRET,
-            callbackURL: process.env.FB_CALLBACK_URL
+            callbackURL: process.env.LOGIN_URL + "/callback/fb"
     },
         function (accessToken, refreshToken, profile, done) {
             process.nextTick(function () {
@@ -44,7 +44,7 @@ if (process.env.FB_APP_ID !== undefined) {
     ))
     router.get('/fb', passport.authenticate('facebook'));
 
-    router.get('/fb/callback', passport.authenticate('facebook'),
+    router.get('/callback/fb', passport.authenticate('facebook'),
     function (req, res) {
         res.send("success")
     });

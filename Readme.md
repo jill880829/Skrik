@@ -66,6 +66,6 @@
 {
 	"success": boolean,
 	"description": string,
-	"content":[ { "lineid": Integer, "user": string, "data": string } ]
+	"content": [{ "lineid": Integer, "user": string, "data": string }]
 }
 ```
