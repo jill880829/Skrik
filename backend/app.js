@@ -16,7 +16,7 @@ var apiRouter = require('./routes/ApiRouter');
 var app = express();
 
 // mongo setup
-var username = process.env.USERNAME;
+var username = process.env.DB_USERNAME;
 var password = process.env.PASSWORD;
 var database = process.env.DATABASE;
 var dburl = process.env.DBURL;
