@@ -43,6 +43,13 @@ const Login = () => {
         console.log(username, password)
         const data = { 'newName': username, 'newPassword': password };
         setShowReg(false);
+        if(checked){
+            // Pass and push data to DB
+
+        }
+        else{
+            // Error messages
+        }
     }
     const postData = () => {
         console.log(username, password)
