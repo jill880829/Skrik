@@ -30,7 +30,12 @@ passport.use(new LocalStrategy(
         }
     }
 ))
+<<<<<<< HEAD
 if (process.env.FB_APP_ID !== undefined) {
+=======
+
+if(process.env.FB_APP_ID !== undefined && process.env.FB_APP_ID !== '') {
+>>>>>>> origin/send-data-to-db
     passport.use(new FacebookStrategy({
             clientID: process.env.FB_APP_ID,
             clientSecret: process.env.FB_APP_SECRET,
