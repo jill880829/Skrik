@@ -52,7 +52,7 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
     // query file
     if(typeof file === "undefined")
     {
-        project.Files.push({ FileName: filename, Deleted: false });
+        await project.Files.push({ FileName: filename, Deleted: false });
         file = project.Files.find(function(item){
             return item.FileName === filename;
           });
@@ -62,7 +62,7 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
 
     // add linechange
     try{
-        file.LineChanges.push({Index: linenum, 
+        await file.LineChanges.push({Index: linenum, 
                                Type: commit_type, 
                                CreateTime: Date.now(), 
                                UpdateTime: Date.now(),
@@ -222,6 +222,7 @@ async function deleteProject(projectid){
     return { "success": true, "description": "Project Deletion Finished!!!" };
 }
 
+// list file in project
 async function listFiles(projectid){
     if (projectid === null || projectid === undefined )
         return { "success": false, "description": "Invalid Projectid!!!", "files": null  };
@@ -288,6 +289,7 @@ async function getFile(projectid, filename){
     return { "success": true, "description": "Finish Getting File !!!", "content": data };
 }
 
+// get users in project
 async function getProjectUsers(projectid){
     projectid = projectid.toLowerCase();
     if (projectid.match(regxhex) === null || projectid.length !== 24)
@@ -295,7 +297,7 @@ async function getProjectUsers(projectid){
     try {
         var project = await Projects.findById(projectid);
     } catch (err) {
-        console.error("[db] error deleting project in project database: " + err);
+        console.error("[db] error querying project in project database: " + err);
         return { "success": false, "description": "Project Querying Failed!!!" };
     }
     if(project === null)
@@ -305,6 +307,7 @@ async function getProjectUsers(projectid){
     return { "success": true, "description": "Project Querying Finished!!!", "users":  project.Users};
 }
 
+// get projectname in project
 async function getProjectName(projectid){
     projectid = projectid.toLowerCase();
     if (projectid.match(regxhex) === null || projectid.length !== 24)
@@ -312,7 +315,7 @@ async function getProjectName(projectid){
     try {
         var project = await Projects.findById(projectid);
     } catch (err) {
-        console.error("[db] error deleting project in project database: " + err);
+        console.error("[db] error querying project in project database: " + err);
         return { "success": false, "description": "Project Querying Failed!!!" };
     }
     if(project === null)
@@ -321,7 +324,8 @@ async function getProjectName(projectid){
         return { "success": false, "description": "Project Has Been Deleted!!!" };
     return { "success": true, "description": "Project Querying Finished!!!", "name":  project.ProjectName};
 }
-// packet the project and 
+
+// packet the project
 async function generate_Project_zip(projectid){
 // TODO
 }

@@ -10,7 +10,7 @@ var passport = require('passport');
 const QueryUser = require('../utils/db/QueryUser');
 const QueryProject = require('../utils/db/QueryProject');
 const QueryRedis = require('../utils/db/QueryRedis');
-
+const Tool = require('../utils/Tool')
 // handle ID sha256
 var counter = 0;
 var secret = process.env.ID_SECRET;
@@ -45,13 +45,11 @@ router.post('/register', jsonParser, async function (req, res) {
 });
 
 /* Get profile page and list projectids */
-/* 
-NOW :username version
-TODO 
-3. delete old redies sha ?
-*/
 router.get('/projects', async function (req, res) {
-    var queryUsername = req.session.passport.user;
+    if (req.session.passport === undefined || req.session.passport === null)
+        var queryUsername = '';
+    else
+        var queryUsername = req.session.passport.user;
     var result = await QueryUser.listProjectids(queryUsername);
     if (result["success"] === false) {
         if (result["description"] === "Querying user Failed!!!")
@@ -63,7 +61,7 @@ router.get('/projects', async function (req, res) {
             var projects_info = [];
             for (let id of result["ids"])
             {
-                var idHash = base64.stringify(sha256(id + counter.toString() + secret));
+                var idHash = sha256(id + counter.toString() + secret).toString();
                 var store_res = QueryRedis.storeID(idHash, queryUsername, id)
                 if (store_res["success"] === false)
                     res.status(500).send(store_res["description"]);
@@ -83,10 +81,9 @@ router.get('/projects', async function (req, res) {
 
 /* list sorted files */
 // TODO:
-// 2. ls need to expire old key
+// ls need to expire old key
 router.get('/ls/:idsha', async function (req, res) {
     var idsha = req.params.idsha;
-    
     var get_res = await QueryRedis.getID(idsha);
     if (get_res["success"] === false) 
         return get_res["description"];
@@ -105,21 +102,7 @@ router.get('/ls/:idsha', async function (req, res) {
     {
         var files = result["files"];
         if (files !== null)
-            files = files.sort(function(a,b){
-                var _range = (a.length < b.length)? a.length : b.length;
-                for(var i = 0; i < _range; i++)
-                {
-                    if (a[i] === b[i])
-                        continue;
-                    else if (a[i] === "/" && b[i] !== "/")
-                        return false;
-                    else if (b[i] === "/" && a[i] !== "/")
-                        return true;
-                    else
-                        return a[i] > b[i];
-                }
-                return (a.length > b.length);
-            });
+            files = Tool.sort_files(files);
         res.send(files);
     }   
 });
