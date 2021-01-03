@@ -15,7 +15,7 @@ passport.use(new LocalStrategy(
         try {
             var result = await QueryUser.authUser(username, password);
 
-            console.log("get user: " + username + " pass: " + password + ", login sucess: " + result)
+            console.log("get user: " + username + " pass: " + password + ", login sucess: " + JSON.stringify(result))
             if (result.success === true) {
                 return done(null, { username: username })
                 // return {username: username}

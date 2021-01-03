@@ -25,6 +25,7 @@
         "passport-github": "^1.1.0",
         "passport-google": "^0.3.0",
         "passport-local": "^1.0.0",
+        "redis": "^3.0.2",
         "ws": "^7.4.1"
     },
     "devDependencies": {

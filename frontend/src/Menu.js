@@ -51,28 +51,32 @@ const initList = [
     },
 
 ];
-const ls = [{ "id_hash": "sdf", "project_name": "Skrik", "users": ["abc", "def"] }, { "id_hash": "sddfvf", "project_name": "Kan", "users": ["tyb", "pxo"] }]
+//const ls = [{ "id_hash": "sdf", "project_name": "Skrik", "project_users": ["abc", "def"] }, { "id_hash": "sddfvf", "project_name": "Kan", "project_users": ["tyb", "pxo"] }]
+const ls = []
 const transfer = (ele) => {
     return ele.map(element => ({
         'id': element.id_hash,
         'name': element.project_name,
         'history':'0',
-        'colab':element.users
+        'colab':element.project_users,
     }));
 }
 function Menu() {
     const [list, setList] = useState(transfer(ls));
 
-    // useEffect( async () => {
-    //     const result = await
-    //     fetch('/api/projects', {
-    //         method: 'GET',
-    //         headers: new Headers({
-    //             'Content-Type': 'application/json'
-    //         })
-    //     })
-    //     [{"id_hash": string, "project_name": string, "users": [string]}]
-    // }, [])
+    useEffect( async () => {
+        const result = await
+        fetch('/api/projects', {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        })
+        const backendList = await result.json()
+        console.log(backendList)
+        console.log(transfer(backendList))
+        setList([...transfer(backendList)])
+    }, [])
 
     const modalRef = React.useRef();
 

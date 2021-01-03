@@ -74,7 +74,7 @@ router.get('/projects', async function (req, res) {
                     const projectusers = await QueryProject.getProjectUsers(id);
                     if (projectusers["success"] === false)
                         res.status(500).send(projectusers["description"]);    
-                    projects_info.push({"id_hash": idHash,"project_name": projectname["name"], "projectusers": projectusers["users"]});
+                    projects_info.push({"id_hash": idHash,"project_name": projectname["name"], "project_users": projectusers["users"]});
                 }
             }
         res.send(projects_info);
