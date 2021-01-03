@@ -74,6 +74,7 @@ function Menu() {
             })
         })
         const backendList = await result.json()
+        console.log(backendList)
         setList([...transfer(backendList)])
     }, [])
 
@@ -83,6 +84,8 @@ function Menu() {
         modalRef.current.openModal();
     }
     const intoProject = (e) => {
+        console.log(e)
+        window.location.href = '/Editor/'+e
         console.log('into project')
     }
     const handleKeyUp = (e) => {
@@ -162,7 +165,7 @@ function Menu() {
                             name={project.name}
                             hist={project.history}
                             colab={project.colab}
-                            intoProject={intoProject}
+                            intoProject={() => intoProject(project.id)}
                             deleteProject={() => deleteProject(project.id)}
                         >
                         </Project>))

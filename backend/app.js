@@ -38,9 +38,9 @@ if (
     empty(process.env.MONGO_URL, "MONGO_URL") ||
     empty(process.env.PROJECT_SECRET, "PROJECT_SECRET") ||
     empty(process.env.SESSION_SECRET, "SESSION_SECRET") ||
-    empty(process.env.LOGIN_URL, "LOGIN_URL") ||
-    empty(process.env.FB_APP_ID, "FB_APP_ID") ||
-    empty(process.env.FB_APP_SECRET, "FB_APP_SECRET") ||
+    // empty(process.env.LOGIN_URL, "LOGIN_URL") ||
+    // empty(process.env.FB_APP_ID, "FB_APP_ID") ||
+    // empty(process.env.FB_APP_SECRET, "FB_APP_SECRET") ||
     empty(process.env.HTTP_PORT, "HTTP_PORT") ||
     empty(process.env.SOCKETIO_PORT, "SOCKETIO_PORT") ||
     empty(process.env.REDIS_URL, "REDIS_URL") ||

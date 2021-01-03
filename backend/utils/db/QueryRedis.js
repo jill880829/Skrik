@@ -1,14 +1,8 @@
 const redis = require('redis');
-<<<<<<< Updated upstream
 const client = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_URL);
-// client.auth(process.env.REDIS_PASSWORD)
-
-=======
-const client = redis.createClient();
 const Bluebird = require('bluebird');
 // const client = redis.createClient(6379,'127.0.0.1');
 // client.auth('password')
->>>>>>> Stashed changes
 // redis setup
 
 

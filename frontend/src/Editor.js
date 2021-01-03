@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect} from 'react'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material-darker.css'
 import 'codemirror/mode/xml/xml'
@@ -18,7 +18,7 @@ import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
 import FileStructure from './structure'
 import useStructure from './useStructure'
-
+import {useParams,useLocation} from 'react-router-dom'
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -42,12 +42,27 @@ const codingOptions = [
 ]
 
 export default function Editor(props) {
-    const ls=['/src/components/SkrikPage.js','/src/components/SkrikPage.css','/src/index.js','/src/index.html','/src/text.py','/package.js','/empty/empty2/']
-    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure(transfer(rmduplicate(ls).list));
+    const ls=[]
+    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure({});
     const [filesStructure, setFile] = useState(ls);
     const [language, setLan] = useState('python');
     const [fileName, setFileName] = useState('Untitled')
+    const {hash} = useParams()
     
+    useEffect( async () => {
+        const result = await
+        fetch(`/api/ls/${hash}`, {
+            method: 'GET',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        })
+        
+        const backendList = await result.json()
+        setFile([...backendList])
+        setTree([...transfer(rmduplicate(backendList).list)])
+        
+    }, [])
     function onChangeCode(value) {
         setLan(value.value);
     }
@@ -77,7 +92,6 @@ export default function Editor(props) {
             setCodes(tmp)
         }
         else if(task === 'output-path'){
-            console.log(filesStructure,update)
             const rmdup = rmduplicate([...filesStructure,update])
             if(rmdup.duplicate){
                 console.log("EXISTS")
