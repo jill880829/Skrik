@@ -4,6 +4,10 @@ import Modal from './components/modal';
 import { IconContext } from "react-icons";
 import { FcPlus } from "react-icons/fc";
 import { BsTrash, BsClockHistory, BsFillPeopleFill } from "react-icons/bs";
+import { GoLocation,GoLink,GoDeviceMobile,GoMail } from "react-icons/go";
+import { ImFacebook, ImGithub } from "react-icons/im";
+import { FaFacebook, FaGithub} from 'react-icons/fa'
+import { BiBuildingHouse } from 'react-icons/bi';
 import './components/project.css'
 import Select from 'react-select';
 
@@ -39,19 +43,6 @@ class Project extends Component {
 
 
 
-
-
-
-const initList = [
-    {
-        id: 1,
-        name: 'folder1',
-        history: '0',
-        colab: []
-    },
-
-];
-
 const ls = []
 const transfer = (ele) => {
     return ele.map(element => ({
@@ -64,27 +55,32 @@ const transfer = (ele) => {
 
 function Menu() {
     const [list, setList] = useState(transfer(ls));
+    const [editMode, setEdit] = useState(false);
 
-    useEffect( async () => {
+    const [company, setCompany] = useState('');
+    const [git, setGit] = useState('');
+    const [fb, setFb] = useState('');
+    const [location, setLoc] = useState('');
+    const [email, setEmail] = useState('');
+    const [savedData, setData] = useState(['','','','',''])
+
+    // const []
+
+    useEffect(async () => {
         const result = await
-        fetch('/api/projects', {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json'
+            fetch('/api/projects', {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                })
             })
-        })
         const backendList = await result.json()
         setList([...transfer(backendList)])
     }, [])
 
     const modalRef = React.useRef();
-
-    const openModal = () => {
-        modalRef.current.openModal();
-    }
-    const intoProject = (e) => {
-        console.log('into project')
-    }
+    const openModal = () => {modalRef.current.openModal();}
+    const intoProject = (e) => {console.log('into project')}
     const handleKeyUp = (e) => {
         if (e.key === 'Enter' && e.target.value !== "") {
             console.log(e.target.value)
@@ -108,7 +104,7 @@ function Menu() {
                     console.log(list)
                     const newProject = {
                         'project_name': newPro,
-                        'colabs':newColab,
+                        'colabs': newColab,
                     }
                     fetch('/api/create_project', {
                         method: 'POST', // or 'PUT'
@@ -116,7 +112,7 @@ function Menu() {
                         headers: new Headers({
                             'Content-Type': 'application/json'
                         })
-                    }).then(res=>{
+                    }).then(res => {
                         console.log(res.status)
                         if (res.status === 403) {
                             console.log("403")
@@ -146,14 +142,152 @@ function Menu() {
         const newList = list.filter(project => project.id !== id)
         setList(newList)
     }
-
-    // const DropdownIndicator = () => null;
+    const editProfile = () => { 
+        console.log('edit');
+        setEdit(true);
+    }
+    const back2Profile = () => { setEdit(false); }
+    const save = () => { 
+        setData([company, git, fb, location, email]);
+        console.log(savedData)
+        setEdit(false);
+    }
     return (
         <div id='menu_container' >
-            <div style={{ float: 'left', width: '10%', height: '100%', backgroundColor: 'transparent' }}>
-
+            <div style={{ float: 'left', width: '20%', height: '100%', backgroundColor: 'transparent' }}>
+                <div className='menu_profile'>
+                    <div className="profile_container">
+                        <div style={{display:'flex'}}>
+                            <img className="profile_photo" src="https://i.imgur.com/1nzuh87.png" alt="photos"></img>
+                        </div>
+                        <div className="profile_names">
+                            <p id='profile_realname'>Anita Lu</p>
+                            <p id='profile_username'>anitalu724</p>
+                        </div>
+                        
+                        {editMode &&
+                            <div>
+                            <div class="profile_detail">
+                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                    <BiBuildingHouse style={{ verticalAlign:'middle'}}/>
+                                </IconContext.Provider>
+                                <div style={{marginLeft:'20px'}}></div>
+                                <input style={{ backgroundColor: '#181818', borderColor: 'transparent', color: 'white', borderRadius: '10px', paddingLeft: '10px', paddingTop:'3px', paddingBottom:'3px' }}
+                                    placeholder='Company'
+                                    onChange={(event)=>{setCompany(event.target.value)}}
+                                >
+                                </input>
+                            </div>
+                            <div class="profile_detail">
+                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                    <FaGithub style={{ verticalAlign:'middle'}}/>
+                                </IconContext.Provider>
+                                <div style={{marginLeft:'20px'}}></div>
+                                <input style={{ backgroundColor: '#181818', borderColor: 'transparent', color: 'white', borderRadius: '10px', paddingLeft: '10px', paddingTop:'3px', paddingBottom:'3px' }}
+                                    placeholder='Github Username'
+                                    onChange={(event)=>{setGit(event.target.value)}}
+                                >
+                                </input>
+                            </div>
+                            <div class="profile_detail">
+                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                    <FaFacebook style={{ verticalAlign:'middle'}}/>
+                                </IconContext.Provider>
+                                <div style={{marginLeft:'20px'}}></div>
+                                <input style={{ backgroundColor: '#181818', borderColor: 'transparent', color: 'white', borderRadius: '10px', paddingLeft: '10px', paddingTop:'3px', paddingBottom:'3px' }}
+                                    placeholder='Facebook Username'
+                                    onChange={(event)=>{setFb(event.target.value)}}
+                                >
+                                </input>
+                            </div>
+                            <div class="profile_detail">
+                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                    <GoLocation style={{ verticalAlign:'middle'}}/>
+                                </IconContext.Provider>
+                                <div style={{marginLeft:'20px'}}></div>
+                                <input style={{ backgroundColor: '#181818', borderColor: 'transparent', color: 'white', borderRadius: '10px', paddingLeft: '10px', paddingTop:'3px', paddingBottom:'3px' }}
+                                    placeholder='Location'
+                                    onChange={(event)=>{setLoc(event.target.value)}}
+                                >
+                                </input>
+                            </div>
+                            <div class="profile_detail">
+                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                    <GoMail style={{ verticalAlign:'middle'}}/>
+                                </IconContext.Provider>
+                                <div style={{marginLeft:'20px'}}></div>
+                                <input style={{ backgroundColor: '#121212', borderColor: 'transparent', color: 'white', borderRadius: '10px', paddingLeft: '10px', paddingTop:'3px', paddingBottom:'3px' }}
+                                    placeholder='Email Address'
+                                    onChange={(event)=>{setEmail(event.target.value)}}
+                                >
+                                </input>
+                            </div>
+                            <div style={ {display:'flex', textAlign:'center', justifyContent:'center'}}>
+                                <button onClick={save} style={ {display:'inline-block', margin:'20px', padding:'2px 10px', backgroundColor:' #48a147', borderColor:'transparent', borderRadius:'10px', color:'white'}}>Save</button>
+                                <button onClick={back2Profile} style={ {display:'inline-block', margin:'20px', padding:'2px 10px', backgroundColor:' #aaaaaa', borderColor:'transparent', borderRadius:'10px', color:'white'}}>Cancel</button>
+                            </div>
+                            
+                            </div>
+                        }
+                        {!editMode &&
+                            <div>
+                                <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                                    <button className='profile_edit_btn' variant='contained' onClick={ editProfile }>Edit Profile</button>
+                                </div>
+                            <div style={{ height: 20 }} />  
+                            <div>
+                                { savedData[0] !== '' &&
+                                    <div class="profile_detail">
+                                        <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                            <BiBuildingHouse style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                        </IconContext.Provider>
+                                        <span style={{color:'#bbbbbb'}}>{savedData[0]}</span>
+                                    </div>
+                                }
+                                { savedData[0] === '' &&<div></div>}
+                                {savedData[1] !== '' && 
+                                    <div class="profile_detail">
+                                        <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                            <FaGithub style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                        </IconContext.Provider>
+                                        <span style={{ color: '#bbbbbb' }}>{ savedData[1]}</span>
+                                    </div>
+                                }
+                                {savedData[1] === '' && <div></div>}
+                                {savedData[2] !== '' &&
+                                    <div class="profile_detail">
+                                        <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                            <FaFacebook style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                        </IconContext.Provider>
+                                    <span style={{ color: '#bbbbbb' }}>{savedData[2]}</span>
+                                    </div>
+                                }
+                                {savedData[2] === '' && <div></div>}
+                                {savedData[3] !== '' &&
+                                    <div class="profile_detail">
+                                        <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                            <GoLocation style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                        </IconContext.Provider>
+                                    <span style={{ color: '#bbbbbb' }}>{ savedData[3]}</span>
+                                    </div>
+                                }
+                                {savedData[3] === '' && <div></div>}
+                                {savedData[4] !== '' &&
+                                    <div class="profile_detail">
+                                        <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                            <GoMail style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                        </IconContext.Provider>
+                                    <span style={{ color: '#bbbbbb' }}>{ savedData[4]}</span>
+                                    </div>
+                                }
+                                {savedData[4] === '' && <div></div>}
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
             </div>
-            <div style={{ float: 'left', width: '86%', height: '100%', padding: '30px' }}>
+            <div style={{ float: 'left', width: '76%', height: '100%', padding: '30px' }}>
                 <div className='menu_menu' >
                     {list.map(project => (
                         <Project
