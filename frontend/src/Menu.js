@@ -1,9 +1,20 @@
+// TODO:
+// Profile data are all called in 'savedData'
+// 'savedData' is a list which contain 5 string(company, git, fb, location, email)
+// 'USERNAME' must be called by DB, use 'setUSERNAME' to initialize it!
+// Anita's TODO: Every profile's realname and photo must be editable, this is working, but not done yet.
+
 import React, { useState, useEffect, Component } from 'react';
 import Modal from './components/modal';
+import ReadMoreReact from 'read-more-react';
 // import Project from './components/project'
 import { IconContext } from "react-icons";
 import { FcPlus } from "react-icons/fc";
 import { BsTrash, BsClockHistory, BsFillPeopleFill } from "react-icons/bs";
+import { GoLocation,GoLink,GoDeviceMobile,GoMail } from "react-icons/go";
+import { ImFacebook, ImGithub } from "react-icons/im";
+import { FaFacebook, FaGithub} from 'react-icons/fa'
+import { BiBuildingHouse } from 'react-icons/bi';
 import './components/project.css'
 import Select from 'react-select';
 
@@ -39,19 +50,6 @@ class Project extends Component {
 
 
 
-
-
-
-const initList = [
-    {
-        id: 1,
-        name: 'folder1',
-        history: '0',
-        colab: []
-    },
-
-];
-
 const ls = []
 const transfer = (ele) => {
     return ele.map(element => ({
@@ -64,15 +62,26 @@ const transfer = (ele) => {
 
 function Menu() {
     const [list, setList] = useState(transfer(ls));
+    const [editMode, setEdit] = useState(false);
+    const [USERNAME, setUSERNAME] = useState('init');
 
-    useEffect( async () => {
+    const [company, setCompany] = useState('');
+    const [git, setGit] = useState('');
+    const [fb, setFb] = useState('');
+    const [location, setLoc] = useState('');
+    const [email, setEmail] = useState('');
+    const [savedData, setData] = useState(['','','','',''])
+
+    // const []
+
+    useEffect(async () => {
         const result = await
-        fetch('/api/projects', {
-            method: 'GET',
-            headers: new Headers({
-                'Content-Type': 'application/json'
+            fetch('/api/projects', {
+                method: 'GET',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                })
             })
-        })
         const backendList = await result.json()
         console.log(backendList)
         setList([...transfer(backendList)])
@@ -111,7 +120,7 @@ function Menu() {
                     console.log(list)
                     const newProject = {
                         'project_name': newPro,
-                        'colabs':newColab,
+                        'colabs': newColab,
                     }
                     fetch('/api/create_project', {
                         method: 'POST', // or 'PUT'
@@ -119,7 +128,7 @@ function Menu() {
                         headers: new Headers({
                             'Content-Type': 'application/json'
                         })
-                    }).then(res=>{
+                    }).then(res => {
                         console.log(res.status)
                         if (res.status === 403) {
                             console.log("403")
@@ -149,14 +158,176 @@ function Menu() {
         const newList = list.filter(project => project.id !== id)
         setList(newList)
     }
-
-    // const DropdownIndicator = () => null;
+    const editProfile = () => { 
+        console.log('edit');
+        setEdit(true);
+    }
+    const back2Profile = () => { setEdit(false); }
+    const save = () => { 
+        setData([company, git, fb, location, email]);
+        console.log(savedData)
+        setEdit(false);
+    }
     return (
         <div id='menu_container' >
-            <div style={{ float: 'left', width: '10%', height: '100%', backgroundColor: 'transparent' }}>
-
+            <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'transparent' }}></div>
+            <div style={{ float: 'left', width: '20%', height: '100%', backgroundColor: 'transparent' }}>
+                <div className='menu_profile'>
+                    <div className="profile_container">
+                        <div style={{display:'flex'}}>
+                            <img className="profile_photo" src="https://i.imgur.com/1nzuh87.png" alt="photos"></img>
+                        </div>
+                        <div className="profile_names">
+                            <p id='profile_realname'>Anita Lu</p>
+                            <p id='profile_username'>{ USERNAME }</p>
+                        </div>
+                        
+                        {editMode ?
+                            <div>
+                            <div class="profile_detail">
+                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                    <BiBuildingHouse style={{ verticalAlign:'middle'}}/>
+                                </IconContext.Provider>
+                                <div style={{marginLeft:'20px'}}></div>
+                                    <input className='profile_edit_input'
+                                        placeholder='Company'
+                                        onChange={(event) => { setCompany(event.target.value) }}
+                                        defaultValue={ savedData[0]}>
+                                    </input>
+                            </div>
+                            <div class="profile_detail">
+                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                    <FaGithub style={{ verticalAlign:'middle'}}/>
+                                </IconContext.Provider>
+                                <div style={{marginLeft:'20px'}}></div>
+                                <input className='profile_edit_input'
+                                    placeholder='Github Username'
+                                        onChange={(event) => { setGit(event.target.value) }}
+                                        defaultValue={ savedData[1]}
+                                >
+                                </input>
+                            </div>
+                            <div class="profile_detail">
+                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                    <FaFacebook style={{ verticalAlign:'middle'}}/>
+                                </IconContext.Provider>
+                                <div style={{marginLeft:'20px'}}></div>
+                                <input className='profile_edit_input'
+                                    placeholder='Facebook Username'
+                                        onChange={(event) => { setFb(event.target.value) }}
+                                        defaultValue={ savedData[2]}
+                                >
+                                </input>
+                            </div>
+                            <div class="profile_detail">
+                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                    <GoLocation style={{ verticalAlign:'middle'}}/>
+                                </IconContext.Provider>
+                                <div style={{marginLeft:'20px'}}></div>
+                                <input className='profile_edit_input'
+                                    placeholder='Location'
+                                        onChange={(event) => { setLoc(event.target.value) }}
+                                        defaultValue={ savedData[3]}
+                                >
+                                </input>
+                            </div>
+                            <div class="profile_detail">
+                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
+                                    <GoMail style={{ verticalAlign:'middle'}}/>
+                                </IconContext.Provider>
+                                <div style={{marginLeft:'20px'}}></div>
+                                <input className='profile_edit_input'
+                                    placeholder='Email Address'
+                                        onChange={(event) => { setEmail(event.target.value) }}
+                                        defaultValue={ savedData[4]}
+                                >
+                                </input>
+                            </div>
+                            <div style={ {display:'flex', textAlign:'center', justifyContent:'center'}}>
+                                <button onClick={save} style={ {display:'inline-block', margin:'20px', padding:'2px 10px', backgroundColor:' #48a147', borderColor:'transparent', borderRadius:'10px', color:'white'}}>Save</button>
+                                <button onClick={back2Profile} style={ {display:'inline-block', margin:'20px', padding:'2px 10px', backgroundColor:' #aaaaaa', borderColor:'transparent', borderRadius:'10px', color:'white'}}>Cancel</button>
+                            </div>
+                            
+                            </div>
+                        :
+                            <div>
+                                <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                                    <button className='profile_edit_btn' variant='contained' onClick={ editProfile }>Edit Profile</button>
+                                </div>
+                                <div style={{ height: 20 }} />  
+                                <div>
+                                    {savedData[0] !== '' ?
+                                        <div class="profile_detail">
+                                            <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
+                                                    <BiBuildingHouse style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                            </IconContext.Provider>
+                                            {savedData[0].length <= 20 ?
+                                                <span className="profile_span">{savedData[0]}</span>
+                                                :
+                                                <span className="profile_span">{savedData[0].substring(0,20)}...</span>
+                                            }
+                                    </div>
+                                    :null
+                                    }
+                                    {savedData[1] !== '' ?
+                                        <div class="profile_detail">
+                                            <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
+                                                    <FaGithub style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                            </IconContext.Provider>
+                                            {savedData[1].length <= 20 ?
+                                                <span className="profile_span">{savedData[1]}</span>
+                                                :
+                                                <span className="profile_span">{savedData[1].substring(0,20)}...</span>
+                                            }
+                                    </div>
+                                    :null
+                                    }
+                                    {savedData[2] !== '' ?
+                                        <div class="profile_detail">
+                                            <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
+                                                    <FaFacebook style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                            </IconContext.Provider>
+                                            {savedData[2].length <=20 ?
+                                                <span className="profile_span">{savedData[2]}</span>
+                                                :
+                                                <span className="profile_span">{savedData[2].substring(0,20)}...</span>
+                                            }
+                                    </div>
+                                    :null
+                                    }
+                                    {savedData[3] !== '' ?
+                                        <div class="profile_detail">
+                                            <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
+                                                    <GoLocation style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                            </IconContext.Provider>
+                                            {savedData[3].length <= 20 ?
+                                                <span className="profile_span">{savedData[3]}</span>
+                                                :
+                                                <span className="profile_span">{savedData[3].substring(0,20)}...</span>
+                                            }
+                                    </div>
+                                    :null
+                                    }
+                                    {savedData[4] !== '' ?
+                                        <div class="profile_detail">
+                                            <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
+                                                    <GoMail style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                            </IconContext.Provider>
+                                            {savedData[4].length <= 20 ?
+                                                <span className="profile_span">{savedData[4]}</span>
+                                                :
+                                                <span className="profile_span">{savedData[4].substring(0,20)}...</span>
+                                            }
+                                    </div>
+                                    :null
+                                    }
+                            </div>
+                        </div>
+                        }
+                    </div>
+                </div>
             </div>
-            <div style={{ float: 'left', width: '86%', height: '100%', padding: '30px' }}>
+            <div style={{ float: 'left', width: '68%', height: '100%', padding: '30px' }}>
                 <div className='menu_menu' >
                     {list.map(project => (
                         <Project
@@ -172,13 +343,14 @@ function Menu() {
                     }
                 </div>
             </div>
-            <div style={{ float: 'right', width: '4%', height: '100%', backgroundColor: 'transparent' }}>
+            <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'transparent' }}>
                 <button id='menu_add_btn' onClick={openModal}>
                     <IconContext.Provider value={{ color: 'gray', size: '50px' }}>
                         <FcPlus />
                     </IconContext.Provider>
                 </button>
             </div>
+            <div style={{ float: 'right', width: '4%', height: '100%', backgroundColor: 'transparent' }}></div>
             <Modal ref={modalRef}>
                 <span className='menu_modal_span'>Create a project</span>
                 <div className='menu_modal_inputs'>
@@ -188,13 +360,6 @@ function Menu() {
                     </div>
                     <input className='menu_modal_input' type='text' name='name' id='name' onKeyUp={handleKeyUp} />
                     Collaborators
-                    {/* <Select
-                        components={{ DropdownIndicator }}
-                        closeMenuOnSelect={false}
-                        options={[]}
-                    >
-                    
-                    </Select> */}
                     <input className='menu_modal_input' ></input>
                     <p style={{ color: '#CCCCCC', fontSize: 10, lineHeight: 0.8 }}>* Use ";" to split collaborators</p>
                 </div>
