@@ -246,10 +246,26 @@ code {
 }
 
 .profile_detail{
-    margin: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     display: flex;
     align-items: left;
-
+}
+.profile_edit_input{
+  background-color: #181818;
+  border-color: transparent;
+  color:white;
+  border-radius: 10px;
+  padding:1px 10px 1px;
+  width:80%;
+  font-size: 14px;
+  letter-spacing: 1px;
+  
+}
+.profile_span{
+  color:#bbbbbb;
+  background-color: transparent;
+  width: 80%;
 }
   
   

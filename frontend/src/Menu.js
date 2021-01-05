@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Component } from 'react';
 import Modal from './components/modal';
+import ReadMoreReact from 'read-more-react';
 // import Project from './components/project'
 import { IconContext } from "react-icons";
 import { FcPlus } from "react-icons/fc";
@@ -154,7 +155,8 @@ function Menu() {
     }
     return (
         <div id='menu_container' >
-            <div style={{ float: 'left', width: '20%', height: '100%', backgroundColor: 'transparent' }}>
+            <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'lightblue' }}></div>
+            <div style={{ float: 'left', width: '20%', height: '100%', backgroundColor: 'purple' }}>
                 <div className='menu_profile'>
                     <div className="profile_container">
                         <div style={{display:'flex'}}>
@@ -165,16 +167,17 @@ function Menu() {
                             <p id='profile_username'>anitalu724</p>
                         </div>
                         
-                        {editMode &&
+                        {editMode ?
                             <div>
                             <div class="profile_detail">
                                 <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
                                     <BiBuildingHouse style={{ verticalAlign:'middle'}}/>
                                 </IconContext.Provider>
                                 <div style={{marginLeft:'20px'}}></div>
-                                <input style={{ backgroundColor: '#181818', borderColor: 'transparent', color: 'white', borderRadius: '10px', paddingLeft: '10px', paddingTop:'3px', paddingBottom:'3px' }}
-                                    placeholder='Company'
-                                    onChange={(event)=>{setCompany(event.target.value)}}
+                                    <input className='profile_edit_input'
+                                        placeholder='Company'
+                                        onChange={(event) => { setCompany(event.target.value) }}
+                                        
                                 >
                                 </input>
                             </div>
@@ -183,7 +186,7 @@ function Menu() {
                                     <FaGithub style={{ verticalAlign:'middle'}}/>
                                 </IconContext.Provider>
                                 <div style={{marginLeft:'20px'}}></div>
-                                <input style={{ backgroundColor: '#181818', borderColor: 'transparent', color: 'white', borderRadius: '10px', paddingLeft: '10px', paddingTop:'3px', paddingBottom:'3px' }}
+                                <input className='profile_edit_input'
                                     placeholder='Github Username'
                                     onChange={(event)=>{setGit(event.target.value)}}
                                 >
@@ -194,7 +197,7 @@ function Menu() {
                                     <FaFacebook style={{ verticalAlign:'middle'}}/>
                                 </IconContext.Provider>
                                 <div style={{marginLeft:'20px'}}></div>
-                                <input style={{ backgroundColor: '#181818', borderColor: 'transparent', color: 'white', borderRadius: '10px', paddingLeft: '10px', paddingTop:'3px', paddingBottom:'3px' }}
+                                <input className='profile_edit_input'
                                     placeholder='Facebook Username'
                                     onChange={(event)=>{setFb(event.target.value)}}
                                 >
@@ -205,7 +208,7 @@ function Menu() {
                                     <GoLocation style={{ verticalAlign:'middle'}}/>
                                 </IconContext.Provider>
                                 <div style={{marginLeft:'20px'}}></div>
-                                <input style={{ backgroundColor: '#181818', borderColor: 'transparent', color: 'white', borderRadius: '10px', paddingLeft: '10px', paddingTop:'3px', paddingBottom:'3px' }}
+                                <input className='profile_edit_input'
                                     placeholder='Location'
                                     onChange={(event)=>{setLoc(event.target.value)}}
                                 >
@@ -216,7 +219,7 @@ function Menu() {
                                     <GoMail style={{ verticalAlign:'middle'}}/>
                                 </IconContext.Provider>
                                 <div style={{marginLeft:'20px'}}></div>
-                                <input style={{ backgroundColor: '#121212', borderColor: 'transparent', color: 'white', borderRadius: '10px', paddingLeft: '10px', paddingTop:'3px', paddingBottom:'3px' }}
+                                <input className='profile_edit_input'
                                     placeholder='Email Address'
                                     onChange={(event)=>{setEmail(event.target.value)}}
                                 >
@@ -228,66 +231,86 @@ function Menu() {
                             </div>
                             
                             </div>
-                        }
-                        {!editMode &&
+                        :
+                        
                             <div>
                                 <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                                     <button className='profile_edit_btn' variant='contained' onClick={ editProfile }>Edit Profile</button>
                                 </div>
                             <div style={{ height: 20 }} />  
-                            <div>
-                                { savedData[0] !== '' &&
-                                    <div class="profile_detail">
-                                        <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
-                                            <BiBuildingHouse style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
-                                        </IconContext.Provider>
-                                        <span style={{color:'#bbbbbb'}}>{savedData[0]}</span>
+                                <div>
+                                    {savedData[0] !== '' ?
+                                        <div class="profile_detail">
+                                            <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
+                                                    <BiBuildingHouse style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                            </IconContext.Provider>
+                                            {savedData[0].length < 20 ?
+                                                <span className="profile_span">{savedData[0]}</span>
+                                                :
+                                                <span className="profile_span">{savedData[0].substring(0,20)}...</span>
+                                            }
                                     </div>
-                                }
-                                { savedData[0] === '' &&<div></div>}
-                                {savedData[1] !== '' && 
-                                    <div class="profile_detail">
-                                        <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
-                                            <FaGithub style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
-                                        </IconContext.Provider>
-                                        <span style={{ color: '#bbbbbb' }}>{ savedData[1]}</span>
+                                    :null
+                                    }
+                                    {savedData[1] !== '' ?
+                                        <div class="profile_detail">
+                                            <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
+                                                    <FaGithub style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                            </IconContext.Provider>
+                                            {savedData[1].length < 20 ?
+                                                <span className="profile_span">{savedData[1]}</span>
+                                                :
+                                                <span className="profile_span">{savedData[1].substring(0,20)}...</span>
+                                            }
                                     </div>
-                                }
-                                {savedData[1] === '' && <div></div>}
-                                {savedData[2] !== '' &&
-                                    <div class="profile_detail">
-                                        <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
-                                            <FaFacebook style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
-                                        </IconContext.Provider>
-                                    <span style={{ color: '#bbbbbb' }}>{savedData[2]}</span>
+                                    :null
+                                    }
+                                    {savedData[2] !== '' ?
+                                        <div class="profile_detail">
+                                            <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
+                                                    <FaFacebook style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                            </IconContext.Provider>
+                                            {savedData[2].length < 20 ?
+                                                <span className="profile_span">{savedData[2]}</span>
+                                                :
+                                                <span className="profile_span">{savedData[2].substring(0,20)}...</span>
+                                            }
                                     </div>
-                                }
-                                {savedData[2] === '' && <div></div>}
-                                {savedData[3] !== '' &&
-                                    <div class="profile_detail">
-                                        <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
-                                            <GoLocation style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
-                                        </IconContext.Provider>
-                                    <span style={{ color: '#bbbbbb' }}>{ savedData[3]}</span>
+                                    :null
+                                    }
+                                    {savedData[3] !== '' ?
+                                        <div class="profile_detail">
+                                            <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
+                                                    <GoLocation style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                            </IconContext.Provider>
+                                            {savedData[3].length < 20 ?
+                                                <span className="profile_span">{savedData[3]}</span>
+                                                :
+                                                <span className="profile_span">{savedData[3].substring(0,20)}...</span>
+                                            }
                                     </div>
-                                }
-                                {savedData[3] === '' && <div></div>}
-                                {savedData[4] !== '' &&
-                                    <div class="profile_detail">
-                                        <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
-                                            <GoMail style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
-                                        </IconContext.Provider>
-                                    <span style={{ color: '#bbbbbb' }}>{ savedData[4]}</span>
+                                    :null
+                                    }
+                                    {savedData[4] !== '' ?
+                                        <div class="profile_detail">
+                                            <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
+                                                    <GoMail style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                            </IconContext.Provider>
+                                            {savedData[4].length < 20 ?
+                                                <span className="profile_span">{savedData[4]}</span>
+                                                :
+                                                <span className="profile_span">{savedData[4].substring(0,20)}...</span>
+                                            }
                                     </div>
-                                }
-                                {savedData[4] === '' && <div></div>}
+                                    :null
+                                    }
                             </div>
                         </div>
                         }
                     </div>
                 </div>
             </div>
-            <div style={{ float: 'left', width: '76%', height: '100%', padding: '30px' }}>
+            <div style={{ float: 'left', width: '68%', height: '100%', padding: '30px' }}>
                 <div className='menu_menu' >
                     {list.map(project => (
                         <Project
@@ -303,13 +326,14 @@ function Menu() {
                     }
                 </div>
             </div>
-            <div style={{ float: 'right', width: '4%', height: '100%', backgroundColor: 'transparent' }}>
+            <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'green' }}>
                 <button id='menu_add_btn' onClick={openModal}>
                     <IconContext.Provider value={{ color: 'gray', size: '50px' }}>
                         <FcPlus />
                     </IconContext.Provider>
                 </button>
             </div>
+            <div style={{ float: 'right', width: '4%', height: '100%', backgroundColor: 'lightblue' }}></div>
             <Modal ref={modalRef}>
                 <span className='menu_modal_span'>Create a project</span>
                 <div className='menu_modal_inputs'>
