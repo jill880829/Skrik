@@ -1,3 +1,9 @@
+// TODO:
+// Profile data are all called in 'savedData'
+// 'savedData' is a list which contain 5 string(company, git, fb, location, email)
+// 'USERNAME' must be called by DB, use 'setUSERNAME' to initialize it!
+// Anita's TODO: Every profile's realname and photo must be editable, this is working, but not done yet.
+
 import React, { useState, useEffect, Component } from 'react';
 import Modal from './components/modal';
 import ReadMoreReact from 'read-more-react';
@@ -57,6 +63,7 @@ const transfer = (ele) => {
 function Menu() {
     const [list, setList] = useState(transfer(ls));
     const [editMode, setEdit] = useState(false);
+    const [USERNAME, setUSERNAME] = useState('init');
 
     const [company, setCompany] = useState('');
     const [git, setGit] = useState('');
@@ -164,7 +171,7 @@ function Menu() {
                         </div>
                         <div className="profile_names">
                             <p id='profile_realname'>Anita Lu</p>
-                            <p id='profile_username'>anitalu724</p>
+                            <p id='profile_username'>{ USERNAME }</p>
                         </div>
                         
                         {editMode ?
