@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect, Component } from 'react';
 import Modal from './components/modal';
-import ReadMoreReact from 'read-more-react';
+//import ReadMoreReact from 'read-more-react';
 // import Project from './components/project'
 import { IconContext } from "react-icons";
 import { FcPlus } from "react-icons/fc";
