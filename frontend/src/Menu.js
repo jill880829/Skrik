@@ -155,8 +155,8 @@ function Menu() {
     }
     return (
         <div id='menu_container' >
-            <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'lightblue' }}></div>
-            <div style={{ float: 'left', width: '20%', height: '100%', backgroundColor: 'purple' }}>
+            <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'transparent' }}></div>
+            <div style={{ float: 'left', width: '20%', height: '100%', backgroundColor: 'transparent' }}>
                 <div className='menu_profile'>
                     <div className="profile_container">
                         <div style={{display:'flex'}}>
@@ -177,9 +177,8 @@ function Menu() {
                                     <input className='profile_edit_input'
                                         placeholder='Company'
                                         onChange={(event) => { setCompany(event.target.value) }}
-                                        
-                                >
-                                </input>
+                                        defaultValue={ savedData[0]}>
+                                    </input>
                             </div>
                             <div class="profile_detail">
                                 <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
@@ -188,7 +187,8 @@ function Menu() {
                                 <div style={{marginLeft:'20px'}}></div>
                                 <input className='profile_edit_input'
                                     placeholder='Github Username'
-                                    onChange={(event)=>{setGit(event.target.value)}}
+                                        onChange={(event) => { setGit(event.target.value) }}
+                                        defaultValue={ savedData[1]}
                                 >
                                 </input>
                             </div>
@@ -199,7 +199,8 @@ function Menu() {
                                 <div style={{marginLeft:'20px'}}></div>
                                 <input className='profile_edit_input'
                                     placeholder='Facebook Username'
-                                    onChange={(event)=>{setFb(event.target.value)}}
+                                        onChange={(event) => { setFb(event.target.value) }}
+                                        defaultValue={ savedData[2]}
                                 >
                                 </input>
                             </div>
@@ -210,7 +211,8 @@ function Menu() {
                                 <div style={{marginLeft:'20px'}}></div>
                                 <input className='profile_edit_input'
                                     placeholder='Location'
-                                    onChange={(event)=>{setLoc(event.target.value)}}
+                                        onChange={(event) => { setLoc(event.target.value) }}
+                                        defaultValue={ savedData[3]}
                                 >
                                 </input>
                             </div>
@@ -221,7 +223,8 @@ function Menu() {
                                 <div style={{marginLeft:'20px'}}></div>
                                 <input className='profile_edit_input'
                                     placeholder='Email Address'
-                                    onChange={(event)=>{setEmail(event.target.value)}}
+                                        onChange={(event) => { setEmail(event.target.value) }}
+                                        defaultValue={ savedData[4]}
                                 >
                                 </input>
                             </div>
@@ -232,19 +235,18 @@ function Menu() {
                             
                             </div>
                         :
-                        
                             <div>
                                 <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                                     <button className='profile_edit_btn' variant='contained' onClick={ editProfile }>Edit Profile</button>
                                 </div>
-                            <div style={{ height: 20 }} />  
+                                <div style={{ height: 20 }} />  
                                 <div>
                                     {savedData[0] !== '' ?
                                         <div class="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                     <BiBuildingHouse style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
                                             </IconContext.Provider>
-                                            {savedData[0].length < 20 ?
+                                            {savedData[0].length <= 20 ?
                                                 <span className="profile_span">{savedData[0]}</span>
                                                 :
                                                 <span className="profile_span">{savedData[0].substring(0,20)}...</span>
@@ -257,7 +259,7 @@ function Menu() {
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                     <FaGithub style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
                                             </IconContext.Provider>
-                                            {savedData[1].length < 20 ?
+                                            {savedData[1].length <= 20 ?
                                                 <span className="profile_span">{savedData[1]}</span>
                                                 :
                                                 <span className="profile_span">{savedData[1].substring(0,20)}...</span>
@@ -270,7 +272,7 @@ function Menu() {
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                     <FaFacebook style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
                                             </IconContext.Provider>
-                                            {savedData[2].length < 20 ?
+                                            {savedData[2].length <=20 ?
                                                 <span className="profile_span">{savedData[2]}</span>
                                                 :
                                                 <span className="profile_span">{savedData[2].substring(0,20)}...</span>
@@ -283,7 +285,7 @@ function Menu() {
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                     <GoLocation style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
                                             </IconContext.Provider>
-                                            {savedData[3].length < 20 ?
+                                            {savedData[3].length <= 20 ?
                                                 <span className="profile_span">{savedData[3]}</span>
                                                 :
                                                 <span className="profile_span">{savedData[3].substring(0,20)}...</span>
@@ -296,7 +298,7 @@ function Menu() {
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                     <GoMail style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
                                             </IconContext.Provider>
-                                            {savedData[4].length < 20 ?
+                                            {savedData[4].length <= 20 ?
                                                 <span className="profile_span">{savedData[4]}</span>
                                                 :
                                                 <span className="profile_span">{savedData[4].substring(0,20)}...</span>
@@ -326,14 +328,14 @@ function Menu() {
                     }
                 </div>
             </div>
-            <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'green' }}>
+            <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'transparent' }}>
                 <button id='menu_add_btn' onClick={openModal}>
                     <IconContext.Provider value={{ color: 'gray', size: '50px' }}>
                         <FcPlus />
                     </IconContext.Provider>
                 </button>
             </div>
-            <div style={{ float: 'right', width: '4%', height: '100%', backgroundColor: 'lightblue' }}></div>
+            <div style={{ float: 'right', width: '4%', height: '100%', backgroundColor: 'transparent' }}></div>
             <Modal ref={modalRef}>
                 <span className='menu_modal_span'>Create a project</span>
                 <div className='menu_modal_inputs'>
