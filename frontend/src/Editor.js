@@ -43,7 +43,15 @@ const codingOptions = [
 
 export default function Editor(props) {
     const ls=[]
-    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure({});
+    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure([{
+        type: "blankFolder",
+        displayAddBlank: false,
+    },
+    {
+        type: "blankFile",
+        displayAddBlank: false,
+    },
+    ]);
     const [filesStructure, setFile] = useState(ls);
     const [language, setLan] = useState('python');
     const [fileName, setFileName] = useState('Untitled')
@@ -59,10 +67,16 @@ export default function Editor(props) {
         })
         
         const backendList = await result.json()
-        setFile([...backendList])
-        setTree([...transfer(rmduplicate(backendList).list)])
+        if(backendList!==undefined){
+            setFile([...backendList])
+            setTree([...transfer(rmduplicate(backendList).list)])
+        }
+        
+        
+        
         
     }, [])
+    console.log(treeStructure)
     function onChangeCode(value) {
         setLan(value.value);
     }
