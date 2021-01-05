@@ -345,13 +345,6 @@ function Menu() {
                     </div>
                     <input className='menu_modal_input' type='text' name='name' id='name' onKeyUp={handleKeyUp} />
                     Collaborators
-                    {/* <Select
-                        components={{ DropdownIndicator }}
-                        closeMenuOnSelect={false}
-                        options={[]}
-                    >
-                    
-                    </Select> */}
                     <input className='menu_modal_input' ></input>
                     <p style={{ color: '#CCCCCC', fontSize: 10, lineHeight: 0.8 }}>* Use ";" to split collaborators</p>
                 </div>
