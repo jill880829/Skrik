@@ -4,7 +4,7 @@ import './App.css';
 import Login from './Login';
 import Editor from './Editor';
 import Menu from './Menu';
-import ProfileNew from './ProfileNew'
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -30,9 +30,7 @@ function App() {
             <li>
               <Link to="/Menu">Menu</Link>
             </li>
-            <li>
-              <Link to="/Profile">Profile</Link>
-            </li>
+            
             <li>
               <Link>Download</Link>
             </li>
@@ -51,9 +49,7 @@ function App() {
           <Route path="/Menu">
             <Menu/>
           </Route>
-          <Route path="/Profile">
-            <ProfileNew/>
-          </Route>
+          
         </Switch>
       </div>
     </Router>
