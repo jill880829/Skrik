@@ -16,7 +16,7 @@ import { AiOutlineFile, AiFillRest} from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
-import FileStructure from './structure'
+import FileStructure from './Structure'
 import useStructure from './useStructure'
 import {useParams,useLocation} from 'react-router-dom'
 
