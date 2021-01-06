@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 const session = require('express-session')  
 const RedisStore = require('connect-redis')(session);
+const cors = require('cors');
 
 var loginRouter = require('./routes/LoginRouter');
 var apiRouter = require('./routes/ApiRouter');
@@ -17,6 +18,15 @@ const QueryProject = require('./utils/db/QueryProject');
 const QueryUser = require('./utils/db/QueryUser');
 
 var app = express();
+
+// use cors
+var corsOptions = {
+    credentials: true,
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200, // For legacy browser support
+    methods: "GET, POST"
+}
+app.use(cors(corsOptions));
 
 const { text } = require('body-parser');
 const projectid = "5ff17b374b87d05f09acb6aa";

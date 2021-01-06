@@ -55,23 +55,26 @@ export default function Editor(props) {
     const [filesStructure, setFile] = useState(ls);
     const [language, setLan] = useState('python');
     const [fileName, setFileName] = useState('Untitled')
-    const {hash,projectOwner,projectName} = useParams()
-    
+    const {hash} = useParams()
+    const [projectName,setProjectName] = useState("")
     useEffect( async () => {
-        const result = await
-        fetch(`/api/ls/${hash}`, {
+        const result = await fetch(`http://localhost:3001/api/ls/${hash}`, {
             method: 'GET',
+            credentials: 'include',
+            withCredentials: true,
             headers: new Headers({
                 'Content-Type': 'application/json'
             })
         })
-        
-        const backendList = await result.json()
-        
-        if(backendList.length!==0){
-            setFile([...backendList])
-            setTree([...transfer(rmduplicate(backendList).list)])
+        //console.log(result)
+        const {project_name,files} = await result.json()
+        setProjectName(project_name)
+        console.log(files)
+        if(files.length!==0){
+            setFile([...files])
+            setTree([...transfer(rmduplicate(files).list)])
         }
+        
     },[])
 
     function onChangeCode(value) {

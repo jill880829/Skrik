@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const path = require('path');
 const Projects = require('./ProjectSchema');
 const UserData = require('./UserDataSchema');
@@ -6,11 +5,6 @@ const regxstr = /^[ A-Za-z0-9_.-]+$/;
 const regxfile = /^[ /A-Za-z0-9_.-]+$/;
 const regxhex = /^[A-Fa-f0-9]+$/;
 const regxnewline = /[\n]/;
-
-/*Readme
-if you want to "update line" delete line first then insert line 
-insert one line
-*/
 
 // add LineChange (insert or delete a line)
 async function addLineChange(projectid, filename, username, linenum, commit_type, content) {

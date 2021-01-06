@@ -43,7 +43,7 @@ function App() {
           <Route path="/Login">
             <Login/>
           </Route>
-          <Route path="/Editor/:hash/:projectOwner/:projectName">
+          <Route path="/Editor/:hash">
             <Editor/>
           </Route>
           <Route path="/Menu">

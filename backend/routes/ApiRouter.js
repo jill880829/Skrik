@@ -1,22 +1,19 @@
 var express = require('express');
 var bodyParser = require('body-parser')
 var router = express.Router();
-const url = require('url');
 const sha256 = require('crypto-js/sha256');
-const base64 = require('crypto-js/enc-base64');
-var passport = require('passport');
-
 
 const QueryUser = require('../utils/db/QueryUser');
 const QueryProject = require('../utils/db/QueryProject');
 const QueryRedis = require('../utils/db/QueryRedis');
 const Tool = require('../utils/Tool')
+
+
 // handle ID sha256
 var counter = 0;
 var secret = process.env.ID_SECRET;
 
-// create application/x-www-form-urlencoded parser.
-// if needed, could change to json parser.
+// create json parser.
 var jsonParser = bodyParser.json({ extended: true })
 
 /* GET home page. */
@@ -44,10 +41,9 @@ router.post('/register', jsonParser, async function (req, res) {
 });
 
 /* Get profile page and list projectids */
-router.get('/projects', async function (req, res) { 
+router.get('/projects', async function (req, res) {
     if(! req.isAuthenticated())
         return res.status(401).send("Invalid User!!!");
-
     var queryUsername = req.session.passport.user;
     var result = await QueryUser.listProjectids(queryUsername);
     if (result["success"] === false) {
@@ -57,26 +53,26 @@ router.get('/projects', async function (req, res) {
             return res.status(403).send(result["description"]);
     }
     else {
-        var projects_info = [];
-        for (let id of result["ids"])
-        {
-            var idHash = sha256(id + counter.toString() + secret).toString();
-            counter += 1;
-            var store_res = QueryRedis.storeID(idHash, queryUsername, id)
-            if (store_res["success"] === false)
-                return res.status(500).send(store_res["description"]);
-            else{
-                const projectname = await QueryProject.getProjectName(id);
-                if (projectname["success"] === false)
-                    return res.status(500).send(projectname["description"]);
-                const projectusers = await QueryProject.getProjectUsers(id);
-                if (projectusers["success"] === false)
-                    return res.status(500).send(projectusers["description"]);    
-                projects_info.push({"id_hash": idHash,"project_name": projectname["name"], "project_users": projectusers["users"]});
+            var projects_info = [];
+            for (let id of result["ids"])
+            {
+                var idHash = sha256(id + counter.toString() + secret).toString();
+                counter += 1;
+                var store_res = QueryRedis.storeID(idHash, queryUsername, id)
+                if (store_res["success"] === false)
+                    res.status(500).send(store_res["description"]);
+                else{
+                    const projectname = await QueryProject.getProjectName(id);
+                    if (projectname["success"] === false)
+                        res.status(500).send(projectname["description"]);
+                    const projectusers = await QueryProject.getProjectUsers(id);
+                    if (projectusers["success"] === false)
+                        res.status(500).send(projectusers["description"]);    
+                    projects_info.push({"id_hash": idHash,"project_name": projectname["name"], "project_users": projectusers["users"]});
+                }
             }
         }
         return res.send(projects_info);
-    }
 });
 
 /* list sorted files */
@@ -86,7 +82,6 @@ router.get('/projects', async function (req, res) {
 router.get('/ls/:idsha', async function (req, res) {
     if(! req.isAuthenticated())
         return res.status(401).send("Invalid User!!!");
-       
     var idsha = req.params.idsha;
     console.log('get id...');
     var get_res = await QueryRedis.getID(idsha);
@@ -109,13 +104,13 @@ router.get('/ls/:idsha', async function (req, res) {
     if (files !== null)
         files = Tool.sort_files(files);
     return res.json({"project_name": project_name_res["name"], "files":files});
+
 });
 
 /* create project */
 router.post('/create_project', jsonParser, async function (req, res) {
     if(! req.isAuthenticated())
         return res.status(401).send("Invalid User!!!");
-  
     var owner = req.session.passport.user;
     var projectname = req.body.project_name;
     var colabs = req.body.colabs;

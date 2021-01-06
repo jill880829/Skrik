@@ -76,11 +76,14 @@ function Menu() {
 
     useEffect(async () => {
         const result = await
-            fetch('/api/projects', {
+            fetch('http://localhost:3001/api/projects', {
                 method: 'GET',
-                headers: new Headers({
+                credentials: 'include',
+                withCredentials: true,
+                headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json'
-                })
+                }
             })
         const backendList = await result.json()
         console.log(backendList)
@@ -92,9 +95,9 @@ function Menu() {
     const openModal = () => {
         modalRef.current.openModal();
     }
-    const intoProject = (e,name) => {
+    const intoProject = (e) => {
         console.log('into project')
-        window.location.href = `/Editor/${e}/${name}`
+        window.location.href = `/Editor/${e}`
         
     }
     const handleKeyUp = (e) => {
@@ -130,9 +133,11 @@ function Menu() {
                             'colabs': newColab,
                         }
                     }
-                    const res = await fetch('/api/create_project', {
+                    const res = await fetch('http://localhost:3001/api/create_project', {
                         method: 'POST', // or 'PUT'
                         body: JSON.stringify(newProject),
+                        credentials: 'include',
+                        withCredentials: true,
                         headers: new Headers({
                             'Content-Type': 'application/json'
                         })
