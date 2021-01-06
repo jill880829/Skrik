@@ -92,10 +92,10 @@ function Menu() {
     const openModal = () => {
         modalRef.current.openModal();
     }
-    const intoProject = (e) => {
-        console.log(e)
-        window.location.href = '/Editor/' + e
+    const intoProject = (e,name) => {
         console.log('into project')
+        window.location.href = `/Editor/${e}/${name}`
+        
     }
     const handleKeyUp = (e) => {
         if (e.key === 'Enter' && e.target.value !== "") {
@@ -352,7 +352,7 @@ function Menu() {
                             name={project.name}
                             hist={project.history}
                             colab={project.colab}
-                            intoProject={() => intoProject(project.id)}
+                            intoProject={() => intoProject(project.id,project.name)}
                             deleteProject={() => deleteProject(project.id)}
                         >
                         </Project>))

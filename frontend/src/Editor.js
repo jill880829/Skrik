@@ -55,7 +55,7 @@ export default function Editor(props) {
     const [filesStructure, setFile] = useState(ls);
     const [language, setLan] = useState('python');
     const [fileName, setFileName] = useState('Untitled')
-    const {hash} = useParams()
+    const {hash,projectOwner,projectName} = useParams()
     
     useEffect( async () => {
         const result = await
@@ -65,19 +65,15 @@ export default function Editor(props) {
                 'Content-Type': 'application/json'
             })
         })
-        //console.log(result)
-        const backendList = await result.text()
-        console.log(backendList)
+        
+        const backendList = await result.json()
+        
         if(backendList.length!==0){
             setFile([...backendList])
             setTree([...transfer(rmduplicate(backendList).list)])
         }
-        
-        
-        
-        
     },[])
-    console.log(treeStructure)
+
     function onChangeCode(value) {
         setLan(value.value);
     }
@@ -162,7 +158,7 @@ export default function Editor(props) {
             <span onClick={()=>deb(ls)}>debugger</span>
             <div className='page_container'>
                 <div id='folder_structure'>
-                    <FileStructure returnNewFile={sendNewFile} returnClickFile={requestFileContext} treeStructure={treeStructure}
+                    <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} treeStructure={treeStructure}
                     setTree={setTree} resetStatus={resetStatus} onClickFile={onClickFile} onClickFolder={onClickFolder} 
                     AddNewFile={AddNewFile} SaveToTree={SaveToTree} currentFilePath= {currentFilePath}/>
                 </div>

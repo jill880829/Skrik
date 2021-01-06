@@ -25,7 +25,7 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 
-export default function Structure({returnNewFile,returnClickFile,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
+export default function Structure({projectName,returnNewFile,returnClickFile,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
     
     const File = ({ name, filepath, focusOn }) => {
         let ext = name.split(".")[1];
@@ -157,7 +157,7 @@ export default function Structure({returnNewFile,returnClickFile,treeStructure, 
     }
     return (
         <div className="App">
-            <FolderStructure projectName="My Project" />
+            <FolderStructure projectName={projectName} />
             <Tree>
                 {displayStruct(treeStructure)}
             </Tree>

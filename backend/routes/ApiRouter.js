@@ -108,7 +108,7 @@ router.get('/ls/:idsha', async function (req, res) {
     var files = result["files"];
     if (files !== null)
         files = Tool.sort_files(files);
-    return res.send({"project_name": project_name_res["name"], "files":files});
+    return res.json({"project_name": project_name_res["name"], "files":files});
 });
 
 /* create project */
