@@ -7,9 +7,9 @@ const regxstr = /^[ A-Za-z0-9_.-]+$/;
 
 // register use
 async function createUser(username, password){
-    if (username === null || username === undefined || username.match(regxstr) === null)
+    if (typeof(username) !== "string" || username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
-    if (password === null || password === undefined || password.match(regxstr) === null)
+    if (typeof(password) !== "string" || password.match(regxstr) === null)
         return { "success": false, "description": "Invalid Password!!!" };
     
     try{
@@ -34,9 +34,9 @@ async function createUser(username, password){
 
 // login authentication
 async function authUser(username, password){
-    if (username === null || username === undefined || username.match(regxstr) === null)
+    if (typeof(username) !== "string" || username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
-    if (password === null || password === undefined || password.match(regxstr) === null)
+    if (typeof(password) !== "string" || password.match(regxstr) === null)
         return { "success": false, "description": "Invalid Password!!!" };
     
     try{
@@ -56,7 +56,7 @@ async function authUser(username, password){
 
 // list project ids in user profile page
 async function listProjectids(username){
-    if (username === null || username === undefined || username.match(regxstr) === null)
+    if (typeof(username) !== "string" || username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!", "ids": null };
 
     try{

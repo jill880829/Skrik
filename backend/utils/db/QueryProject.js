@@ -4,7 +4,7 @@ const Projects = require('./ProjectSchema');
 const UserData = require('./UserDataSchema');
 const regxstr = /^[ A-Za-z0-9_.-]+$/;
 const regxfile = /^[ /A-Za-z0-9_.-]+$/;
-const regxhex = /^[a-f0-9]+$/;
+const regxhex = /^[A-Fa-f0-9]+$/;
 const regxnewline = /[\n]/;
 
 /*Readme
@@ -14,18 +14,18 @@ insert one line
 
 // add LineChange (insert or delete a line)
 async function addLineChange(projectid, filename, username, linenum, commit_type, content) {
-    projectid = projectid.toLowerCase();
-    if (projectid.match(regxhex) === null || projectid.length !== 24)
+    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!" };
-    if (filename.match(regxfile) === null)
+    projectid = projectid.toLowerCase();
+    if (typeof(filename) !== "string" || filename.match(regxfile) === null)
         return { "success": false, "description": "Invalid File Name!!!" };
-    if (username.match(regxstr) === null)
+    if (typeof(username) !== "string" || username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
-    if (typeof linenum !== "number" || linenum < 1)
+    if (typeof(linenum) !== "number" || linenum < 1)
         return { "success": false, "description": "Invalid Line Index!!!" };
     if (commit_type !== "insert" && commit_type !== "delete")
         return { "success": false, "description": "Invalid Commit Type!!!" };
-    if (content.match(regxnewline) !== null)
+    if (typeof(content) !== "string" || content.match(regxnewline) !== null)
         return { "success": false, "description": "Invalid content!!!" };
     try{
         var project = await Projects.findById(projectid);
@@ -79,14 +79,12 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
 
 // delete a file in projectid
 async function deleteFile(projectid, filename, username){
-    if (projectname === undefined || projectname === null)
+    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!" };
     projectid = projectid.toLowerCase();
-    if (projectid.match(regxhex) === null || projectid.length !== 24)
-        return { "success": false, "description": "Invalid Projectid!!!" };
-    if (filename === undefined || filename === null || filename.match(regxfile) === null)
+    if (typeof(filename) !== "string" || filename.match(regxfile) === null)
         return { "success": false, "description": "Invalid File Name!!!" };
-    if (username === undefined || username === null || username.match(regxstr) === null)
+    if (typeof(username) !== "string" || username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
     try{
         var project = await Projects.findById(projectid);
@@ -124,11 +122,13 @@ async function deleteFile(projectid, filename, username){
 
 // create a project
 async function createProject(projectname, colabs, owner){
-    if (projectname === undefined || projectname === null || projectname.match(regxstr) === null)
-        return { "success": false, "description": "Invalid Project Name!!!" };
-    
+    if (typeof(projectname) !== "string" || projectname.match(regxstr) === null)
+        return { "success": false, "description": "Invalid Project Name!!!" };    
     if (Array.isArray(colabs) === false)
-        return { "success": false, "description": "Username List Should Be Array!!!" };
+        return { "success": false, "description": "Colabs List Should Be Array!!!" };
+    if (typeof(owner) !== "string" || owner.match(regxstr) === null)
+        return { "success": false, "description": "Invalid Owner Name!!!" };
+    
     colabs.push(owner);
     for (let username of colabs)
     {
@@ -174,9 +174,10 @@ async function createProject(projectname, colabs, owner){
 
 // delete a project
 async function deleteProject(projectid){
-    projectid = projectid.toLowerCase();
-    if (projectid.match(regxhex) === null || projectid.length !== 24)
+    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!" };
+    projectid = projectid.toLowerCase();
+    
     try {
         var project = await Projects.findById(projectid);
     } catch (err) {
@@ -224,11 +225,9 @@ async function deleteProject(projectid){
 
 // list file in project
 async function listFiles(projectid){
-    if (projectid === null || projectid === undefined )
-        return { "success": false, "description": "Invalid Projectid!!!", "files": null  };
+    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
+        return { "success": false, "description": "Invalid Projectid!!!" };    
     projectid = projectid.toLowerCase();
-    if (projectid.match(regxhex) === null || projectid.length !== 24)
-        return { "success": false, "description": "Invalid Projectid!!!", "files": null  };
     try {
         var project = await Projects.findById(projectid);
     } catch (err) {
@@ -251,11 +250,11 @@ async function listFiles(projectid){
 
 // get content in file
 async function getFile(projectid, filename){
+    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
+        return { "success": false, "description": "Invalid Projectid!!!" };    
     projectid = projectid.toLowerCase();
-    if (projectid.match(regxhex) === null || projectid.length !== 24)
-        return { "success": false, "description": "Invalid Projectid!!!" };
-    if (filename.match(regxfile) === null)
-        return { "success": false, "description": "Invalid File Name!!!", "content": null };
+    if (typeof(filename) !== "string" || filename.match(regxfile) === null)
+        return { "success": false, "description": "Invalid File Name!!!" };
     
     try{
         var project = await Projects.findById(projectid);
@@ -291,9 +290,9 @@ async function getFile(projectid, filename){
 
 // get users in project
 async function getProjectUsers(projectid){
+    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
+        return { "success": false, "description": "Invalid Projectid!!!" };    
     projectid = projectid.toLowerCase();
-    if (projectid.match(regxhex) === null || projectid.length !== 24)
-        return { "success": false, "description": "Invalid Projectid!!!" };
     try {
         var project = await Projects.findById(projectid);
     } catch (err) {
@@ -309,9 +308,9 @@ async function getProjectUsers(projectid){
 
 // get projectname in project
 async function getProjectName(projectid){
-    projectid = projectid.toLowerCase();
     if (projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!" };
+    projectid = projectid.toLowerCase();
     try {
         var project = await Projects.findById(projectid);
     } catch (err) {
