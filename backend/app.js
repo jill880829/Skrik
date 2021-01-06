@@ -137,7 +137,7 @@ wss.on('connection', ws => {
     ws.onmessage = async (message) => {
         const { data } = message
         console.log(data)
-        const {task, payload} = JSON.parse(data)
+        const [task, payload] = JSON.parse(data)
 
         switch (task) {
             case 'input': {

@@ -64,7 +64,7 @@ function Menu() {
     const [list, setList] = useState(transfer(ls));
     const [editMode, setEdit] = useState(false);
     const [USERNAME, setUSERNAME] = useState('init');
-
+    const [newProject, setNewProject] = useState('')
     const [company, setCompany] = useState('');
     const [git, setGit] = useState('');
     const [fb, setFb] = useState('');
@@ -85,7 +85,7 @@ function Menu() {
         const backendList = await result.json()
         console.log(backendList)
         setList([...transfer(backendList)])
-    }, [])
+    }, [newProject])
 
     const modalRef = React.useRef();
 
@@ -152,7 +152,7 @@ function Menu() {
                     }
                     else if (res.status === 200) {
                         console.log("success")
-                        setList([...list, { id: list.length + 1, name: newPro, history: 0, colab: newColab }])
+                        setNewProject(newPro)
                         modalRef.current.closeModal();
                     }
                     else if (res.status === 401){

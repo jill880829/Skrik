@@ -65,9 +65,10 @@ export default function Editor(props) {
                 'Content-Type': 'application/json'
             })
         })
-        
-        const backendList = await result.json()
-        if(backendList!==undefined){
+        //console.log(result)
+        const backendList = await result.text()
+        console.log(backendList)
+        if(backendList.length!==0){
             setFile([...backendList])
             setTree([...transfer(rmduplicate(backendList).list)])
         }
@@ -75,7 +76,7 @@ export default function Editor(props) {
         
         
         
-    }, [])
+    },[])
     console.log(treeStructure)
     function onChangeCode(value) {
         setLan(value.value);
