@@ -11,16 +11,16 @@ import Modal from './components/modal';
 import { IconContext } from "react-icons";
 import { FcPlus } from "react-icons/fc";
 import { BsTrash, BsClockHistory, BsFillPeopleFill } from "react-icons/bs";
-import { GoLocation,GoLink,GoDeviceMobile,GoMail } from "react-icons/go";
+import { GoLocation, GoLink, GoDeviceMobile, GoMail } from "react-icons/go";
 import { ImFacebook, ImGithub } from "react-icons/im";
-import { FaFacebook, FaGithub} from 'react-icons/fa'
+import { FaFacebook, FaGithub } from 'react-icons/fa'
 import { BiBuildingHouse } from 'react-icons/bi';
 import './components/project.css'
 import Select from 'react-select';
 
 class Project extends Component {
     render() {
-        const { id,key, name, hist, colab, intoProject, deleteProject } = this.props;
+        const { id, key, name, hist, colab, intoProject, deleteProject } = this.props;
         return (
             <div id={id} key={key} className='project_container' onClick={intoProject}>
                 <div className='project_wrapper' style={{ position: 'relative' }} onClick={this.intoProject}>
@@ -31,7 +31,7 @@ class Project extends Component {
                                 <BsClockHistory /> <span>changed {hist} days ago</span>
                             </div>
                             <div>
-                                <BsFillPeopleFill /> <span>{colab.length-1} collaborators</span>
+                                <BsFillPeopleFill /> <span>{colab.length - 1} collaborators</span>
                             </div>
                         </IconContext.Provider>
                     </div>
@@ -55,8 +55,8 @@ const transfer = (ele) => {
     return ele.map(element => ({
         'id': element.id_hash,
         'name': element.project_name,
-        'history':'0',
-        'colab':element.project_users,
+        'history': '0',
+        'colab': element.project_users,
     }));
 }
 
@@ -70,7 +70,7 @@ function Menu() {
     const [fb, setFb] = useState('');
     const [location, setLoc] = useState('');
     const [email, setEmail] = useState('');
-    const [savedData, setData] = useState(['','','','',''])
+    const [savedData, setData] = useState(['', '', '', '', ''])
 
     // const []
 
@@ -94,7 +94,7 @@ function Menu() {
     }
     const intoProject = (e) => {
         console.log(e)
-        window.location.href = '/Editor/'+e
+        window.location.href = '/Editor/' + e
         console.log('into project')
     }
     const handleKeyUp = (e) => {
@@ -102,13 +102,12 @@ function Menu() {
             console.log(e.target.value)
         }
     }
-    const confirmModal = (e) => {
+    const confirmModal = async (e) => {
         if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].nodeName.toLowerCase() === 'input') {
             if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].value !== '') {
                 let inputPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1]
                 let newPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1].value;
                 let newColab = (e.target.parentNode.parentNode.childNodes[1].childNodes[3].value).split(';');
-                // console.log(e.target.parentNode.parentNode.childNodes[1].childNodes[3])
                 const same = list.filter(project => { if (project.name === newPro) return true })
                 if (same.length > 0) {
                     console.log('This project name has already existed!');
@@ -116,36 +115,53 @@ function Menu() {
                     inputPro.parentNode.childNodes[0].childNodes[1].className = 'menu_modal_warning_visible'
                 }
                 else {
+                    let newProject
                     console.log(list.length)
                     console.log(list)
-                    const newProject = {
-                        'project_name': newPro,
-                        'colabs': newColab,
+                    if (newColab.length === 1 && newColab[0] === "") {
+                        newProject = {
+                            'project_name': newPro,
+                            'colabs': [],
+                        }
                     }
-                    fetch('/api/create_project', {
+                    else {
+                        newProject = {
+                            'project_name': newPro,
+                            'colabs': newColab,
+                        }
+                    }
+                    const res = await fetch('/api/create_project', {
                         method: 'POST', // or 'PUT'
                         body: JSON.stringify(newProject),
                         headers: new Headers({
                             'Content-Type': 'application/json'
                         })
-                    }).then(res => {
-                        console.log(res.status)
-                        if (res.status === 403) {
-                            console.log("403")
-                        }
-                        else if (res.status === 500) {
-                            console.log("500")
-                        }
-                        else if (res.status === 200) {
-                            console.log("success")
-                        }
-                        else {
-                            console.log("ERROR")
-                        }
                     })
+                    if (res.status === 403) {
+                       
+                        res.text().then(res => { 
+                            alert(`403 Forbidden: Refuse to create the project!\n${res}`)
+                            //console.log(res) 
+                        })
+                        //alert("403 Forbidden \nRefuse to create the project!")
+                    }
+                    else if (res.status === 500) {
+                        res.text().then(res => { 
+                            alert(`500 Internal Server Error\n${res}`)
+                        })
+                    }
+                    else if (res.status === 200) {
+                        console.log("success")
+                        setList([...list, { id: list.length + 1, name: newPro, history: 0, colab: newColab }])
+                        modalRef.current.closeModal();
+                    }
+                    else if (res.status === 401){
+                        res.text().then(res => { 
+                            alert(`401 Unauthorized\n${res}`)
+                        })
+                        window.location.href = '/Login'
+                    }
                     
-                    setList([...list, { id: list.length + 1, name: newPro, history: 0, colab: newColab }])
-                    modalRef.current.closeModal();
                 }
             }
             else {
@@ -158,12 +174,12 @@ function Menu() {
         const newList = list.filter(project => project.id !== id)
         setList(newList)
     }
-    const editProfile = () => { 
+    const editProfile = () => {
         console.log('edit');
         setEdit(true);
     }
     const back2Profile = () => { setEdit(false); }
-    const save = () => { 
+    const save = () => {
         setData([company, git, fb, location, email]);
         console.log(savedData)
         setEdit(false);
@@ -174,155 +190,155 @@ function Menu() {
             <div style={{ float: 'left', width: '20%', height: '100%', backgroundColor: 'transparent' }}>
                 <div className='menu_profile'>
                     <div className="profile_container">
-                        <div style={{display:'flex'}}>
+                        <div style={{ display: 'flex' }}>
                             <img className="profile_photo" src="https://i.imgur.com/1nzuh87.png" alt="photos"></img>
                         </div>
                         <div className="profile_names">
                             <p id='profile_realname'>Anita Lu</p>
-                            <p id='profile_username'>{ USERNAME }</p>
+                            <p id='profile_username'>{USERNAME}</p>
                         </div>
-                        
+
                         {editMode ?
                             <div>
-                            <div class="profile_detail">
-                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
-                                    <BiBuildingHouse style={{ verticalAlign:'middle'}}/>
-                                </IconContext.Provider>
-                                <div style={{marginLeft:'20px'}}></div>
+                                <div class="profile_detail">
+                                    <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
+                                        <BiBuildingHouse style={{ verticalAlign: 'middle' }} />
+                                    </IconContext.Provider>
+                                    <div style={{ marginLeft: '20px' }}></div>
                                     <input className='profile_edit_input'
                                         placeholder='Company'
                                         onChange={(event) => { setCompany(event.target.value) }}
-                                        defaultValue={ savedData[0]}>
+                                        defaultValue={savedData[0]}>
                                     </input>
-                            </div>
-                            <div class="profile_detail">
-                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
-                                    <FaGithub style={{ verticalAlign:'middle'}}/>
-                                </IconContext.Provider>
-                                <div style={{marginLeft:'20px'}}></div>
-                                <input className='profile_edit_input'
-                                    placeholder='Github Username'
+                                </div>
+                                <div class="profile_detail">
+                                    <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
+                                        <FaGithub style={{ verticalAlign: 'middle' }} />
+                                    </IconContext.Provider>
+                                    <div style={{ marginLeft: '20px' }}></div>
+                                    <input className='profile_edit_input'
+                                        placeholder='Github Username'
                                         onChange={(event) => { setGit(event.target.value) }}
-                                        defaultValue={ savedData[1]}
-                                >
-                                </input>
-                            </div>
-                            <div class="profile_detail">
-                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
-                                    <FaFacebook style={{ verticalAlign:'middle'}}/>
-                                </IconContext.Provider>
-                                <div style={{marginLeft:'20px'}}></div>
-                                <input className='profile_edit_input'
-                                    placeholder='Facebook Username'
+                                        defaultValue={savedData[1]}
+                                    >
+                                    </input>
+                                </div>
+                                <div class="profile_detail">
+                                    <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
+                                        <FaFacebook style={{ verticalAlign: 'middle' }} />
+                                    </IconContext.Provider>
+                                    <div style={{ marginLeft: '20px' }}></div>
+                                    <input className='profile_edit_input'
+                                        placeholder='Facebook Username'
                                         onChange={(event) => { setFb(event.target.value) }}
-                                        defaultValue={ savedData[2]}
-                                >
-                                </input>
-                            </div>
-                            <div class="profile_detail">
-                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
-                                    <GoLocation style={{ verticalAlign:'middle'}}/>
-                                </IconContext.Provider>
-                                <div style={{marginLeft:'20px'}}></div>
-                                <input className='profile_edit_input'
-                                    placeholder='Location'
+                                        defaultValue={savedData[2]}
+                                    >
+                                    </input>
+                                </div>
+                                <div class="profile_detail">
+                                    <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
+                                        <GoLocation style={{ verticalAlign: 'middle' }} />
+                                    </IconContext.Provider>
+                                    <div style={{ marginLeft: '20px' }}></div>
+                                    <input className='profile_edit_input'
+                                        placeholder='Location'
                                         onChange={(event) => { setLoc(event.target.value) }}
-                                        defaultValue={ savedData[3]}
-                                >
-                                </input>
-                            </div>
-                            <div class="profile_detail">
-                                <IconContext.Provider value={{color: '#bbbbbb', size: '20px' }}>
-                                    <GoMail style={{ verticalAlign:'middle'}}/>
-                                </IconContext.Provider>
-                                <div style={{marginLeft:'20px'}}></div>
-                                <input className='profile_edit_input'
-                                    placeholder='Email Address'
+                                        defaultValue={savedData[3]}
+                                    >
+                                    </input>
+                                </div>
+                                <div class="profile_detail">
+                                    <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
+                                        <GoMail style={{ verticalAlign: 'middle' }} />
+                                    </IconContext.Provider>
+                                    <div style={{ marginLeft: '20px' }}></div>
+                                    <input className='profile_edit_input'
+                                        placeholder='Email Address'
                                         onChange={(event) => { setEmail(event.target.value) }}
-                                        defaultValue={ savedData[4]}
-                                >
-                                </input>
+                                        defaultValue={savedData[4]}
+                                    >
+                                    </input>
+                                </div>
+                                <div style={{ display: 'flex', textAlign: 'center', justifyContent: 'center' }}>
+                                    <button onClick={save} style={{ display: 'inline-block', margin: '20px', padding: '2px 10px', backgroundColor: ' #48a147', borderColor: 'transparent', borderRadius: '10px', color: 'white' }}>Save</button>
+                                    <button onClick={back2Profile} style={{ display: 'inline-block', margin: '20px', padding: '2px 10px', backgroundColor: ' #aaaaaa', borderColor: 'transparent', borderRadius: '10px', color: 'white' }}>Cancel</button>
+                                </div>
+
                             </div>
-                            <div style={ {display:'flex', textAlign:'center', justifyContent:'center'}}>
-                                <button onClick={save} style={ {display:'inline-block', margin:'20px', padding:'2px 10px', backgroundColor:' #48a147', borderColor:'transparent', borderRadius:'10px', color:'white'}}>Save</button>
-                                <button onClick={back2Profile} style={ {display:'inline-block', margin:'20px', padding:'2px 10px', backgroundColor:' #aaaaaa', borderColor:'transparent', borderRadius:'10px', color:'white'}}>Cancel</button>
-                            </div>
-                            
-                            </div>
-                        :
+                            :
                             <div>
                                 <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                                    <button className='profile_edit_btn' variant='contained' onClick={ editProfile }>Edit Profile</button>
+                                    <button className='profile_edit_btn' variant='contained' onClick={editProfile}>Edit Profile</button>
                                 </div>
-                                <div style={{ height: 20 }} />  
+                                <div style={{ height: 20 }} />
                                 <div>
                                     {savedData[0] !== '' ?
                                         <div class="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
-                                                    <BiBuildingHouse style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                                <BiBuildingHouse style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                             </IconContext.Provider>
                                             {savedData[0].length <= 20 ?
                                                 <span className="profile_span">{savedData[0]}</span>
                                                 :
-                                                <span className="profile_span">{savedData[0].substring(0,20)}...</span>
+                                                <span className="profile_span">{savedData[0].substring(0, 20)}...</span>
                                             }
-                                    </div>
-                                    :null
+                                        </div>
+                                        : null
                                     }
                                     {savedData[1] !== '' ?
                                         <div class="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
-                                                    <FaGithub style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                                <FaGithub style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                             </IconContext.Provider>
                                             {savedData[1].length <= 20 ?
                                                 <span className="profile_span">{savedData[1]}</span>
                                                 :
-                                                <span className="profile_span">{savedData[1].substring(0,20)}...</span>
+                                                <span className="profile_span">{savedData[1].substring(0, 20)}...</span>
                                             }
-                                    </div>
-                                    :null
+                                        </div>
+                                        : null
                                     }
                                     {savedData[2] !== '' ?
                                         <div class="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
-                                                    <FaFacebook style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                                <FaFacebook style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                             </IconContext.Provider>
-                                            {savedData[2].length <=20 ?
+                                            {savedData[2].length <= 20 ?
                                                 <span className="profile_span">{savedData[2]}</span>
                                                 :
-                                                <span className="profile_span">{savedData[2].substring(0,20)}...</span>
+                                                <span className="profile_span">{savedData[2].substring(0, 20)}...</span>
                                             }
-                                    </div>
-                                    :null
+                                        </div>
+                                        : null
                                     }
                                     {savedData[3] !== '' ?
                                         <div class="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
-                                                    <GoLocation style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                                <GoLocation style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                             </IconContext.Provider>
                                             {savedData[3].length <= 20 ?
                                                 <span className="profile_span">{savedData[3]}</span>
                                                 :
-                                                <span className="profile_span">{savedData[3].substring(0,20)}...</span>
+                                                <span className="profile_span">{savedData[3].substring(0, 20)}...</span>
                                             }
-                                    </div>
-                                    :null
+                                        </div>
+                                        : null
                                     }
                                     {savedData[4] !== '' ?
                                         <div class="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
-                                                    <GoMail style={{marginRight:30, marginLeft:5, verticalAlign:'middle'}}/>
+                                                <GoMail style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                             </IconContext.Provider>
                                             {savedData[4].length <= 20 ?
                                                 <span className="profile_span">{savedData[4]}</span>
                                                 :
-                                                <span className="profile_span">{savedData[4].substring(0,20)}...</span>
+                                                <span className="profile_span">{savedData[4].substring(0, 20)}...</span>
                                             }
-                                    </div>
-                                    :null
+                                        </div>
+                                        : null
                                     }
+                                </div>
                             </div>
-                        </div>
                         }
                     </div>
                 </div>

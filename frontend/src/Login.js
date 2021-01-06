@@ -41,7 +41,7 @@ const Login = () => {
     const handleSocialLoginFailure = (err) => { console.error(err) }
     const postRegister = () => {
         console.log(username, password)
-        const data = { 'name': username, 'password': password };
+        const data = { 'username': username, 'password': password };
         if(checked){
             // Pass and push data to DB
             fetch('/api/register', {
@@ -53,11 +53,13 @@ const Login = () => {
             }).then(res => {
                 if(res.status===200){
                     setShowReg(false);
+                    alert("Successfully Registered!")
                 }
                 else if(res.status===500){
                     alert("500 Internal Server Error")
                 }
                 else if(res.status===403){
+                    console.log(res.data)
                     alert("403 Forbidden \nRefuse to register this set of username and password!")
                 }
                 else{

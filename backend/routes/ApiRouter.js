@@ -33,6 +33,7 @@ router.post('/register', jsonParser, async function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
     var result = await QueryUser.createUser(username, password);
+    
     if (result["success"] === false) 
     {
         if (result["description"].includes("Failed!!!"))
