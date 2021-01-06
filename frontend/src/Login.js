@@ -41,14 +41,36 @@ const Login = () => {
     const handleSocialLoginFailure = (err) => { console.error(err) }
     const postRegister = () => {
         console.log(username, password)
-        const data = { 'newName': username, 'newPassword': password };
-        setShowReg(false);
+        const data = { 'name': username, 'password': password };
         if(checked){
             // Pass and push data to DB
+            fetch('/api/register', {
+                method: 'POST', // or 'PUT'
+                body: JSON.stringify(data),
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                })
+            }).then(res => {
+                if(res.status===200){
+                    setShowReg(false);
+                }
+                else if(res.status===500){
+                    alert("500 Internal Server Error")
+                }
+                else if(res.status===403){
+                    alert("403 Forbidden \nRefuse to register this set of username and password!")
+                }
+                else{
+                    alert("Unknown Error")
+                }
+            })
+                .catch(error => console.error('Error:Login Error'))
 
         }
         else{
             // Error messages
+            alert("Please check your confirm password!")
+            setShowReg(true);
         }
     }
     const postData = () => {
