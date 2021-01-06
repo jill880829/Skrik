@@ -18,7 +18,7 @@ import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
 import FileStructure from './Structure'
 import useStructure from './useStructure'
-import {useParams,useLocation} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
