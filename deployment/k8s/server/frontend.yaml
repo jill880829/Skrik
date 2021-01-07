@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: frontend
+        image: asia.gcr.io/skrik-299012/frontend:v0.0.3
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+          name: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: default
+  labels:
+    app: frontend
+spec:
+  selector:
+    app: frontend
+  ports:
+    - name: http-port
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+  clusterIP: None

@@ -107,18 +107,17 @@ app.use('/api', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
+    console.log("[endpoint] 404 not found: " + req.url)
     next(createError(404));
 });
 
 // error handler
 app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message;
-    res.locals.error = req.app.get('env') === 'development' ? err : {};
+    console.log("[global err] uncaught error: " + err)
 
-    // render the error page
+    // send the error page
     res.status(err.status || 500);
-    res.render('error');
+    res.send('error');
 });
 
 app2 = express()

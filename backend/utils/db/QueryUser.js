@@ -74,29 +74,20 @@ async function listProjectids(username){
     return { "success": true, "description": "List Project ids", "ids": userdata.ProjectIds };
 }
 
-async function createFBUser(fbid, _user){
+async function authFB(fbid, profileName){
     if (typeof(fbid) !== "string" || fbid.match(regxnum) === null)
-        return { "success": false, "description": "Invalid fbid!!!" };
-    try{
-        var user = await UserData.findOne({FacebookId: fbid});
-    } catch(err) {
-        console.error("[db] error querying user: " + err);
-        return { "success": false, "description": "Querying user Failed!!!" };
-    }
+        throw "Invalid fbid!!!";
+    
+    var user = await UserData.findOne({FacebookId: fbid});
 
     if(user !== null)
-        return { "success": fasle, "description": "User Already Existed" };
+        return { username: user.username };
 
-    var buf = crypto.randomBytes(15);
-    var passwd = buf.toString('hex');
-    var username = sha256(_user).toString();        
-    try{  
-        await UserData.create({ Username: username, Password: passwd, FacebookId: fbid });
-    } catch (err) {
-        console.error("[db] error creating user in UserDatas database: " + err);
-        return { "success": false, "description": "User creation Failed!!!" };
-    }
-    return { "success": true, "description": "User creation Finished!!!" };
+    var passwd = crypto.randomBytes(15).toString('hex');
+    var username = "user-" + sha256(profileName).toString().substring(0, 10);
+    await UserData.create({ Username: username, Password: passwd, FacebookId: fbid, Nickname: username });
+
+    return { username: username };
 }
 
 async function setProfile(username, nickname, company, gitname, fbname, loc, email){
@@ -164,6 +155,6 @@ async function getProfile(username){
 module.exports = {authUser: authUser,
                   listProjectids:listProjectids,
                   createUser:createUser,
-                  createFBUser:createFBUser,
+                  authFB:authFB,
                   setProfile:setProfile,
                   getProfile:getProfile};

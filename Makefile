@@ -2,7 +2,7 @@
 include backend/.env
 export $(shell sed 's/=.*//' backend/.env)
 
-NOW := v0.0.2
+NOW := v0.0.3
 PROJECT_ID := skrik-299012
 
 init:
@@ -41,6 +41,15 @@ deploy_backend_build:
 	export DOCKER_NAME=backend && \
 	docker build \
 		-f deployment/local/backend_server/Dockerfile \
+		-t asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME) . && \
+	docker tag asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME) asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW) && \
+	docker push asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW) && \
+	echo asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW)
+
+deploy_frontend_build:
+	export DOCKER_NAME=frontend && \
+	docker build \
+		-f deployment/local/frontend_server/Dockerfile \
 		-t asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME) . && \
 	docker tag asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME) asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW) && \
 	docker push asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW) && \

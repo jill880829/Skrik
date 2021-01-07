@@ -30,7 +30,7 @@ const FILE_ICONS = {
     json: <SiJson />
 };
 
-const client = new WebSocket('ws://localhost:4000')
+const client = new WebSocket('wss://skrik.net/api/wss')
 
 const codingOptions = [
     { label: 'Python', value: 'python' },
@@ -143,7 +143,12 @@ export default function Editor(props) {
     }
 
     client.onopen = () => {
-        console.log('onopen')
+        console.log('websocket open')
+        setOpened(true)
+    }
+
+    client.onclose = () => {
+        console.log('websocket close')
         setOpened(true)
     }
 

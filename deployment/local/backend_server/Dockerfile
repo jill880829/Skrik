@@ -11,6 +11,8 @@ COPY backend/app.js ./app.js
 COPY backend/package-lock.json ./package-lock.json
 COPY backend/package.json ./package.json
 
+RUN mkdir tmp
+
 RUN npm install
 
 CMD ["npm", "start"]
