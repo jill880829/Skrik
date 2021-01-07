@@ -16,7 +16,7 @@ import { AiOutlineFile, AiFillRest } from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
-import FileStructure from './structure'
+import FileStructure from './Structure'
 import useStructure from './useStructure'
 import { useParams } from 'react-router-dom'
 
@@ -30,7 +30,7 @@ const FILE_ICONS = {
     json: <SiJson />
 };
 
-const client = new WebSocket('ws://localhost:3002')
+const client = new WebSocket('ws://localhost:4000')
 
 const codingOptions = [
     { label: 'Python', value: 'python' },
