@@ -16,7 +16,7 @@ import { AiOutlineFile, AiFillRest} from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
-import FileStructure from './Structure'
+import FileStructure from './structure'
 import useStructure from './useStructure'
 import {useParams} from 'react-router-dom'
 
@@ -30,7 +30,7 @@ const FILE_ICONS = {
     json: <SiJson />
 };
 
-const client = new WebSocket('ws://localhost:4000')
+const client = new WebSocket('ws://localhost:3002')
 
 const codingOptions = [
     { label: 'Python', value: 'python' },
@@ -88,7 +88,10 @@ export default function Editor(props) {
     client.onmessage = (message) => {
         const { data } = message
         const [task, update] = JSON.parse(data)
-        if (task === 'output') {
+        if (task === 'init') {
+            setCodes(update)
+        }
+        else if (task === 'output') {
             let tmp = codes;
             const content = update.content
             content.forEach((part) => {
