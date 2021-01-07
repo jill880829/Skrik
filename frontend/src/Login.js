@@ -31,18 +31,18 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirm, setConfirm] = useState("");
-    const [checked, setChecked] = useState(false); 
+    const [checked, setChecked] = useState(false);
     const [showRegister, setShowReg] = useState(false);
     const [checkIcon, setIconColor] = useState("#a2693b");
 
-    
+
     const handleSocialLogin = (user) => { console.log(user) }
 
     const handleSocialLoginFailure = (err) => { console.error(err) }
     const postRegister = () => {
         console.log(username, password)
         const data = { 'username': username, 'password': password };
-        if(checked){
+        if (checked) {
             // Pass and push data to DB
             fetch('/api/register', {
                 method: 'POST', // or 'PUT'
@@ -51,25 +51,25 @@ const Login = () => {
                     'Content-Type': 'application/json',
                 })
             }).then(res => {
-                if(res.status===200){
+                if (res.status === 200) {
                     setShowReg(false);
                     alert("Successfully Registered!")
                 }
-                else if(res.status===500){
+                else if (res.status === 500) {
                     alert("500 Internal Server Error")
                 }
-                else if(res.status===403){
+                else if (res.status === 403) {
                     console.log(res.data)
                     alert("403 Forbidden \nRefuse to register this set of username and password!")
                 }
-                else{
+                else {
                     alert("Unknown Error")
                 }
             })
                 .catch(error => console.error('Error:Login Error'))
 
         }
-        else{
+        else {
             // Error messages
             alert("Please check your confirm password!")
             setShowReg(true);
@@ -77,7 +77,7 @@ const Login = () => {
     }
     const postData = () => {
         console.log(username, password)
-        const data = {"username":username,"password":password}
+        const data = { "username": username, "password": password }
         fetch('/api/login', {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data),
@@ -98,8 +98,8 @@ const Login = () => {
         })
             .catch(error => console.error('Error:Login Error'))
     }
-    const handleKeyUp = (e) => { 
-        if (e === password) { 
+    const handleKeyUp = (e) => {
+        if (e === password) {
             setChecked(true);
             setIconColor('#48a147');
         }
@@ -109,8 +109,8 @@ const Login = () => {
         }
     }
 
-    
-    
+
+
 
     const toRegister = () => {
         setShowReg(true);
@@ -129,68 +129,68 @@ const Login = () => {
                         alt='brand'
                     />
                 </Grid>
-                {showRegister && 
+                {showRegister &&
                     <Grid container item xs={12} sm={6} style={{ padding: 10, backgroundColor: ' hsl(225, 6%, 13%)' }} direction='column' justify='space-between' alignItems='center'>
                         <div />
                         <div style={{ display: 'flex', flexDirection: 'column', padding: 30, borderRadius: '10%' }}>
                             <h1 style={{ color: 'lightgray', textAlign: 'center' }}>Register</h1>
-                            <Divider variant="fullWidth" style={{backgroundColor:'gray',width:'100%', textAlign:'center', marginTop:'20px' }}/>
+                            <Divider variant="fullWidth" style={{ backgroundColor: 'gray', width: '100%', textAlign: 'center', marginTop: '20px' }} />
                             <div style={{ height: 20 }} />
                             <CssTextField
-                                    label='Username'
-                                    margin='normal'
-                                    variant="outlined"
-                                    onChange={(event)=>{setUsername(event.target.value)}}
-                                    InputLabelProps={{ style: { color: "#a2693b", } }}
-                                    InputProps={{
-                                        style: { color: "#a2693b", letterSpacing: 1 },
-                                        startAdornment: (
-                                            <InputAdornment position="start"><AccountCircle /></InputAdornment>)
-                                    }}>
-                                </CssTextField>
+                                label='Username'
+                                margin='normal'
+                                variant="outlined"
+                                onChange={(event) => { setUsername(event.target.value) }}
+                                InputLabelProps={{ style: { color: "#a2693b", } }}
+                                InputProps={{
+                                    style: { color: "#a2693b", letterSpacing: 1 },
+                                    startAdornment: (
+                                        <InputAdornment position="start"><AccountCircle /></InputAdornment>)
+                                }}>
+                            </CssTextField>
                             <CssTextField
-                                    label='Password'
-                                    type="password"
-                                    margin='normal'
-                                    variant="outlined"
-                                    onChange={(event) => {
-                                        setPassword(event.target.value);
-                                    }}
-                                    InputLabelProps={{ style: { color: "#a2693b" } }}
-                                    InputProps={{
-                                        style: { color: "#a2693b", letterSpacing: 1, size: 30 },
-                                        startAdornment: (
-                                            <InputAdornment position="start"><Lock /></InputAdornment>)
-                                    }}>
-                                </CssTextField>
+                                label='Password'
+                                type="password"
+                                margin='normal'
+                                variant="outlined"
+                                onChange={(event) => {
+                                    setPassword(event.target.value);
+                                }}
+                                InputLabelProps={{ style: { color: "#a2693b" } }}
+                                InputProps={{
+                                    style: { color: "#a2693b", letterSpacing: 1, size: 30 },
+                                    startAdornment: (
+                                        <InputAdornment position="start"><Lock /></InputAdornment>)
+                                }}>
+                            </CssTextField>
                             <CssTextField
-                                    label='Confirm Password'
-                                    type="password"
-                                    margin='normal'
-                                    variant="outlined"
-                                    onChange={(event) => {
-                                        setConfirm(event.target.value);
-                                        handleKeyUp(event.target.value);
-                                    }}
-                                    InputLabelProps={{ style: { color: "#a2693b" } }}
-                                    InputProps={{
-                                        style: { color: "#a2693b", letterSpacing: 1, size: 30 },
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <IconContext.Provider value={{ color: checkIcon, size: '23px', className: 'project_icon' }}>
-                                                    <IoCheckbox />
-                                                </IconContext.Provider>
-                                            </InputAdornment>)
-                                    }}>
-                                </CssTextField>
+                                label='Confirm Password'
+                                type="password"
+                                margin='normal'
+                                variant="outlined"
+                                onChange={(event) => {
+                                    setConfirm(event.target.value);
+                                    handleKeyUp(event.target.value);
+                                }}
+                                InputLabelProps={{ style: { color: "#a2693b" } }}
+                                InputProps={{
+                                    style: { color: "#a2693b", letterSpacing: 1, size: 30 },
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <IconContext.Provider value={{ color: checkIcon, size: '23px', className: 'project_icon' }}>
+                                                <IoCheckbox />
+                                            </IconContext.Provider>
+                                        </InputAdornment>)
+                                }}>
+                            </CssTextField>
                             <div style={{ height: 20 }} />
                             <Button id='login_login_btn' variant='contained' onClick={postRegister}>
                                 Register
                             </Button>
-                        
-                        <div id='login_separator'>or</div>
-                        <Button id='login_join_btn' onClick={toLogin}>Back to Login</Button>
-                    </div>
+
+                            <div id='login_separator'>or</div>
+                            <Button id='login_join_btn' onClick={toLogin}>Back to Login</Button>
+                        </div>
                         <div />
                     </Grid>
                 }
@@ -209,7 +209,7 @@ const Login = () => {
                                 label='Username'
                                 margin='normal'
                                 variant="outlined"
-                                onChange={(event)=>{setUsername(event.target.value)}}
+                                onChange={(event) => { setUsername(event.target.value) }}
                                 InputLabelProps={{ style: { color: "#a2693b", } }}
                                 InputProps={{
                                     style: { color: "#a2693b", letterSpacing: 1 },
@@ -222,7 +222,7 @@ const Login = () => {
                                 type="password"
                                 margin='normal'
                                 variant="outlined"
-                                onChange={(event)=>{setPassword(event.target.value)}}
+                                onChange={(event) => { setPassword(event.target.value) }}
                                 InputLabelProps={{ style: { color: "#a2693b" } }}
                                 InputProps={{
                                     style: { color: "#a2693b", letterSpacing: 1, size: 30 },
@@ -238,7 +238,7 @@ const Login = () => {
                             <Button id='login_join_btn' onClick={toRegister}>Interested in joining?</Button>
                             <div id='login_separator'>or</div>
                             <div id='login_social_login_container'>
-                                <SocialButton
+                                {/* <SocialButton
                                     provider='facebook'
                                      appId='1085741245183609'
                                     onLoginSuccess={handleSocialLogin}
@@ -249,7 +249,13 @@ const Login = () => {
                                         <ImFacebook2 style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                     </IconContext.Provider>
                                     Login with Facebook
-                                    </SocialButton>
+                                    </SocialButton> */}
+                                <Button className='login_social_btn login_fb_btn' onClick={()=>{window.location.href='/api/login/fb'}}>
+                                    <IconContext.Provider value={{ color: 'white', size: '20px' }}>
+                                        <ImFacebook2 style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
+                                    </IconContext.Provider>
+                                    Login with Facebook
+                                </Button>
                                 <SocialButton
                                     provider='google'
                                     appId='1003856103545-uquo9c3ki6ka55lsbct1etdkctsirfqb.apps.googleusercontent.com'
