@@ -27,7 +27,7 @@ async function createUser(username, password){
         return { "success": false, "description": "Username Existed" };
     const passwordHash = base64.stringify(sha256(password));
     try{  
-        await UserData.create({ Username: username, Password: passwordHash });
+        await UserData.create({ Username: username, Password: passwordHash, Nickname: username});
     } catch (err) {
         console.error("[db] error creating user in UserDatas database: " + err);
         return { "success": false, "description": "User creation Failed!!!" };

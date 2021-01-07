@@ -63,7 +63,7 @@ const transfer = (ele) => {
 function Menu() {
     const [list, setList] = useState(transfer(ls));
     const [editMode, setEdit] = useState(false);
-    const [USERNAME, setUSERNAME] = useState('init');
+    const [nickname, setNickname] = useState('Anita Lu');
     const [newProject, setNewProject] = useState('')
     const [company, setCompany] = useState('');
     const [git, setGit] = useState('');
@@ -71,7 +71,7 @@ function Menu() {
     const [location, setLoc] = useState('');
     const [email, setEmail] = useState('');
     const [savedData, setData] = useState(['', '', '', '', ''])
-
+    const [update, setUpdate] = useState({});
     // const []
 
     useEffect(async () => {
@@ -105,15 +105,50 @@ function Menu() {
         }
         else if (result.status===200){
             const backendList = await result.json()
-            console.log(backendList)
             setList([...transfer(backendList)])
         }
         else{
             alert(`Unknown Error!`)
         }
-
-    }, [newProject])
-
+        const resProfile = await
+            fetch('/api/get_profile', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            })
+        if(resProfile.status===401){
+            resProfile.text().then(res => {
+                window.location.href = '/Login'
+            })
+        }
+        else if(resProfile.status===403){
+            resProfile.text().then(res => {
+                alert(`403 Forbidden: Refuse to create the project!\n${res}`)
+                //console.log(res) 
+            })
+        }
+        else if(resProfile.status===500){
+            resProfile.text().then(res => {
+                alert(`500 Internal Server Error\n${res}`)
+                //console.log(res) 
+            })
+        }
+        else if(resProfile.status===200){
+            //const a = await resProfile.json()
+            //console.log(a)
+            const {Nickname, Company, Email, Githubname, Facebookname, Location} = await resProfile.json()
+            setNickname(Nickname)
+            setCompany(Company)
+            setGit(Githubname)
+            setFb(Facebookname)
+            setLoc(Location)
+            setEmail(Email)
+            setData([Company, Githubname, Facebookname, Location, Email]);
+        }
+    }, [newProject,update])
+    
     const modalRef = React.useRef();
 
     const openModal = () => {
@@ -208,8 +243,40 @@ function Menu() {
     const back2Profile = () => { setEdit(false); }
     const save = () => {
         setData([company, git, fb, location, email]);
-        console.log(savedData)
-        setEdit(false);
+        const passData = {
+            "Nickname": nickname,
+            "Company": company,
+            "Email": email,
+            "Githubname": git,
+            "Facebookname": fb,
+            "Location": location,
+        }
+        fetch('/api/set_profile', {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(passData),
+            headers: new Headers({
+                'Content-Type': 'application/json',
+            })
+        }).then(res => {
+            if (res.status === 401) {
+                res.text().then(res => {
+                    alert(`401 Unauthorized\n${res}`)
+                })
+                window.location.href = '/Login'
+            }
+            else if (res.status === 403) {
+                res.text().then(res => {
+                    alert(`403 Forbidden: Refuse to save the profile!\n${res}`)
+                })
+            }
+            else if (res.status === 200) {
+                setEdit(false);
+                setUpdate(passData);
+            }
+            else {
+                console.log("ERROR")
+            }
+        })
     }
     return (
         <div id='menu_container' >
@@ -221,13 +288,13 @@ function Menu() {
                             <img className="profile_photo" src="https://i.imgur.com/1nzuh87.png" alt="photos"></img>
                         </div>
                         <div className="profile_names">
-                            <p id='profile_realname'>Anita Lu</p>
-                            <p id='profile_username'>{USERNAME}</p>
+                            <p id='profile_realname'>{nickname}</p>
+                            {/* <p id='profile_username'>{USERNAME}</p> */}
                         </div>
 
                         {editMode ?
                             <div>
-                                <div class="profile_detail">
+                                <div className="profile_detail">
                                     <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
                                         <BiBuildingHouse style={{ verticalAlign: 'middle' }} />
                                     </IconContext.Provider>
@@ -238,7 +305,7 @@ function Menu() {
                                         defaultValue={savedData[0]}>
                                     </input>
                                 </div>
-                                <div class="profile_detail">
+                                <div className="profile_detail">
                                     <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
                                         <FaGithub style={{ verticalAlign: 'middle' }} />
                                     </IconContext.Provider>
@@ -250,7 +317,7 @@ function Menu() {
                                     >
                                     </input>
                                 </div>
-                                <div class="profile_detail">
+                                <div className="profile_detail">
                                     <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
                                         <FaFacebook style={{ verticalAlign: 'middle' }} />
                                     </IconContext.Provider>
@@ -262,7 +329,7 @@ function Menu() {
                                     >
                                     </input>
                                 </div>
-                                <div class="profile_detail">
+                                <div className="profile_detail">
                                     <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
                                         <GoLocation style={{ verticalAlign: 'middle' }} />
                                     </IconContext.Provider>
@@ -274,7 +341,7 @@ function Menu() {
                                     >
                                     </input>
                                 </div>
-                                <div class="profile_detail">
+                                <div className="profile_detail">
                                     <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
                                         <GoMail style={{ verticalAlign: 'middle' }} />
                                     </IconContext.Provider>
@@ -300,7 +367,7 @@ function Menu() {
                                 <div style={{ height: 20 }} />
                                 <div>
                                     {savedData[0] !== '' ?
-                                        <div class="profile_detail">
+                                        <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                 <BiBuildingHouse style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                             </IconContext.Provider>
@@ -313,7 +380,7 @@ function Menu() {
                                         : null
                                     }
                                     {savedData[1] !== '' ?
-                                        <div class="profile_detail">
+                                        <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                 <FaGithub style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                             </IconContext.Provider>
@@ -326,7 +393,7 @@ function Menu() {
                                         : null
                                     }
                                     {savedData[2] !== '' ?
-                                        <div class="profile_detail">
+                                        <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                 <FaFacebook style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                             </IconContext.Provider>
@@ -339,7 +406,7 @@ function Menu() {
                                         : null
                                     }
                                     {savedData[3] !== '' ?
-                                        <div class="profile_detail">
+                                        <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                 <GoLocation style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                             </IconContext.Provider>
@@ -352,7 +419,7 @@ function Menu() {
                                         : null
                                     }
                                     {savedData[4] !== '' ?
-                                        <div class="profile_detail">
+                                        <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                 <GoMail style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                             </IconContext.Provider>
