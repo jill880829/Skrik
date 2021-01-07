@@ -20,8 +20,8 @@ const QueryUser = require('./utils/db/QueryUser');
 var app = express();
 
 const { text } = require('body-parser');
-const projectid = "5ff17b374b87d05f09acb6aa";
-const filename = "test_file"
+const projectid = "5ff5d613a7ade00013d63a26";
+const filename = "/test_file"
 
 function empty(a, name) {
     let t = (a === undefined || a === "")
@@ -126,15 +126,42 @@ const server = http.createServer(app2)
 const wss = new WebSocket.Server({ server })
 let buffers = {}
 
-wss.on('connection', ws => {
+wss.on('connection', async ws => {
     const sendData = (client, data) => {
         client.send(JSON.stringify(data))
     }
-    const sendErr = (data) => {
+    const sendInit = (data) => {
         ws.send(JSON.stringify(data))
     }
-    // sendData(ws, ['output', codes])
 
+    let content = ''
+    var result = await QueryProject.getFile(projectid, filename)
+    if (result['success'] === false) {
+        console.log("error", result['description'])
+    }
+    else {
+        // TODO
+        /*
+        result['content'] FORMAT
+        [ { "lineid": Integer, "user": string, "data": string } ]
+        */
+        console.log(result['content'])
+        // console.log(buffers)
+        for(let buffer of Object.values(buffers)) {
+            console.log(buffer.line, buffer.text)
+            let textInBuffer = (buffer.text.slice(-1) === '\n') ? buffer.text.slice(0, -1) : buffer.text
+            result['content'][buffer.line].data = textInBuffer
+        }
+        console.log(result['content'])
+        for(let text of result['content']) {
+            content += (text["data"] + '\n')
+        }
+        // console.log(content)
+        content = content.slice(0, -1)
+    }
+    sendInit(['init', content])
+
+    console.log("connected")
     ws.onmessage = async (message) => {
         const { data } = message
         console.log(data)
@@ -147,9 +174,12 @@ wss.on('connection', ws => {
                 if (content.length === 2 && content[0].ope + content[1].ope === 1 &&
                     content[0].start === content[1].start && content[0].start + 1 === content[0].end &&
                     content[0].end === content[1].end) {
+                    if (buffers[author] === undefined) {
+                        buffers[author] = { line: content[0].start, text: '' }
+                    }
                     if (content[0].start != buffers[author].line) {
                         if (buffers[author].text != '') {
-                            let textToDB = buffers[author].text.slice(0, -1)
+                            let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
                             var result = await QueryProject.addLineChange(projectid, filename, author, buffers[author].line + 1, 'delete', '')
                             console.log('delete', buffers[author].line + 1)
                             if (result['success'] === false) {
