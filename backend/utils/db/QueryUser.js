@@ -70,6 +70,9 @@ async function listProjectids(username){
     return { "success": true, "description": "List Project ids", "ids": userdata.ProjectIds };
 }
 
+async function createFBUser(fbid){
+
+}
 
 module.exports = {authUser: authUser,
                   listProjectids:listProjectids,

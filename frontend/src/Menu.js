@@ -76,10 +76,8 @@ function Menu() {
 
     useEffect(async () => {
         const result = await
-            fetch('http://localhost:3001/api/projects', {
+            fetch('/api/projects', {
                 method: 'GET',
-                credentials: 'include',
-                withCredentials: true,
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
@@ -133,11 +131,9 @@ function Menu() {
                             'colabs': newColab,
                         }
                     }
-                    const res = await fetch('http://localhost:3001/api/create_project', {
+                    const res = await fetch('/api/create_project', {
                         method: 'POST', // or 'PUT'
                         body: JSON.stringify(newProject),
-                        credentials: 'include',
-                        withCredentials: true,
                         headers: new Headers({
                             'Content-Type': 'application/json'
                         })

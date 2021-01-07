@@ -44,11 +44,9 @@ const Login = () => {
         const data = { 'username': username, 'password': password };
         if(checked){
             // Pass and push data to DB
-            fetch('http://localhost:3001/api/register', {
+            fetch('/api/register', {
                 method: 'POST', // or 'PUT'
                 body: JSON.stringify(data),
-                credentials: 'include',
-                withCredentials: true,
                 headers: new Headers({
                     'Content-Type': 'application/json',
                 })
@@ -80,11 +78,9 @@ const Login = () => {
     const postData = () => {
         console.log(username, password)
         const data = {"username":username,"password":password}
-        fetch('http://localhost:3001/api/login', {
+        fetch('/api/login', {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(data),
-            credentials: 'include',
-            withCredentials: true,
             headers: new Headers({
                 'Content-Type': 'application/json',
             })

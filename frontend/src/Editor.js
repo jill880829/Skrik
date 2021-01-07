@@ -58,10 +58,8 @@ export default function Editor(props) {
     const {hash} = useParams()
     const [projectName,setProjectName] = useState("")
     useEffect( async () => {
-        const result = await fetch(`http://localhost:3001/api/ls/${hash}`, {
+        const result = await fetch(`/api/ls/${hash}`, {
             method: 'GET',
-            credentials: 'include',
-            withCredentials: true,
             headers: new Headers({
                 'Content-Type': 'application/json'
             })
