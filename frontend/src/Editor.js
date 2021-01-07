@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material-darker.css'
 import 'codemirror/mode/xml/xml'
@@ -12,13 +12,13 @@ import { diffLines } from 'diff'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { SiCplusplus, SiJson } from "react-icons/si";
-import { AiOutlineFile, AiFillRest} from "react-icons/ai";
+import { AiOutlineFile, AiFillRest } from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
 import FileStructure from './Structure'
 import useStructure from './useStructure'
-import {useParams} from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -42,8 +42,8 @@ const codingOptions = [
 ]
 
 export default function Editor(props) {
-    const ls=[]
-    const {treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure([{
+    const ls = []
+    const { treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure([{
         type: "blankFolder",
         displayAddBlank: false,
     },
@@ -55,25 +55,51 @@ export default function Editor(props) {
     const [filesStructure, setFile] = useState(ls);
     const [language, setLan] = useState('python');
     const [fileName, setFileName] = useState('Untitled')
-    const {hash} = useParams()
-    const [projectName,setProjectName] = useState("")
-    useEffect( async () => {
+    const { hash } = useParams()
+    const [projectName, setProjectName] = useState("")
+    useEffect(async () => {
         const result = await fetch(`/api/ls/${hash}`, {
             method: 'GET',
             headers: new Headers({
                 'Content-Type': 'application/json'
             })
         })
-        //console.log(result)
-        const {project_name,files} = await result.json()
-        setProjectName(project_name)
-        console.log(files)
-        if(files.length!==0){
-            setFile([...files])
-            setTree([...transfer(rmduplicate(files).list)])
+        if (result.status === 401) {
+            result.text().then(res => {
+                // res.text().then(res => {
+                //     alert(`401 Unauthorized\n${res}`)
+                // })
+                window.location.href = '/Login'
+            })
         }
-        
-    },[])
+        else if (result.status === 403) {
+            result.text().then(res => {
+                alert(`403 Forbidden: Refuse to create the project!\n${res}`)
+                //console.log(res) 
+            })
+        }
+        else if (result.status === 500) {
+            result.text().then(res => {
+                alert(`500 Internal Server Error\n${res}`)
+                //console.log(res) 
+            })
+        }
+        else if (result.status === 200) {
+            const { project_name, files } = await result.json()
+            setProjectName(project_name)
+            console.log(files)
+            if (files.length !== 0) {
+                setFile([...files])
+                setTree([...transfer(rmduplicate(files).list)])
+            }
+        }
+        else{
+            alert("Unknown Error!")
+        }
+        //console.log(result)
+
+
+    }, [])
 
     function onChangeCode(value) {
         setLan(value.value);
@@ -88,7 +114,10 @@ export default function Editor(props) {
     client.onmessage = (message) => {
         const { data } = message
         const [task, update] = JSON.parse(data)
-        if (task === 'output') {
+        if (task === 'init') {
+            setCodes(update)
+        }
+        else if (task === 'output') {
             let tmp = codes;
             const content = update.content
             content.forEach((part) => {
@@ -103,9 +132,9 @@ export default function Editor(props) {
             })
             setCodes(tmp)
         }
-        else if(task === 'output-path'){
-            const rmdup = rmduplicate([...filesStructure,update])
-            if(rmdup.duplicate){
+        else if (task === 'output-path') {
+            const rmdup = rmduplicate([...filesStructure, update])
+            if (rmdup.duplicate) {
                 console.log("EXISTS")
             }
             setFile([...rmdup.list])
@@ -147,7 +176,7 @@ export default function Editor(props) {
     const requestFileContext = (ls) => {
         sendData(['file', ls])
         const filenamesplit = ls.split('/')
-        setFileName(filenamesplit[filenamesplit.length-1])
+        setFileName(filenamesplit[filenamesplit.length - 1])
     }
     const deb = (ls) => {
         rmduplicate(ls)
@@ -156,18 +185,18 @@ export default function Editor(props) {
     const ext = fileName.split(".")[1];
     return (
         <div>
-            <span onClick={()=>deb(ls)}>debugger</span>
+            <span onClick={() => deb(ls)}>debugger</span>
             <div className='page_container'>
                 <div id='folder_structure'>
                     <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} treeStructure={treeStructure}
-                    setTree={setTree} resetStatus={resetStatus} onClickFile={onClickFile} onClickFolder={onClickFolder} 
-                    AddNewFile={AddNewFile} SaveToTree={SaveToTree} currentFilePath= {currentFilePath}/>
+                        setTree={setTree} resetStatus={resetStatus} onClickFile={onClickFile} onClickFolder={onClickFolder}
+                        AddNewFile={AddNewFile} SaveToTree={SaveToTree} currentFilePath={currentFilePath} />
                 </div>
                 <div id='editor_container'>
                     <div id='editor_title'>
                         <div>
                             {FILE_ICONS[ext] || <AiOutlineFile />}
-                            <span style={{marginLeft:"10px"}}>{fileName}</span>
+                            <span style={{ marginLeft: "10px" }}>{fileName}</span>
                         </div>
                         <CodeSelect options={codingOptions} onChange={onChangeCode} />
                     </div>
@@ -184,8 +213,8 @@ export default function Editor(props) {
                             lineNumbers: true,
                             cursorHeight: 0.85,
                             indentUnit: 0,
-                            smartIndent:false,
-                            electricChars:false
+                            smartIndent: false,
+                            electricChars: false
                         }}
                         placeholder='Select a code mode...'
                         defaultValue={{ label: "Select a code mode...", value: 0 }}

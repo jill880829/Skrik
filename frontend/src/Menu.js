@@ -83,9 +83,35 @@ function Menu() {
                     'Content-Type': 'application/json'
                 }
             })
-        const backendList = await result.json()
-        console.log(backendList)
-        setList([...transfer(backendList)])
+        if(result.status===401){
+            result.text().then(res => {
+                // res.text().then(res => {
+                //     alert(`401 Unauthorized\n${res}`)
+                // })
+                window.location.href = '/Login'
+            })
+        }
+        else if(result.status===403){
+            result.text().then(res => {
+                alert(`403 Forbidden: Refuse to create the project!\n${res}`)
+                //console.log(res) 
+            })
+        }
+        else if(result.status===500){
+            result.text().then(res => {
+                alert(`500 Internal Server Error\n${res}`)
+                //console.log(res) 
+            })
+        }
+        else if (result.status===200){
+            const backendList = await result.json()
+            console.log(backendList)
+            setList([...transfer(backendList)])
+        }
+        else{
+            alert(`Unknown Error!`)
+        }
+
     }, [newProject])
 
     const modalRef = React.useRef();
@@ -96,7 +122,7 @@ function Menu() {
     const intoProject = (e) => {
         console.log('into project')
         window.location.href = `/Editor/${e}`
-        
+
     }
     const handleKeyUp = (e) => {
         if (e.key === 'Enter' && e.target.value !== "") {
@@ -139,15 +165,15 @@ function Menu() {
                         })
                     })
                     if (res.status === 403) {
-                       
-                        res.text().then(res => { 
+
+                        res.text().then(res => {
                             alert(`403 Forbidden: Refuse to create the project!\n${res}`)
                             //console.log(res) 
                         })
                         //alert("403 Forbidden \nRefuse to create the project!")
                     }
                     else if (res.status === 500) {
-                        res.text().then(res => { 
+                        res.text().then(res => {
                             alert(`500 Internal Server Error\n${res}`)
                         })
                     }
@@ -156,13 +182,13 @@ function Menu() {
                         setNewProject(newPro)
                         modalRef.current.closeModal();
                     }
-                    else if (res.status === 401){
-                        res.text().then(res => { 
+                    else if (res.status === 401) {
+                        res.text().then(res => {
                             alert(`401 Unauthorized\n${res}`)
                         })
                         window.location.href = '/Login'
                     }
-                    
+
                 }
             }
             else {
@@ -353,7 +379,7 @@ function Menu() {
                             name={project.name}
                             hist={project.history}
                             colab={project.colab}
-                            intoProject={() => intoProject(project.id,project.name)}
+                            intoProject={() => intoProject(project.id, project.name)}
                             deleteProject={() => deleteProject(project.id)}
                         >
                         </Project>))
