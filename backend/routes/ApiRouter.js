@@ -26,6 +26,7 @@ router.get('/', function (req, res) {
 router.post('/register', jsonParser, async function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
+    console.log(`[endpoint] /api/register: username: ${username} password: ${password}`);
     var result = await QueryUser.createUser(username, password);
     
     if (result["success"] === false) 
@@ -41,8 +42,10 @@ router.post('/register', jsonParser, async function (req, res) {
 
 /* Get profile page and list projectids */
 router.get('/projects', async function (req, res) {
-    if(! req.isAuthenticated())
+    if(! req.isAuthenticated()){
+        console.log('[endpoint] /api/projects: Invalid User!!!')
         return res.status(401).send("Invalid User!!!");
+    }
     var queryUsername = req.session.passport.user;
     var result = await QueryUser.listProjectids(queryUsername);
     if (result["success"] === false) {
@@ -71,6 +74,7 @@ router.get('/projects', async function (req, res) {
                 }
             }
         }
+        console.log(`[endpoint] /api/projects: Username: ${queryUsername} result: ${result}`);
         return res.send(projects_info);
 });
 
@@ -82,9 +86,7 @@ router.get('/ls/:idsha', async function (req, res) {
     if(! req.isAuthenticated())
         return res.status(401).send("Invalid User!!!");
     var idsha = req.params.idsha;
-    console.log('get id...');
     var get_res = await QueryRedis.getID(idsha);
-    console.log(get_res);
     if (get_res["success"] === false) 
         return res.status(403).send(get_res["description"]);
     else
@@ -160,5 +162,7 @@ router.post('/set_profile', async function (req, res){
     return res.send(result["description"]);
 });
 
+
 module.exports = router;
 
+  

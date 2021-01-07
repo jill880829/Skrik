@@ -7,8 +7,16 @@ metadata:
     app: nginx-config
 data:
   default.conf: |
+    upstream socketio {
+      server backend:3002;
+    }
+
     upstream backend {
       server backend:3001;
+    }
+
+    upstream frontend {
+      server frontend:3000;
     }
 
     server {
@@ -16,13 +24,23 @@ data:
       listen [::]:80;
       server_name  _;
 
-      location /api/ {
-        add_header Content-Type application/json; # Prevents download
-        proxy_pass http://backend/api/;
+      location ^~ /api/login {
+        proxy_pass http://backend/api/login;
+      }
+
+      location /api/wss {
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+
+        proxy_pass http://socketio/;
+        proxy_connect_timeout 30m;
+        proxy_send_timeout 30m;
+        proxy_read_timeout 30m;
+
       }
 
       location / {
-        add_header Content-Type text/plain; # Prevents download
-        return 200 "Hello world! Kubernetes + Let's encrypt demo.";
+        proxy_pass http://frontend/;
       }
     }
