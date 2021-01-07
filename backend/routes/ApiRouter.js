@@ -26,7 +26,6 @@ router.get('/', function (req, res) {
 router.post('/register', jsonParser, async function (req, res) {
     var username = req.body.username;
     var password = req.body.password;
-    console.log(typeof(username))
     var result = await QueryUser.createUser(username, password);
     
     if (result["success"] === false) 
@@ -129,6 +128,36 @@ router.post('/create_project', jsonParser, async function (req, res) {
 router.get('/download_project', async function (req, res){
     // TODO
     return res.send('still working...');
+});
+
+/* get profile */
+router.get('/get_profile', async function (req, res){
+    if(! req.isAuthenticated())
+        return res.status(401).send("Invalid User!!!");
+    var username = req.session.passport.user;    
+    result = await QueryUser.getProfile(username);
+    if (result["success"] === false){
+        return res.status(403).send(result["description"]);
+    }
+    return res.send(result["Data"]);
+});
+
+/* set profile */
+router.post('/set_profile', async function (req, res){
+    if(! req.isAuthenticated())
+        return res.status(401).send("Invalid User!!!");
+    var username = req.session.passport.user;    
+    var Nickname = req.body.Nickname;
+    var Company = req.body.Company;
+    var Githubname = req.body.Githubname;
+    var Facebookname = req.body.Facebookname;
+    var Location = req.body.Location;
+    var Email = req.body.Email;
+    result = await QueryUser.setProfile(username, Nickname, Company, Githubname, Facebookname, Location, Email);
+    if (result["success"] === false){
+        return res.status(403).send(result["description"]);
+    }
+    return res.send(result["description"]);
 });
 
 module.exports = router;

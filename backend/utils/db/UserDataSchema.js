@@ -8,7 +8,13 @@ const UserDataSchema = new Schema(
     FacebookId: { type: String },
     GoogleId: { type: String },
     GithubId: { type: String },
-    ProjectIds: [String] 
+    ProjectIds: [String],
+    Nickname: { type: String },
+    Company: { type: String },
+    Githubname: { type: String },
+    Facebookname: { type: String },
+    Location: { type: String },
+    Email: { type: String }
 }, {collection: 'UserData'})
 
 module.exports = mongoose.model('UserData', UserDataSchema)

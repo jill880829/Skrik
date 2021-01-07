@@ -126,7 +126,17 @@ async function test_v2(){
     // console.log(a);
     
 }
+async function test_v3(){
+    var a = await QueryUser.setProfile('a_3', '哈哈是我啦', 'Skrik', '哈哈是我啦', '哈哈是我啦', '不告訴你', '不告訴你');
+    console.log(a);
+    var a = await QueryUser.getProfile('a_3');
+    console.log(a);
+    
+    // var a = await QueryProject.getFile('5ff181955bf3050a232a7e61','/testfile','c_2', 5, 'insert', 'All right...');
+    // console.log(a);
+    
+}
 // init();
 // test();
 // init_v2();
-test_v2();
+test_v3();
