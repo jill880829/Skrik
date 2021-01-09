@@ -193,9 +193,9 @@ const Login = () => {
                     </Grid>
                 }
                 {!showRegister &&
-                    <Grid container item xs={12} sm={6} style={{ padding: 10, backgroundColor: ' hsl(225, 6%, 13%)' }} direction='column' justify='space-between' alignItems='center'>
-                        <div />
-                        <div style={{ display: 'flex', flexDirection: 'column', padding: 30, borderRadius: '10%' }}>
+                <Grid container item xs={12} sm={6} style={{ padding: 10, backgroundColor: ' hsl(225, 6%, 13%)' }} direction='column' justify='space-between' alignItems='center'>
+                    <div />
+                    <div style={{ display: 'flex', flexDirection: 'column', padding: 30, borderRadius: '10%' }}>
                             <Grid container justify='center'>
                                 <img
                                     src='https://i.imgur.com/qCO0nq4.png'
@@ -234,26 +234,8 @@ const Login = () => {
                             </Button>
                             <div style={{ height: 20 }} />
                             <Button id='login_join_btn' onClick={toRegister}>Interested in joining?</Button>
-                            <div id='login_separator'>or</div>
-                            <div id='login_social_login_container'>
-                                {/* <Button class='login_social_btn' variant='outlined' onClick={()=>{window.location.href='/api/login/fb'}}>
-                                    <IconContext.Provider value={{ color: 'white', size: '20px' }}>
-                                        <ImFacebook2 style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
-                                    </IconContext.Provider>
-                                    Login with Facebook
-                                </Button>
-                                <Button class='login_social_btn' onClick={()=>{window.location.href='/api/login/google'}}>
-                                    <IconContext.Provider value={{ color: 'white', size: '20px' }}>
-                                        <ImGoogle style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
-                                    </IconContext.Provider>
-                                    Login with Google
-                                </Button>
-                                <Button class='login_social_btn' onClick={()=>{window.location.href='/api/login/github'}}>
-                                    <IconContext.Provider value={{ color: 'white', size: '20px' }}>
-                                        <ImGithub style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
-                                    </IconContext.Provider>
-                                    Login with Github
-                                </Button> */}
+                        <div id='login_separator'>or</div>
+                        <div id='login_social_login_container'>
                             <Button
                                 onClick={()=>{window.location.href='/api/login/fb'}}
                                 variant='contained'
@@ -275,13 +257,10 @@ const Login = () => {
                                 startIcon={<ImGithub style={{ marginRight: 10, marginLeft: 5 }} />}>
                                 Login with Github
                             </Button>
-                            
-                            
-                                
-                            </div>
                         </div>
-                        <div />
-                    </Grid>
+                    </div>
+                    <div />
+                </Grid>
                 }
             </Grid>
         </div>
