@@ -255,18 +255,21 @@ const Login = () => {
                                     Login with Github
                                 </Button> */}
                             <Button
+                                onClick={()=>{window.location.href='/api/login/fb'}}
                                 variant='contained'
                                 id='login_fb_btn'
                                 startIcon={<ImFacebook2 style={{ marginRight: 10, marginLeft: 5 }} />}>
                                 Login with Facebook
                             </Button>
                             <Button
+                                onClick={()=>{window.location.href='/api/login/google'}}
                                 variant='contained'
                                 id='login_google_btn'
                                 startIcon={<ImGoogle style={{ marginRight: 10, marginLeft: 5 }} />}>
                                 Login with Google
                             </Button>
                             <Button
+                                onClick={()=>{window.location.href='/api/login/github'}}
                                 variant='contained'
                                 id='login_git_btn'
                                 startIcon={<ImGithub style={{ marginRight: 10, marginLeft: 5 }} />}>
