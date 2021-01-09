@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Grid, TextField } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -8,11 +9,8 @@ import { IoCheckbox } from "react-icons/io5";
 import { IconContext } from "react-icons";
 import Divider from '@material-ui/core/Divider';
 
-import SocialButton from './components/socialButton';
-// import { FaFacebookF, FaGoogle, FaGithub } from "react-icons/fa";
-import { ImFacebook2, ImGoogle, ImGithub } from "react-icons/im";
+import { ImFacebook2, ImGoogle, ImGithub, ImGit } from "react-icons/im";
 
-//import { Si1Password } from 'react-icons/si';
 
 
 const CssTextField = withStyles({
@@ -238,62 +236,45 @@ const Login = () => {
                             <Button id='login_join_btn' onClick={toRegister}>Interested in joining?</Button>
                             <div id='login_separator'>or</div>
                             <div id='login_social_login_container'>
-                                {/* <SocialButton
-                                    provider='facebook'
-                                     appId='1085741245183609'
-                                    onLoginSuccess={handleSocialLogin}
-                                    onLoginFailure={handleSocialLoginFailure}
-                                    className='login_social_btn login_fb_btn'
-                                >
-                                    <IconContext.Provider value={{ color: 'white', size: '20px' }}>
-                                        <ImFacebook2 style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
-                                    </IconContext.Provider>
-                                    Login with Facebook
-                                    </SocialButton> */}
-                                
-                                <Button className='login_social_btn login_fb_btn' onClick={()=>{window.location.href='/api/login/fb'}}>
+                                {/* <Button class='login_social_btn' variant='outlined' onClick={()=>{window.location.href='/api/login/fb'}}>
                                     <IconContext.Provider value={{ color: 'white', size: '20px' }}>
                                         <ImFacebook2 style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                     </IconContext.Provider>
                                     Login with Facebook
                                 </Button>
-                                <Button className='login_social_btn login_fb_btn' onClick={()=>{window.location.href='/api/login/google'}}>
-                                    <IconContext.Provider value={{ color: 'white', size: '20px' }}>
-                                        <ImFacebook2 style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
-                                    </IconContext.Provider>
-                                    Login with Google
-                                </Button>
-                                <Button className='login_social_btn login_fb_btn' onClick={()=>{window.location.href='/api/login/github'}}>
-                                    <IconContext.Provider value={{ color: 'white', size: '20px' }}>
-                                        <ImFacebook2 style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
-                                    </IconContext.Provider>
-                                    Login with Github
-                                </Button>
-                                {/* <SocialButton
-                                    provider='google'
-                                    appId='1003856103545-uquo9c3ki6ka55lsbct1etdkctsirfqb.apps.googleusercontent.com'
-                                    onLoginSuccess={handleSocialLogin}
-                                    onLoginFailure={handleSocialLoginFailure}
-                                    className='login_social_btn login_google_btn'
-                                >
+                                <Button class='login_social_btn' onClick={()=>{window.location.href='/api/login/google'}}>
                                     <IconContext.Provider value={{ color: 'white', size: '20px' }}>
                                         <ImGoogle style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                     </IconContext.Provider>
                                     Login with Google
-                                    </SocialButton>
-
-                                <SocialButton
-                                    provider='github'
-                                    appId='YOUR_APP_ID'
-                                    onLoginSuccess={handleSocialLogin}
-                                    onLoginFailure={handleSocialLoginFailure}
-                                    className='login_social_btn login_git_btn'
-                                > */}
-                                    {/* <IconContext.Provider value={{ color: 'white', size: '20px' }}>
+                                </Button>
+                                <Button class='login_social_btn' onClick={()=>{window.location.href='/api/login/github'}}>
+                                    <IconContext.Provider value={{ color: 'white', size: '20px' }}>
                                         <ImGithub style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                     </IconContext.Provider>
                                     Login with Github
-                                    </SocialButton> */}
+                                </Button> */}
+                            <Button
+                                variant='contained'
+                                id='login_fb_btn'
+                                startIcon={<ImFacebook2 style={{ marginRight: 10, marginLeft: 5 }} />}>
+                                Login with Facebook
+                            </Button>
+                            <Button
+                                variant='contained'
+                                id='login_google_btn'
+                                startIcon={<ImGoogle style={{ marginRight: 10, marginLeft: 5 }} />}>
+                                Login with Google
+                            </Button>
+                            <Button
+                                variant='contained'
+                                id='login_git_btn'
+                                startIcon={<ImGithub style={{ marginRight: 10, marginLeft: 5 }} />}>
+                                Login with Github
+                            </Button>
+                            
+                            
+                                
                             </div>
                         </div>
                         <div />
