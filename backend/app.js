@@ -185,7 +185,7 @@ wss.on('connection', async ws => {
                     // console.log(buffers)
                     for(let buffer of Object.values(buffers)) {
                         if(buffer.filepath === filepath && buffer.text != '') {
-                            console.log(buffer.filepath, buffer.line, buffer.text)
+                            // console.log(buffer.filepath, buffer.line, buffer.text)
                             let textInBuffer = (buffer.text.slice(-1) === '\n') ? buffer.text.slice(0, -1) : buffer.text
                             result['content'][buffer.line].data = textInBuffer
                         }
