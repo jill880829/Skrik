@@ -4,6 +4,7 @@ import './App.css';
 import Login from './Login';
 import Editor from './Editor';
 import Menu from './Menu';
+import Error from './Error';
 
 import {
   BrowserRouter as Router,
@@ -30,6 +31,9 @@ function App() {
             <li>
               <Link to="/Menu">Menu</Link>
             </li>
+            <li>
+              <Link to="/Error">Error</Link>
+            </li>
             
             <li>
               <Link>Download</Link>
@@ -48,6 +52,9 @@ function App() {
           </Route>
           <Route path="/Menu">
             <Menu/>
+          </Route>
+          <Route path="/Error">
+            <Error/>
           </Route>
           
         </Switch>
