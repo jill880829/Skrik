@@ -318,10 +318,6 @@ async function getProjectName(projectid){
     return { "success": true, "description": "Project Querying Finished!!!", "name":  project.ProjectName};
 }
 
-// packet the project
-async function generate_Project_zip(projectid){
-// TODO
-}
 
 module.exports = {createProject: createProject,
                   deleteProject: deleteProject,

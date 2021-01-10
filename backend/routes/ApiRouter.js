@@ -2,16 +2,19 @@ var express = require('express');
 var bodyParser = require('body-parser')
 var router = express.Router();
 const sha256 = require('crypto-js/sha256');
+const fs = require('fs');
+const crypto = require('crypto');
 
 const QueryUser = require('../utils/db/QueryUser');
 const QueryProject = require('../utils/db/QueryProject');
 const QueryRedis = require('../utils/db/QueryRedis');
 const Tool = require('../utils/Tool')
-
+const baseDir = process.env.SKRIK_ROOT;
+var secret = process.env.PROJECT_SECRET;
 
 // handle ID sha256
 var counter = 0;
-var secret = process.env.ID_SECRET;
+
 
 // create json parser.
 var jsonParser = bodyParser.json({ extended: true })
@@ -74,7 +77,7 @@ router.get('/projects', async function (req, res) {
                 }
             }
         }
-        console.log(`[endpoint] /api/projects: Username: ${queryUsername} result: ${result}`);
+        // console.log(`[endpoint] /api/projects: Username: ${queryUsername} result: ${projects_info}`);
         return res.send(projects_info);
 });
 
@@ -124,12 +127,69 @@ router.post('/create_project', jsonParser, async function (req, res) {
             return res.status(403).send(result["description"]);
     }
     return res.send(result["description"]);
+
+aaaaa
+
+
+
+
+
+
 });
 
 /* TODO download project */
-router.get('/download_project', async function (req, res){
-    // TODO
-    return res.send('still working...');
+router.get('/download_project/:idsha', async function (req, res){
+    if(! req.isAuthenticated())
+        return res.status(401).send("Invalid User!!!");
+    let idsha = req.params.idsha;
+
+    let id_res = await QueryRedis.getID(idsha);
+    if (id_res["success"] === false) 
+        return res.status(403).send(id_res["description"]);
+    else
+        var projectid = id_res["id"];
+
+    let result = await QueryProject.getProjectName(projectid);
+    if (result["success"] === false)
+        return res.status(403).send(result["description"]);
+    else
+        var projectname = result["name"];
+    projectname = projectname.split('/')[1];
+    let filelist_res = await QueryProject.listFiles(projectid);
+    if (filelist_res["success"] === false)
+        return res.status(403).send(filelist_res["description"]);
+    else
+        var filelist = filelist_res["files"];
+
+    datas = []
+    for (let file of filelist){
+        let content_res = await QueryProject.getFile(projectid, file);
+        if (content_res["success"] === false)
+            return res.status(403).send(filelist_res["description"]);
+        else{
+            var content = '';
+            for (let line of content_res["content"]){
+                content += line["data"] + '\n'; 
+            }
+            datas.push(content)
+        }
+    }
+    console.log(__dirname)
+    var rand_dir = crypto.randomBytes(8).toString('hex');
+    filepath = baseDir + 'tmp/' + rand_dir + '-' + projectname;
+    var filename = rand_dir + '-' + projectname;
+    Tool.write_file_structure(filepath, filelist, datas);
+    await Tool.zip_project(baseDir + 'tmp/',filename);
+    fs.readFile(filepath + '.zip', (err, data) => {
+        if (err) {
+            console.log(err);
+        } 
+        else {   
+            res.setHeader('Content-Type', 'application/x-gzip');
+            res.end(data);
+        }
+   });
+   return;
 });
 
 /* get profile */

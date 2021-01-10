@@ -250,13 +250,26 @@ const Login = () => {
                                     </IconContext.Provider>
                                     Login with Facebook
                                     </SocialButton> */}
+                                
                                 <Button className='login_social_btn login_fb_btn' onClick={()=>{window.location.href='/api/login/fb'}}>
                                     <IconContext.Provider value={{ color: 'white', size: '20px' }}>
                                         <ImFacebook2 style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                     </IconContext.Provider>
                                     Login with Facebook
                                 </Button>
-                                <SocialButton
+                                <Button className='login_social_btn login_fb_btn' onClick={()=>{window.location.href='/api/login/google'}}>
+                                    <IconContext.Provider value={{ color: 'white', size: '20px' }}>
+                                        <ImFacebook2 style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
+                                    </IconContext.Provider>
+                                    Login with Google
+                                </Button>
+                                <Button className='login_social_btn login_fb_btn' onClick={()=>{window.location.href='/api/login/github'}}>
+                                    <IconContext.Provider value={{ color: 'white', size: '20px' }}>
+                                        <ImFacebook2 style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
+                                    </IconContext.Provider>
+                                    Login with Github
+                                </Button>
+                                {/* <SocialButton
                                     provider='google'
                                     appId='1003856103545-uquo9c3ki6ka55lsbct1etdkctsirfqb.apps.googleusercontent.com'
                                     onLoginSuccess={handleSocialLogin}
@@ -275,12 +288,12 @@ const Login = () => {
                                     onLoginSuccess={handleSocialLogin}
                                     onLoginFailure={handleSocialLoginFailure}
                                     className='login_social_btn login_git_btn'
-                                >
-                                    <IconContext.Provider value={{ color: 'white', size: '20px' }}>
+                                > */}
+                                    {/* <IconContext.Provider value={{ color: 'white', size: '20px' }}>
                                         <ImGithub style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
                                     </IconContext.Provider>
                                     Login with Github
-                                    </SocialButton>
+                                    </SocialButton> */}
                             </div>
                         </div>
                         <div />
