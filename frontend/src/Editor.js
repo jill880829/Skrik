@@ -16,7 +16,7 @@ import { AiOutlineFile, AiFillRest } from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
-import FileStructure from './Structure'
+import FileStructure from './structure'
 import useStructure from './useStructure'
 import { useParams } from 'react-router-dom'
 
@@ -30,7 +30,7 @@ const FILE_ICONS = {
     json: <SiJson />
 };
 
-const client = new WebSocket('wss://skrik.net/api/wss')
+const client = new WebSocket('ws://localhost:3002')
 
 const codingOptions = [
     { label: 'Python', value: 'python' },
@@ -57,6 +57,10 @@ export default function Editor(props) {
     const [fileName, setFileName] = useState('Untitled')
     const { hash } = useParams()
     const [projectName, setProjectName] = useState("")
+    const [filePath, setFilePath] = useState('Untitled')
+    const sendData = (data) => {
+        client.send(JSON.stringify(data))
+    }
     useEffect(async () => {
         const result = await fetch(`/api/ls/${hash}`, {
             method: 'GET',
@@ -97,7 +101,7 @@ export default function Editor(props) {
             alert("Unknown Error!")
         }
         //console.log(result)
-
+        await sendData(['init', hash])
 
     }, [])
 
@@ -114,23 +118,27 @@ export default function Editor(props) {
     client.onmessage = (message) => {
         const { data } = message
         const [task, update] = JSON.parse(data)
-        if (task === 'init') {
+        if (task === 'init-file') {
             setCodes(update)
+            setOpened(true)
         }
         else if (task === 'output') {
             let tmp = codes;
-            const content = update.content
-            content.forEach((part) => {
-                if (part.ope === 0) {
-                    if (part.start === 0) tmp = part.content + sliceLines(tmp, part.start)
-                    else tmp = sliceLines(tmp, 0, part.start) + '\n' + part.content + sliceLines(tmp, part.start)
-                }
-                else {
-                    if (part.start === 0) tmp = sliceLines(tmp, part.end)
-                    else tmp = sliceLines(tmp, 0, part.start) + '\n' + sliceLines(tmp, part.end)
-                }
-            })
-            setCodes(tmp)
+            // console.log(update.content)
+            if(update.filepath === filePath) {
+                const content = update.content
+                content.forEach((part) => {
+                    if (part.ope === 0) {
+                        if (part.start === 0) tmp = part.content + sliceLines(tmp, part.start)
+                        else tmp = sliceLines(tmp, 0, part.start) + '\n' + part.content + sliceLines(tmp, part.start)
+                    }
+                    else {
+                        if (part.start === 0) tmp = sliceLines(tmp, part.end)
+                        else tmp = sliceLines(tmp, 0, part.start) + '\n' + sliceLines(tmp, part.end)
+                    }
+                })
+                setCodes(tmp)
+            }
         }
         else if (task === 'output-path') {
             const rmdup = rmduplicate([...filesStructure, update])
@@ -152,9 +160,7 @@ export default function Editor(props) {
         setOpened(true)
     }
 
-    const sendData = (data) => {
-        client.send(JSON.stringify(data))
-    }
+    
 
     const sendCodes = (code) => {
         let diff = diffLines(codes, code)
@@ -172,14 +178,16 @@ export default function Editor(props) {
                 count_line += part.count
             }
         })
-        sendData(['input', { author: 'a', content: diff_code }])
+        console.log(filePath)
+        sendData(['input', {filepath: filePath, content: diff_code}])
     }
 
     const sendNewFile = (ls) => {
         sendData(['path', ls])
     }
     const requestFileContext = (ls) => {
-        sendData(['file', ls])
+        sendData(['request_file', ls])
+        setFilePath(ls)
         const filenamesplit = ls.split('/')
         setFileName(filenamesplit[filenamesplit.length - 1])
     }
