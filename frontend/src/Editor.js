@@ -30,7 +30,7 @@ const FILE_ICONS = {
     json: <SiJson />
 };
 
-const client = new WebSocket('ws://localhost:3002')
+var client// = new WebSocket('ws://localhost:3002')
 
 const codingOptions = [
     { label: 'Python', value: 'python' },
@@ -62,6 +62,52 @@ export default function Editor(props) {
         client.send(JSON.stringify(data))
     }
     useEffect(async () => {
+        client = new WebSocket('ws://localhost:3002')
+        client.onmessage = (message) => {
+            const { data } = message
+            const [task, update] = JSON.parse(data)
+            if (task === 'init-file') {
+                setCodes(update)
+                setOpened(true)
+            }
+            else if (task === 'output') {
+                let tmp = codes;
+                // console.log(update.content)
+                if(update.filepath === filePath) {
+                    const content = update.content
+                    content.forEach((part) => {
+                        if (part.ope === 0) {
+                            if (part.start === 0) tmp = part.content + sliceLines(tmp, part.start)
+                            else tmp = sliceLines(tmp, 0, part.start) + '\n' + part.content + sliceLines(tmp, part.start)
+                        }
+                        else {
+                            if (part.start === 0) tmp = sliceLines(tmp, part.end)
+                            else tmp = sliceLines(tmp, 0, part.start) + '\n' + sliceLines(tmp, part.end)
+                        }
+                    })
+                    setCodes(tmp)
+                }
+            }
+            else if (task === 'output-path') {
+                const rmdup = rmduplicate([...filesStructure, update])
+                if (rmdup.duplicate) {
+                    console.log("EXISTS")
+                }
+                setFile([...rmdup.list])
+                setTree(transfer([...rmdup.list]))
+            }
+        }
+    
+        client.onopen = () => {
+            console.log('websocket open')
+            setOpened(true)
+        }
+    
+        client.onclose = () => {
+            console.log('websocket close')
+            setOpened(true)
+        }
+
         const result = await fetch(`/api/ls/${hash}`, {
             method: 'GET',
             headers: new Headers({
@@ -78,8 +124,8 @@ export default function Editor(props) {
         }
         else if (result.status === 403) {
             result.text().then(res => {
-                alert(`403 Forbidden: Refuse to create the project!\n${res}`)
-                //console.log(res) 
+                alert(`403 Forbidden: Refuse to get the project!\n${res}`)
+                window.location.href = '/Menu'
             })
         }
         else if (result.status === 500) {
@@ -103,6 +149,7 @@ export default function Editor(props) {
         //console.log(result)
         await sendData(['init', hash])
 
+        
     }, [])
 
     function onChangeCode(value) {
@@ -114,53 +161,6 @@ export default function Editor(props) {
 
     const [codes, setCodes] = useState('')
     const [opened, setOpened] = useState(false)
-
-    client.onmessage = (message) => {
-        const { data } = message
-        const [task, update] = JSON.parse(data)
-        if (task === 'init-file') {
-            setCodes(update)
-            setOpened(true)
-        }
-        else if (task === 'output') {
-            let tmp = codes;
-            // console.log(update.content)
-            if(update.filepath === filePath) {
-                const content = update.content
-                content.forEach((part) => {
-                    if (part.ope === 0) {
-                        if (part.start === 0) tmp = part.content + sliceLines(tmp, part.start)
-                        else tmp = sliceLines(tmp, 0, part.start) + '\n' + part.content + sliceLines(tmp, part.start)
-                    }
-                    else {
-                        if (part.start === 0) tmp = sliceLines(tmp, part.end)
-                        else tmp = sliceLines(tmp, 0, part.start) + '\n' + sliceLines(tmp, part.end)
-                    }
-                })
-                setCodes(tmp)
-            }
-        }
-        else if (task === 'output-path') {
-            const rmdup = rmduplicate([...filesStructure, update])
-            if (rmdup.duplicate) {
-                console.log("EXISTS")
-            }
-            setFile([...rmdup.list])
-            setTree(transfer([...rmdup.list]))
-        }
-    }
-
-    client.onopen = () => {
-        console.log('websocket open')
-        setOpened(true)
-    }
-
-    client.onclose = () => {
-        console.log('websocket close')
-        setOpened(true)
-    }
-
-    
 
     const sendCodes = (code) => {
         let diff = diffLines(codes, code)
@@ -200,7 +200,6 @@ export default function Editor(props) {
     const ext = fileName.split(".")[1];
     return (
         <div>
-            <span onClick={() => deb(ls)}>debugger</span>
             <div className='page_container'>
                 <div id='folder_structure'>
                     <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} treeStructure={treeStructure}

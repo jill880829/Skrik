@@ -94,7 +94,7 @@ router.get('/ls/:idsha', async function (req, res) {
         return res.status(403).send(get_res["description"]);
     else
         var projectid = get_res["id"];
-    
+    req.session.passport.projectid = projectid;
     var result = await QueryProject.listFiles(projectid);
     if (result["success"] === false) 
     {
@@ -138,17 +138,10 @@ aaaaa
 });
 
 /* TODO download project */
-router.get('/download_project/:idsha', async function (req, res){
+router.get('/download', async function (req, res){
     if(! req.isAuthenticated())
         return res.status(401).send("Invalid User!!!");
-    let idsha = req.params.idsha;
-
-    let id_res = await QueryRedis.getID(idsha);
-    if (id_res["success"] === false) 
-        return res.status(403).send(id_res["description"]);
-    else
-        var projectid = id_res["id"];
-
+    let projectid = req.session.passport.projectid;
     let result = await QueryProject.getProjectName(projectid);
     if (result["success"] === false)
         return res.status(403).send(result["description"]);
@@ -174,21 +167,12 @@ router.get('/download_project/:idsha', async function (req, res){
             datas.push(content)
         }
     }
-    console.log(__dirname)
     var rand_dir = crypto.randomBytes(8).toString('hex');
-    filepath = baseDir + 'tmp/' + rand_dir + '-' + projectname;
-    var filename = rand_dir + '-' + projectname;
+    filepath = baseDir + 'tmp/' + projectname + '-' + rand_dir;
+    var filename = projectname + '-' + rand_dir;
     Tool.write_file_structure(filepath, filelist, datas);
     await Tool.zip_project(baseDir + 'tmp/',filename);
-    fs.readFile(filepath + '.zip', (err, data) => {
-        if (err) {
-            console.log(err);
-        } 
-        else {   
-            res.setHeader('Content-Type', 'application/x-gzip');
-            res.end(data);
-        }
-   });
+    res.download(filepath + '.zip')
    return;
 });
 

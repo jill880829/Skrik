@@ -45,16 +45,20 @@ function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
-          <Route path="/">
+          <Route path="/" exact={true}>
             <Redirect to="/Login" />
           </Route>
-          <Route path="/Login">
+          <Route path="/Login" exact={true}>
             <Login/>
           </Route>
-          <Route path="/Editor/:hash">
-            <Editor/>
+          {/* <Route path="/Editor/:hash" exact={true} component={() => {return <Editor/>;}}>
+            
+          </Route> */}
+          <Route path="/Editor/:hash" exact={true} >
+            <Editor/>  
           </Route>
-          <Route path="/Menu">
+          
+          <Route path="/Menu" exact={true}>
             <Menu/>
           </Route>
           <Route path="*">

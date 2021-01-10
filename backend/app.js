@@ -110,13 +110,14 @@ app.use('/api', apiRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     console.log("[endpoint] 404 not found: " + req.url)
-    next(createError(404));
+
+    // next(createError(404));
 });
 
 // error handler
 app.use(function (err, req, res, next) {
     console.log("[global err] uncaught error: " + err)
-
+    res.redirect('/Error')
     // send the error page
     res.status(err.status || 500);
     res.send('error');
@@ -139,7 +140,7 @@ wss.on('connection', async ws => {
     let projectID = ''
     let filepath = ''
 
-    console.log("connected")
+    console.log("[socket] connected")
     ws.onmessage = async (message) => {
         const { data } = message
         // console.log(data)
@@ -150,8 +151,6 @@ wss.on('connection', async ws => {
                 projectID = result["id"]
                 var result = await QueryRedis.getUser(payload)
                 author = result["username"]
-                console.log(author)
-                console.log(projectID, author)
             }
             case 'request_file': {
                 let content = ''

@@ -100,7 +100,7 @@ export default function Structure({projectName,returnNewFile,returnClickFile,tre
                     <div className="titleFunction">
                         <VscNewFile onClick={() => handleAddNewFile()} />
                         <VscNewFolder onClick={() => handleAddNewFolder()} />
-                        <VscCloudDownload onclick={() => window.location.href = "/api/download"}  />
+                        <VscCloudDownload onClick={() => {window.location.href = "/api/download"}}  />
                         <VscCollapseAll onClick={() => { alert("Collapse All") }} />
                     </div>
                 </IconContext.Provider>

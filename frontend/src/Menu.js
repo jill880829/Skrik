@@ -11,12 +11,10 @@ import Modal from './components/modal';
 import { IconContext } from "react-icons";
 import { FcPlus } from "react-icons/fc";
 import { BsTrash, BsClockHistory, BsFillPeopleFill } from "react-icons/bs";
-import { GoLocation, GoLink, GoDeviceMobile, GoMail } from "react-icons/go";
-import { ImFacebook, ImGithub } from "react-icons/im";
+import { GoLocation, GoMail } from "react-icons/go";
 import { FaFacebook, FaGithub } from 'react-icons/fa'
 import { BiBuildingHouse } from 'react-icons/bi';
 import './components/project.css'
-import Select from 'react-select';
 
 class Project extends Component {
     render() {
