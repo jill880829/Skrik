@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "passport-github2": "^0.1.12"
+  }
+}

@@ -43,5 +43,6 @@ async function authID(idsha){
 
 module.exports = {storeID: storeID,
                   getID: getID,
+                  getUser: getUser,
                   authID: authID
                 };

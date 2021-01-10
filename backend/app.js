@@ -21,6 +21,7 @@ const QueryRedis = require('./utils/db/QueryRedis');
 var app = express();
 
 const { text } = require('body-parser');
+const { auth } = require('./utils/redis');
 
 const filename = "/test_file"
 
@@ -149,33 +150,52 @@ wss.on('connection', async ws => {
                 projectID = result["id"]
                 var result = await QueryRedis.getUser(payload)
                 author = result["username"]
+                console.log(author)
                 console.log(projectID, author)
             }
             case 'request_file': {
                 let content = ''
+                if (buffers[author] === undefined) {
+                    buffers[author] = { filepath: '', line: 0, text: '' }
+                    // console.log(buffers[author])
+                }
+                if (buffers[author].text != '') {
+                    let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
+                    var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'delete', '')
+                    // console.log('delete', buffers[author].line + 1)
+                    if (result['success'] === false) {
+                        console.log("error", result['description'])
+                    }
+                    var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'insert', textToDB)
+                    // console.log('insert', buffers[author].line + 1, textToDB)
+                    if (result['success'] === false) {
+                        console.log("error", result['description'])
+                    }
+                    buffers[author].text = ''
+                }
                 filepath = payload
-                console.log("[request file]", projectID, payload)
+                buffers[author] = { filepath: filepath, line: 0, text: '' }
                 var result = await QueryProject.getFile(projectID, payload)
                 if (result['success'] === false) {
                     console.log("error", result['description'])
                 }
                 else {
-                    console.log(result['content'])
-                    console.log(buffers)
+                    // console.log(result['content'])
+                    // console.log(filepath)
+                    // console.log(buffers)
                     for(let buffer of Object.values(buffers)) {
-                        // console.log(buffer.filepath, buffer.line, buffer.text)
                         if(buffer.filepath === filepath && buffer.text != '') {
+                            console.log(buffer.filepath, buffer.line, buffer.text)
                             let textInBuffer = (buffer.text.slice(-1) === '\n') ? buffer.text.slice(0, -1) : buffer.text
                             result['content'][buffer.line].data = textInBuffer
                         }
                     }
-                    console.log(result['content'])
+                    // console.log(result['content'])
                     for(let text of result['content']) {
                         content += (text["data"] + '\n')
                     }
                     content = content.slice(0, -1)
                 }
-                buffers[author] = { filepath: filepath, line: 0, text: '' }
                 sendInit(['init-file', content])
                 break
             }
@@ -186,9 +206,9 @@ wss.on('connection', async ws => {
                 if (content.length === 2 && content[0].ope + content[1].ope === 1 &&
                     content[0].start === content[1].start && content[0].start + 1 === content[0].end &&
                     content[0].end === content[1].end) {
-                    if (buffers[author] === undefined) {
-                        buffers[author] = { filepath: filepath, line: content[0].start, text: '' }
-                    }
+                    // if (buffers[author] === undefined) {
+                    //     buffers[author] = { filepath: filepath, line: content[0].start, text: '' }
+                    // }
                     if (content[0].start != buffers[author].line) {
                         if (buffers[author].text != '') {
                             let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
@@ -209,9 +229,9 @@ wss.on('connection', async ws => {
                     buffers[author].text = (content[0].ope === 0) ? content[0].content : content[1].content
                 }
                 else {
-                    if (buffers[author] === undefined) {
-                        buffers[author] = { line: content[0].start, text: '' }
-                    }
+                    // if (buffers[author] === undefined) {
+                    //     buffers[author] = { line: content[0].start, text: '' }
+                    // }
                     if (buffers[author].text != '') {
                         let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
                         var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'delete', '')
@@ -297,6 +317,22 @@ wss.on('connection', async ws => {
             }
             default:
                 break
+        }
+    }
+    ws.onclose = async () => {
+        if (buffers[author].text != '') {
+            let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
+            var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'delete', '')
+            // console.log('delete', buffers[author].line + 1)
+            if (result['success'] === false) {
+                console.log("error", result['description'])
+            }
+            var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'insert', textToDB)
+            // console.log('insert', buffers[author].line + 1, textToDB)
+            if (result['success'] === false) {
+                console.log("error", result['description'])
+            }
+            buffers[author].text = ''
         }
     }
 })
