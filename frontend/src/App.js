@@ -10,7 +10,8 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 
 
@@ -44,6 +45,9 @@ function App() {
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
         <Switch>
+          <Route path="/">
+            <Redirect to="/Login" />
+          </Route>
           <Route path="/Login">
             <Login/>
           </Route>
@@ -53,7 +57,7 @@ function App() {
           <Route path="/Menu">
             <Menu/>
           </Route>
-          <Route path="/Error">
+          <Route path="*">
             <Error/>
           </Route>
           
