@@ -178,8 +178,10 @@ export default function Editor(props) {
                 count_line += part.count
             }
         })
+
         console.log(filePath)
         sendData(['input', {filepath: filePath, content: diff_code}])
+
     }
 
     const sendNewFile = (ls) => {

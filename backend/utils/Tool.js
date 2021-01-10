@@ -1,4 +1,6 @@
 const fs = require('fs');
+const exec = require('child_process').execSync;
+
 
 function sort_files(files){
     files = files.sort(function(a,b) {
@@ -24,21 +26,28 @@ function sort_files(files){
     return files;
 }
 
-function write_file_structure(projectname, files, datas){
+function write_file_structure(base, files, datas){
     for (let i in files){
-        let f = file[i].split('/');
+        let f = files[i].split('/');
         let file_name = f[f.length - 1];
-        let dir = projectname + f.slice(0, f.length - 1).join('/');
+        let dir = base + f.slice(0, f.length - 1).join('/');
         fs.mkdirSync(dir, { recursive: true });
-        fs.writeFile(dir + '/' + file_name, datas[i], function (err) {
+        fs.writeFileSync(dir + '/' + file_name, datas[i], function (err) {
             if (err)
                 console.log(err);
-        });    
+        });
     }
 }
 
-function zip_project(project_name){
-    // fs.mkdirSync(dir, { recursive: true });
+async function zip_project(filedir, projectname){
+    exec(`cd ${filedir}; zip -r ${projectname}.zip ${projectname}`, (err, stdout, stderr) => {
+        if (err) {
+          console.error(`exec error: ${err}`);
+          return;
+        }
+        console.log(stdout);
+    });
 }
 module.exports = {sort_files: sort_files,
+                  write_file_structure:write_file_structure,
                   zip_project: zip_project};

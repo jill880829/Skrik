@@ -65,6 +65,10 @@ deploy_backend_conf:
 		--from-literal=SESSION_SECRET="$(SESSION_SECRET)" \
 		--from-literal=FB_APP_ID="$(FB_APP_ID)" \
 		--from-literal=FB_APP_SECRET="$(FB_APP_SECRET)" \
+		--from-literal=GOOGLE_APP_ID="$(GOOGLE_APP_ID)" \
+		--from-literal=GOOGLE_APP_SECRET="$(GOOGLE_APP_SECRET)" \
+		--from-literal=GITHUB_APP_ID="$(GITHUB_APP_ID)" \
+		--from-literal=GITHUB_APP_SECRET="$(GITHUB_APP_SECRET)" \
 		--from-literal=REDIS_PASSWORD="$(REDIS_PASSWORD)"
 
 deploy_db_conf:

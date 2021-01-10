@@ -21,7 +21,7 @@ const QueryRedis = require('./utils/db/QueryRedis');
 var app = express();
 
 const { text } = require('body-parser');
-// const projectid = "5ff6ea8a1834180012fb91e2";
+
 const filename = "/test_file"
 
 function empty(a, name) {

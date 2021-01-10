@@ -2,6 +2,7 @@ const UserData = require('./UserDataSchema');
 const sha256 = require('crypto-js/sha256');
 const base64 = require('crypto-js/enc-base64');
 const crypto = require('crypto'); 
+const { profile } = require('console');
 // const { use } = require('../../routes/ApiRouter');
 const regxstr = /^[ A-Za-z0-9_.-]+$/;
 const regxnum = /^[0-9]+$/;
@@ -85,7 +86,39 @@ async function authFB(fbid, profileName){
 
     var passwd = crypto.randomBytes(15).toString('hex');
     var username = "user-" + sha256(profileName).toString().substring(0, 10);
-    await UserData.create({ Username: username, Password: passwd, FacebookId: fbid, Nickname: username });
+    await UserData.create({ Username: username, Password: passwd, FacebookId: fbid, Nickname: username, Facebookname: profileName });
+
+    return { username: username };
+}
+
+async function authGoogle(googleid, profileName){
+    if (typeof(googleid) !== "string" || googleid.match(regxnum) === null)
+        throw "Invalid googleid!!!";
+    
+    var user = await UserData.findOne({GoogleId: googleid});
+
+    if(user !== null)
+        return { username: user.username };
+
+    var passwd = crypto.randomBytes(15).toString('hex');
+    var username = "user-" + sha256(profileName).toString().substring(0, 10);
+    await UserData.create({ Username: username, Password: passwd, GoogleId: googleid, Nickname: username });
+
+    return { username: username };
+}
+
+async function authGithub(githubid, profileName){
+    if (typeof(githubid) !== "string" || githubid.match(regxnum) === null)
+        throw "Invalid githubid!!!";
+    
+    var user = await UserData.findOne({GithubId: githubid});
+
+    if(user !== null)
+        return { username: user.username };
+
+    var passwd = crypto.randomBytes(15).toString('hex');
+    var username = "user-" + sha256(profileName).toString().substring(0, 10);
+    await UserData.create({ Username: username, Password: passwd, GithubId: githubid, Nickname: username, Githubname: profileName });
 
     return { username: username };
 }
@@ -156,5 +189,7 @@ module.exports = {authUser: authUser,
                   listProjectids:listProjectids,
                   createUser:createUser,
                   authFB:authFB,
+                  authGoogle:authGoogle,
+                  authGithub:authGithub,
                   setProfile:setProfile,
                   getProfile:getProfile};

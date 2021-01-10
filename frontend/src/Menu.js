@@ -366,7 +366,7 @@ function Menu() {
                                 </div>
                                 <div style={{ height: 20 }} />
                                 <div>
-                                    {savedData[0] !== '' ?
+                                    {savedData[0] !== '' && savedData[0] !== undefined ?
                                         <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                 <BiBuildingHouse style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
@@ -379,7 +379,7 @@ function Menu() {
                                         </div>
                                         : null
                                     }
-                                    {savedData[1] !== '' ?
+                                    {savedData[1] !== '' && savedData[1] !== undefined ?
                                         <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                 <FaGithub style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
@@ -392,7 +392,7 @@ function Menu() {
                                         </div>
                                         : null
                                     }
-                                    {savedData[2] !== '' ?
+                                    {savedData[2] !== '' && savedData[2] !== undefined ?
                                         <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                 <FaFacebook style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
@@ -405,7 +405,7 @@ function Menu() {
                                         </div>
                                         : null
                                     }
-                                    {savedData[3] !== '' ?
+                                    {savedData[3] !== '' && savedData[3] !== undefined ?
                                         <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                 <GoLocation style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
@@ -418,7 +418,7 @@ function Menu() {
                                         </div>
                                         : null
                                     }
-                                    {savedData[4] !== '' ?
+                                    {savedData[4] !== '' && savedData[4] !== undefined ?
                                         <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
                                                 <GoMail style={{ marginRight: 30, marginLeft: 5, verticalAlign: 'middle' }} />
