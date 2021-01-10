@@ -4,8 +4,10 @@ var router = express.Router();
 var passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy
 const FacebookStrategy = require('passport-facebook').Strategy
+
 const GithubStrategy = require('passport-github2').Strategy
 const GoogleStrategy = require('passport-google-oauth2').Strategy
+
 
 var QueryUser = require('../utils/db/QueryUser')
 
@@ -55,6 +57,7 @@ if (process.env.FB_APP_ID !== undefined) {
 
     router.get('/callback/fb', passport.authenticate('facebook', { successRedirect: '/Menu', failureRedirect: '/Login' }));
 }
+
 
 
 if (process.env.GOOGLE_APP_ID !== undefined) {
@@ -113,6 +116,7 @@ if (process.env.GITHUB_APP_ID !== undefined) {
 
     router.get('/callback/github', passport.authenticate('github', { successRedirect: '/Menu', failureRedirect: '/Login' }));
 }
+
 
 passport.serializeUser(function (user, done) {
     console.log(user)
