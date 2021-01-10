@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { IconContext } from "react-icons";
 import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons/ai";
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
-import { VscNewFile, VscNewFolder, VscRefresh, VscCollapseAll } from "react-icons/vsc";
+import { VscNewFile, VscNewFolder, VscCloudDownload, VscCollapseAll } from "react-icons/vsc";
 import { SiCplusplus, SiJson } from "react-icons/si";
 import "./styles.css";
 
@@ -100,7 +100,7 @@ export default function Structure({projectName,returnNewFile,returnClickFile,tre
                     <div className="titleFunction">
                         <VscNewFile onClick={() => handleAddNewFile()} />
                         <VscNewFolder onClick={() => handleAddNewFolder()} />
-                        <VscRefresh  />
+                        <VscCloudDownload onclick={() => window.location.href = "/api/download"}  />
                         <VscCollapseAll onClick={() => { alert("Collapse All") }} />
                     </div>
                 </IconContext.Provider>
