@@ -172,7 +172,7 @@ export default function Editor(props) {
                 count_line += part.count
             }
         })
-        sendData(['input', { author: 'a', content: diff_code }])
+        sendData(['input', { author: 'a_3', content: diff_code }])
     }
 
     const sendNewFile = (ls) => {

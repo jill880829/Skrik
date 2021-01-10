@@ -99,27 +99,27 @@ async function test(){
 
 async function test_v2(){
     /// add some commit
-    // var a = await QueryProject.addLineChange('5ff1e11fab62250349ef7d16','/testdir/lala','a_2', 1, 'insert', 'hallo!');
-    // console.log(a);
-    // var a = await QueryProject.addLineChange('5ff1e11fab62250349ef7d16','/testdir/lala','a_2', 2, 'insert', 'line2!');
-    // console.log(a);
-    // var a = await QueryProject.addLineChange('5ff1e11fab62250349ef7d16','/testdir/lala','a_2', 3, 'insert', 'FLAG{yeahyeeeeeeeeeeeee}');
-    // console.log(a);
-    // var a = await QueryProject.addLineChange('5ff1e11fab62250349ef7d16','/testdir/lala','a_2', 4, 'insert', 'do not write FLAG!!!!');
-    // console.log(a);
-    // var a = await QueryProject.addLineChange('5ff1e11fab62250349ef7d16','/testdir/lala','a_2', 5, 'insert', 'All right...');
-    // console.log(a);
-    var a = await QueryProject.addLineChange('5ff1e11fab62250349ef7d16','/.testfile','a_2', 1, 'insert', 'All right...');
+    var a = await QueryProject.addLineChange('5ff74f19facae41a4c27f5c2','/testdir/lala','a_3', 1, 'insert', 'hallo!');
     console.log(a);
-    var a = await QueryProject.addLineChange('5ff1e11fab62250349ef7d16','/.testfile','a_2', 2, 'insert', 'All right...');
+    var a = await QueryProject.addLineChange('5ff74f19facae41a4c27f5c2','/testdir/lala','a_3', 2, 'insert', 'line2!');
     console.log(a);
-    var a = await QueryProject.addLineChange('5ff1e11fab62250349ef7d16','/.testfile','a_2', 3, 'insert', 'All right...');
+    var a = await QueryProject.addLineChange('5ff74f19facae41a4c27f5c2','/testdir/lala','a_3', 3, 'insert', 'FLAG{yeahyeeeeeeeeeeeee}');
     console.log(a);
-    var a = await QueryProject.addLineChange('5ff1e11fab62250349ef7d16','/testdir/haha','a_2', 1, 'insert', 'Good!');
+    var a = await QueryProject.addLineChange('5ff74f19facae41a4c27f5c2','/testdir/lala','a_3', 4, 'insert', 'do not write FLAG!!!!');
     console.log(a);
-    var a = await QueryProject.addLineChange('5ff1e11fab62250349ef7d16','/testdir/haha','a_2', 2, 'insert', 'Good!');
+    var a = await QueryProject.addLineChange('5ff74f19facae41a4c27f5c2','/testdir/lala','a_3', 5, 'insert', 'All right...');
     console.log(a);
-    var a = await QueryProject.addLineChange('5ff1e11fab62250349ef7d16','/testdir/haha','a_2', 3, 'insert', 'Good!');
+    var a = await QueryProject.addLineChange('5ff74f19facae41a4c27f5c2','/.testfile','a_3', 1, 'insert', 'All right...');
+    console.log(a);
+    var a = await QueryProject.addLineChange('5ff74f19facae41a4c27f5c2','/.testfile','a_3', 2, 'insert', 'All right...');
+    console.log(a);
+    var a = await QueryProject.addLineChange('5ff74f19facae41a4c27f5c2','/.testfile','a_3', 3, 'insert', 'All right...');
+    console.log(a);
+    var a = await QueryProject.addLineChange('5ff74f19facae41a4c27f5c2','/testdir/haha','a_3', 1, 'insert', 'Good!');
+    console.log(a);
+    var a = await QueryProject.addLineChange('5ff74f19facae41a4c27f5c2','/testdir/haha','a_3', 2, 'insert', 'Good!');
+    console.log(a);
+    var a = await QueryProject.addLineChange('5ff74f19facae41a4c27f5c2','/testdir/haha','a_3', 3, 'insert', 'Good!');
     console.log(a);
     
     // var a = await QueryProject.getFile('5ff181955bf3050a232a7e61','/testfile','c_2', 5, 'insert', 'All right...');
@@ -127,11 +127,12 @@ async function test_v2(){
     
 }
 async function test_v3(){
-    var a = await QueryUser.setProfile('a_3', '哈哈是我啦', 'Skrik', '哈哈是我啦', '哈哈是我啦', '不告訴你', '不告訴你');
+    // var a = await QueryUser.setProfile('a_3', '哈哈是我啦', 'Skrik', '哈哈是我啦', '哈哈是我啦', '不告訴你', '不告訴你');
+    // console.log(a);
+    // var a = await QueryUser.getProfile('a_3');
+    // console.log(a);
+    var a = await QueryProject.getFile('5ff74f19facae41a4c27f5c2', '/testdir/lala');
     console.log(a);
-    var a = await QueryUser.getProfile('a_3');
-    console.log(a);
-    
     // var a = await QueryProject.getFile('5ff181955bf3050a232a7e61','/testfile','c_2', 5, 'insert', 'All right...');
     // console.log(a);
     
