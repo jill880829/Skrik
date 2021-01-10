@@ -82,7 +82,7 @@ async function authFB(fbid, profileName){
     var user = await UserData.findOne({FacebookId: fbid});
 
     if(user !== null)
-        return { username: user.username };
+        return { username: user.Username };
 
     var passwd = crypto.randomBytes(15).toString('hex');
     var username = "user-" + sha256(profileName).toString().substring(0, 10);
@@ -98,7 +98,7 @@ async function authGoogle(googleid, profileName){
     var user = await UserData.findOne({GoogleId: googleid});
 
     if(user !== null)
-        return { username: user.username };
+        return { username: user.Username };
 
     var passwd = crypto.randomBytes(15).toString('hex');
     var username = "user-" + sha256(profileName).toString().substring(0, 10);
@@ -114,7 +114,7 @@ async function authGithub(githubid, profileName){
     var user = await UserData.findOne({GithubId: githubid});
 
     if(user !== null)
-        return { username: user.username };
+        return { username: user.Username };
 
     var passwd = crypto.randomBytes(15).toString('hex');
     var username = "user-" + sha256(profileName).toString().substring(0, 10);

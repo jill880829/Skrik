@@ -21,29 +21,6 @@ function App() {
   return (
     <Router>
       <div>
-        {/* <nav>
-          <ul>
-            <li>
-              <Link to="/Login">Login</Link>
-            </li>
-            <li>
-              <Link to="/Editor">Editor</Link>
-            </li>
-            <li>
-              <Link to="/Menu">Menu</Link>
-            </li>
-            <li>
-              <Link to="/Error">Error</Link>
-            </li>
-            
-            <li>
-              <Link>Download</Link>
-            </li>
-          </ul>
-        </nav> */}
-
-        {/* A <Switch> looks through its children <Route>s and
-            renders the first one that matches the current URL. */}
         <Switch>
           <Route path="/" exact={true}>
             <Redirect to="/Login" />
@@ -51,9 +28,6 @@ function App() {
           <Route path="/Login" exact={true}>
             <Login/>
           </Route>
-          {/* <Route path="/Editor/:hash" exact={true} component={() => {return <Editor/>;}}>
-            
-          </Route> */}
           <Route path="/Editor/:hash" exact={true} >
             <Editor/>  
           </Route>

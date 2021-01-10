@@ -30,7 +30,7 @@ const FILE_ICONS = {
     json: <SiJson />
 };
 
-var client// = new WebSocket('ws://localhost:3002')
+var client = new WebSocket('wss://skrik.net/api/wss')
 
 const codingOptions = [
     { label: 'Python', value: 'python' },
@@ -62,7 +62,8 @@ export default function Editor(props) {
         client.send(JSON.stringify(data))
     }
     useEffect(async () => {
-        client = new WebSocket('ws://localhost:3002')
+        // client = new WebSocket('wss://skrik.net/api/wss')
+        
         client.onmessage = (message) => {
             const { data } = message
             const [task, update] = JSON.parse(data)
@@ -147,6 +148,7 @@ export default function Editor(props) {
             alert("Unknown Error!")
         }
         //console.log(result)
+
         await sendData(['init', hash])
 
         

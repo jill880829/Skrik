@@ -24,6 +24,14 @@ data:
       listen [::]:80;
       server_name  _;
 
+      location ^~ /sockjs-node {
+        proxy_pass http://socketio/sockjs-node;
+      }
+
+      location /api/download {
+        proxy_pass http://backend/api/download;
+      }
+      
       location ^~ /api/login {
         proxy_pass http://backend/api/login;
       }

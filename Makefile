@@ -2,7 +2,7 @@
 include backend/.env
 export $(shell sed 's/=.*//' backend/.env)
 
-NOW := v0.0.3
+NOW := v0.0.4
 PROJECT_ID := skrik-299012
 
 init:
@@ -20,7 +20,7 @@ db_clean:
 	docker rmi local_skrik_mongo
 
 dbconn:
-	mongo --authenticationDatabase "$(MONGO_DATABASE)" -u "$(MONGO_USERNAME)" "$(MONGO_URL)/$(MONGO_DATABASE)" -p "$(MONGO_PASSWORD)"
+	mongo --authenticationDatabase "$(MONGO_DATABASE)" -u "$(MONGO_USERNAME)" "$(MONGO_URL):$(MONGO_PORT)/$(MONGO_DATABASE)" -p "$(MONGO_PASSWORD)"
 
 backend:
 	export $$(cat backend/.env | xargs) && export MONGO_USERNAME="$(MONGO_USERNAME)" && cd backend && npm start

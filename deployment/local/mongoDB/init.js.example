@@ -1,10 +1,10 @@
 db.createUser(
     {
-        user: "${USERNAME}",
-        pwd: "${PASSWORD}",
+        user: "${MONGO_USERNAME}",
+        pwd: "${MONGO_PASSWORD}",
         roles: [{
             role: "readWrite",
-            db: "${DATABASE}"
+            db: "${MONGO_DATABASE}"
         }, {
             role: "readWrite",
             db: "session"

@@ -14,6 +14,6 @@ COPY backend/package.json ./package.json
 RUN mkdir tmp
 
 RUN npm install
-RUN export SKRIK_ROOT=/usr/web/skrik
+RUN export SKRIK_ROOT=/usr/web/skrik/
 
 CMD ["npm", "start"]

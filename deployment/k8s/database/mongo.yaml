@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: mongo
-        image: asia.gcr.io/skrik-299012/mongo:v0.0.1
+        image: asia.gcr.io/skrik-299012/mongo:v0.0.4
         imagePullPolicy: Always
         resources:
           requests:

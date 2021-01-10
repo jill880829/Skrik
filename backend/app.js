@@ -110,14 +110,13 @@ app.use('/api', apiRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     console.log("[endpoint] 404 not found: " + req.url)
-
+    res.redirect('/Error')
     // next(createError(404));
 });
 
 // error handler
 app.use(function (err, req, res, next) {
     console.log("[global err] uncaught error: " + err)
-    res.redirect('/Error')
     // send the error page
     res.status(err.status || 500);
     res.send('error');
@@ -163,12 +162,12 @@ wss.on('connection', async ws => {
                     var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'delete', '')
                     // console.log('delete', buffers[author].line + 1)
                     if (result['success'] === false) {
-                        console.log("error", result['description'])
+                        console.log("[socket] request_file:", result['description'])
                     }
                     var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'insert', textToDB)
                     // console.log('insert', buffers[author].line + 1, textToDB)
                     if (result['success'] === false) {
-                        console.log("error", result['description'])
+                        console.log("[socket] request_file:", result['description'])
                     }
                     buffers[author].text = ''
                 }
@@ -176,7 +175,7 @@ wss.on('connection', async ws => {
                 buffers[author] = { filepath: filepath, line: 0, text: '' }
                 var result = await QueryProject.getFile(projectID, payload)
                 if (result['success'] === false) {
-                    console.log("error", result['description'])
+                    console.log("[socket] request_file:", result['description'])
                 }
                 else {
                     // console.log(result['content'])
@@ -214,12 +213,12 @@ wss.on('connection', async ws => {
                             var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'delete', '')
                             // console.log('delete', buffers[author].line + 1)
                             if (result['success'] === false) {
-                                console.log("error", result['description'])
+                                console.log("[socket] input:", result['description'])
                             }
                             var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'insert', textToDB)
                             // console.log('insert', buffers[author].line + 1, textToDB)
                             if (result['success'] === false) {
-                                console.log("error", result['description'])
+                                console.log("[socket] input:", result['description'])
                             }
                         }
                         buffers[author].text = ''
@@ -236,12 +235,12 @@ wss.on('connection', async ws => {
                         var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'delete', '')
                         // console.log('delete', buffers[author].line + 1)
                         if (result['success'] === false) {
-                            console.log("error", result['description'])
+                            console.log("[socket] input:", result['description'])
                         }
                         var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'insert', textToDB)
                         // console.log('insert', buffers[author].line + 1, textToDB)
                         if (result['success'] === false) {
-                            console.log("error", result['description'])
+                            console.log("[socket] input:", result['description'])
                         }
                         buffers[author].text = ''
                     }
@@ -254,7 +253,7 @@ wss.on('connection', async ws => {
                                     var result = await QueryProject.addLineChange(projectID, filepath, author, element.start + idx + 1, 'insert', line)
                                     // console.log('insert', element.start + idx + 1, line)
                                     if (result['success'] === false) {
-                                        console.log("error", result['description'])
+                                        console.log("[socket] input:", result['description'])
                                     }
                                 })
                             }
@@ -265,7 +264,7 @@ wss.on('connection', async ws => {
                                     var result = await QueryProject.addLineChange(projectID, filepath, author, element.start + idx + 1, 'delete', '')
                                     // console.log('delete', element.start + idx + 1)
                                     if (result['success'] === false) {
-                                        console.log("error", result['description'])
+                                        console.log("[socket] input:", result['description'])
                                     }
                                 })
                             }
@@ -278,7 +277,7 @@ wss.on('connection', async ws => {
                             var result = await QueryProject.addLineChange(projectID, filepath, author, content[0].start + idx + 1, 'insert', line)
                             // console.log('insert', content[0].start + idx + 1, line)
                             if (result['success'] === false) {
-                                console.log("error", result['description'])
+                                console.log("[socket] input:", result['description'])
                             }
                         })
                     }
@@ -289,7 +288,7 @@ wss.on('connection', async ws => {
                             var result = await QueryProject.addLineChange(projectID, filepath, author, content[0].start + idx + 1, 'delete', '')
                             // console.log('delete', content[0].start + idx + 1)
                             if (result['success'] === false) {
-                                console.log("error", result['description'])
+                                console.log("[socket] input:", result['description'])
                             }
                         })
                     }
@@ -319,7 +318,8 @@ wss.on('connection', async ws => {
         }
     }
     ws.onclose = async () => {
-        if (buffers[author].text != '') {
+        console.log("[socket] disconnected")
+        if (buffers[author] !== undefined && buffers[author].text != '') {
             let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
             var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'delete', '')
             // console.log('delete', buffers[author].line + 1)

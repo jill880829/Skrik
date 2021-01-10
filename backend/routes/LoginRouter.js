@@ -38,7 +38,6 @@ if (process.env.FB_APP_ID !== undefined) {
             callbackURL: process.env.LOGIN_URL + "/callback/fb"
     },
         async function (accessToken, refreshToken, profile, done) {
-            console.log(profile);
             try {
                 let user = await QueryUser.authFB(profile.id, profile.displayName);
                 if(user.username === undefined) {
@@ -68,7 +67,6 @@ if (process.env.GOOGLE_APP_ID !== undefined) {
             passReqToCallback: true
     },
         async function(req, accessToken, refreshToken, profile, done) {
-            console.log(profile);
             try {
                 let user = await QueryUser.authGoogle(profile.id, profile.displayName);
                 if(user.username === undefined) {
@@ -95,9 +93,7 @@ if (process.env.GITHUB_APP_ID !== undefined) {
             callbackURL: process.env.LOGIN_URL + "/callback/github",
     },
         async function(accessToken, refreshToken, profile, done) {
-            console.log(profile);
             try {
-                console.log(profile)
                 let user = await QueryUser.authGithub(profile.id, profile.username);
                 if(user.username === undefined) {
                     console.log("[github] authGithub missing user: undefined.")
