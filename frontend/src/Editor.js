@@ -30,7 +30,7 @@ const FILE_ICONS = {
     json: <SiJson />
 };
 
-var client = new WebSocket('wss://skrik.net/api/wss')
+var client = new WebSocket('ws://localhost:3002')
 
 const codingOptions = [
     { label: 'Python', value: 'python' },
