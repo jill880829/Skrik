@@ -18,3 +18,8 @@ docker ports:
     1. mongo:           27017
     2. mongo-express:   8081
     3. redis:           6379
+
+## versions
+
+    v0.0.4: single line ok; oauth ok
+    v0.0.5: websocket version demo

@@ -13,3 +13,4 @@ data:
   REDIS_PORT: "6379"
   HTTP_PORT: "3001"
   SOCKETIO_PORT: "3002"
+  SKRIK_ROOT: "/usr/web/skrik/"

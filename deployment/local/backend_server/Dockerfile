@@ -1,6 +1,7 @@
 FROM node:latest
-
 LABEL project=skrik
+
+RUN apt update && apt install -y zip
 
 WORKDIR /usr/web/skrik
 COPY backend/bin/ ./bin/
@@ -14,6 +15,5 @@ COPY backend/package.json ./package.json
 RUN mkdir tmp
 
 RUN npm install
-RUN export SKRIK_ROOT=/usr/web/skrik/
 
 CMD ["npm", "start"]

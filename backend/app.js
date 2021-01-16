@@ -142,7 +142,7 @@ wss.on('connection', async ws => {
     console.log("[socket] connected")
     ws.onmessage = async (message) => {
         const { data } = message
-        // console.log(data)
+        console.log("[data] "+data)
         const [task, payload] = JSON.parse(data)
         switch (task) {
             case 'init': {
@@ -152,6 +152,7 @@ wss.on('connection', async ws => {
                 author = result["username"]
             }
             case 'request_file': {
+                console.log('[projectid] '+projectID)
                 let content = ''
                 if (buffers[author] === undefined) {
                     buffers[author] = { filepath: '', line: 0, text: '' }
@@ -162,12 +163,12 @@ wss.on('connection', async ws => {
                     var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'delete', '')
                     // console.log('delete', buffers[author].line + 1)
                     if (result['success'] === false) {
-                        console.log("[socket] request_file:", result['description'])
+                        console.log("[socket] push buffer:", result['description'])
                     }
                     var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'insert', textToDB)
                     // console.log('insert', buffers[author].line + 1, textToDB)
                     if (result['success'] === false) {
-                        console.log("[socket] request_file:", result['description'])
+                        console.log("[socket] push buffer:", result['description'])
                     }
                     buffers[author].text = ''
                 }
@@ -245,52 +246,64 @@ wss.on('connection', async ws => {
                         buffers[author].text = ''
                     }
                     if (content.length === 2) {
-                        await content.forEach(async element => {
+                        for(let element of content) {
                             if (element.ope === 0) {
                                 let textToDB = (element.content.slice(-1) === '\n') ? element.content.slice(0, -1) : element.content
                                 textToDB = textToDB.split('\n')
-                                await textToDB.forEach(async (line, idx) => {
-                                    var result = await QueryProject.addLineChange(projectID, filepath, author, element.start + idx + 1, 'insert', line)
+                                for(let idx in textToDB) {
+                                    let idxToInt = parseInt(idx)
+                                    let line = textToDB[idxToInt]
+                                    console.log("[dataToDB]", idxToInt, line)
+                                    var result = await QueryProject.addLineChange(projectID, filepath, author, element.start + idxToInt + 1, 'insert', line)
                                     // console.log('insert', element.start + idx + 1, line)
                                     if (result['success'] === false) {
                                         console.log("[socket] input:", result['description'])
                                     }
-                                })
+                                }
                             }
                             else {
                                 let textToDB = (element.content.slice(-1) === '\n') ? element.content.slice(0, -1) : element.content
                                 textToDB = textToDB.split('\n')
-                                await textToDB.forEach(async (line, idx) => {
-                                    var result = await QueryProject.addLineChange(projectID, filepath, author, element.start + idx + 1, 'delete', '')
-                                    // console.log('delete', element.start + idx + 1)
+                                for(let idx in textToDB) {
+                                    let idxToInt = parseInt(idx)
+                                    let line = textToDB[idxToInt]
+                                    console.log("[dataToDB]", idxToInt, line)
+                                    var result = await QueryProject.addLineChange(projectID, filepath, author, element.start + 1, 'delete', '')
+                                    // console.log('insert', element.start + idx + 1, line)
                                     if (result['success'] === false) {
                                         console.log("[socket] input:", result['description'])
                                     }
-                                })
+                                }
                             }
-                        })
+                        }
                     }
                     else if (content.length === 1 && content[0].ope === 0) {
                         let textToDB = (content[0].content.slice(-1) === '\n') ? content[0].content.slice(0, -1) : content[0].content
                         textToDB = textToDB.split('\n')
-                        await textToDB.forEach(async (line, idx) => {
-                            var result = await QueryProject.addLineChange(projectID, filepath, author, content[0].start + idx + 1, 'insert', line)
-                            // console.log('insert', content[0].start + idx + 1, line)
+                        for(let idx in textToDB) {
+                            let idxToInt = parseInt(idx)
+                            let line = textToDB[idxToInt]
+                            console.log("[dataToDB]", idxToInt, line)
+                            var result = await QueryProject.addLineChange(projectID, filepath, author, content[0].start + idxToInt + 1, 'insert', line)
+                            // console.log('insert', element.start + idx + 1, line)
                             if (result['success'] === false) {
                                 console.log("[socket] input:", result['description'])
                             }
-                        })
+                        }
                     }
                     else if (content.length === 1 && content[0].ope === 1) {
                         let textToDB = (content[0].content.slice(-1) === '\n') ? content[0].content.slice(0, -1) : content[0].content
                         textToDB = textToDB.split('\n')
-                        await textToDB.forEach(async (line, idx) => {
-                            var result = await QueryProject.addLineChange(projectID, filepath, author, content[0].start + idx + 1, 'delete', '')
-                            // console.log('delete', content[0].start + idx + 1)
+                        for(let idx in textToDB) {
+                            let idxToInt = parseInt(idx)
+                            let line = textToDB[idxToInt]
+                            console.log("[dataToDB]", idxToInt, line)
+                            var result = await QueryProject.addLineChange(projectID, filepath, author, content[0].start + 1, 'delete', '')
+                            // console.log('insert', element.start + idx + 1, line)
                             if (result['success'] === false) {
                                 console.log("[socket] input:", result['description'])
                             }
-                        })
+                        }
                     }
                 }
                 wss.clients.forEach((client) => {

@@ -18,7 +18,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: backend
-        image: asia.gcr.io/skrik-299012/backend:v0.0.4
+        image: asia.gcr.io/skrik-299012/backend:v0.0.5
         imagePullPolicy: Always
         ports:
         - containerPort: 3001
