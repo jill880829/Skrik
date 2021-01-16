@@ -1,3 +1,6 @@
+// 20210116_comment
+// Add home button at 'help_home_btn'
+// TODO: Add onClick function to this home btn
 import React, { useState, useEffect } from 'react'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material-darker.css'
@@ -12,12 +15,13 @@ import { diffLines } from 'diff'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { SiCplusplus, SiJson } from "react-icons/si";
-import { AiOutlineFile, AiFillRest } from "react-icons/ai";
+import { AiOutlineFile, AiFillRest, AiFillHome} from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
 import FileStructure from './structure'
 import useStructure from './useStructure'
+import { IconContext } from "react-icons";
 import { useParams } from 'react-router-dom'
 
 const FILE_ICONS = {
@@ -200,15 +204,16 @@ export default function Editor(props) {
         console.log(transfer(rmduplicate(ls).list))
     }
     const ext = fileName.split(".")[1];
+    
     return (
         <div>
             <div className='page_container'>
-                <div id='folder_structure'>
+                <div className='folder_structure'>
                     <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} treeStructure={treeStructure}
                         setTree={setTree} resetStatus={resetStatus} onClickFile={onClickFile} onClickFolder={onClickFolder}
                         AddNewFile={AddNewFile} SaveToTree={SaveToTree} currentFilePath={currentFilePath} />
                 </div>
-                <div id='editor_container'>
+                <div className='editor_container'>
                     <div id='editor_title'>
                         <div>
                             {FILE_ICONS[ext] || <AiOutlineFile />}
@@ -235,6 +240,18 @@ export default function Editor(props) {
                         placeholder='Select a code mode...'
                         defaultValue={{ label: "Select a code mode...", value: 0 }}
                     />
+                </div>
+                <div className='help_bar'>
+                    <div style={{display: 'table'}}>
+                        <div className = 'help_btn_bar'>
+                            <button className='help_home_btn'>
+                                <IconContext.Provider value={{ color: 'white', size: '50px' }}>
+                                    <AiFillHome />
+                                </IconContext.Provider>
+                            </button>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
