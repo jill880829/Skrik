@@ -14,9 +14,9 @@
   display: inline-block;
   height: 100%;
   width: 20%;
-  text-align: center;
+  /* text-align: center; */
   background-color: #231f22;
-  border-right: white 3px double;
+  border-right: #bbbbbb 3px double;
   color: white;
   padding: 1%;
   /* position: absolute; */

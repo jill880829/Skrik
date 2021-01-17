@@ -4,8 +4,10 @@ import { IconContext } from "react-icons";
 import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons/ai";
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { VscNewFile, VscNewFolder, VscCloudDownload, VscCollapseAll } from "react-icons/vsc";
+import { TiDeleteOutline} from "react-icons/ti";
 import { SiCplusplus, SiJson } from "react-icons/si";
 import "./css/Structure.css";
+// import { borderRadius } from "react-select/src/theme";
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -18,7 +20,10 @@ const FILE_ICONS = {
 };
 
 const StyledTree = styled.div`
-  line-height: 1.5;
+  line-height: 1.8;
+  padding:5% 0%;
+//   border:blue 1px solid;
+
 `;
 const Collapsible = styled.div`
   height: ${p => (p.isOpen ? "0" : "auto")};
@@ -29,28 +34,28 @@ export default function Structure({projectName,returnNewFile,returnClickFile,fil
     
     const File = ({ name, filepath, focusOn }) => {
         let ext = name.split(".")[1];
-
         return (
-            <div id={filepath} className={focusOn ? "fileFocus" : "file"} filepath={filepath} key={filepath}>
+            
+                <div id={filepath} className={focusOn ? 'structureFile_Focus' :'structureFile'} filepath={filepath} key={filepath}>
                 {FILE_ICONS[ext] || <AiOutlineFile />}
                 <span className="fileSpan" 
                 onClick={(event) => handleclickFile(event)} 
                 onDoubleClick = {()=>{console.log("DBCLICK")}}
-                key={filepath + ' span'}>{name}</span>
-            </div>
+                    key={filepath + ' span'}>{name}</span>
+                </div>
+                
+            
         );
     };
     const Folder = ({ name, children, folderpath, focusOn }) => {
         const [isOpen, setIsOpen] = useState(false);
-
         const handleToggle = e => {
             e.preventDefault();
             setIsOpen(!isOpen);
         };
-
         return (
-            <div id={folderpath} className={focusOn ? "folderFocus" : "folder"} folderpath={folderpath} key={folderpath}>
-                <div className="folder--label" onClick={handleToggle} key={folderpath + ' div'}>
+            <div id={folderpath} className={focusOn ? 'structureFolder_Focus' : 'structureFolder'} folderpath={folderpath} key={folderpath}>
+                <div className="folderLabel" onClick={handleToggle} key={folderpath + ' div'}>
                     {(!isOpen) ? <AiOutlineFolderOpen /> : <AiOutlineFolder />}
                     <span className="folderSpan" key={folderpath + ' span'} onClick={(event) => handleclickFolder(event)}>{name}</span>
                 </div>
@@ -60,7 +65,7 @@ export default function Structure({projectName,returnNewFile,returnClickFile,fil
     };
     const Input = ({ isFolder, filepath, focusOn }) => {
         return (
-            <div id={filepath} className={focusOn ? "fileFocus" : "file"} filepath={filepath} key={filepath}>
+            <div id={filepath} className={focusOn ? "structureFile_Focus" : "structureFile"} filepath={filepath} key={filepath}>
                 {/* onClick={(event)=>console.log("Click on ",event.target)} */}
                 {isFolder ? <AiOutlineFolder /> : <AiOutlineFile />}
                 <input className="inputSpan" placeholder={isFolder ? "Type folder name here" : "Type file name here"} onKeyPress={(event) => handlePressEnter(event, isFolder)}></input>
@@ -111,6 +116,7 @@ export default function Structure({projectName,returnNewFile,returnClickFile,fil
                             <VscNewFile onClick={() => handleAddNewFile()} />
                             <VscNewFolder onClick={() => handleAddNewFolder()} />
                             <VscCloudDownload onClick={() => {window.location.href = "/api/download"}}  />
+                            <TiDeleteOutline onClick={() => { alert("Delete The focus file") }} />
                             <VscCollapseAll onClick={() => { alert("Collapse All") }} />
                         </div>
                     </IconContext.Provider>
