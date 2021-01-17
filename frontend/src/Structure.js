@@ -30,7 +30,7 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 
-export default function Structure({projectName,returnNewFile,returnDelete,returnClickFile,fileList,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
+export default function Structure({projectName,returnNewFile,returnDelete,returnDownload,returnClickFile,fileList,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
     
     const File = ({ name, filepath, focusOn }) => {
         let ext = name.split(".")[1];
@@ -115,7 +115,7 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
                         <div className='navbar_bar'>
                             <VscNewFile onClick={() => handleAddNewFile()} />
                             <VscNewFolder onClick={() => handleAddNewFolder()} />
-                            <VscCloudDownload onClick={() => {window.location.href = "/api/download"}}  />
+                            <VscCloudDownload onClick={() => returnDownload()}  />
                             <TiDeleteOutline onClick={() => returnDelete()} />
                             <VscCollapseAll onClick={() => { alert("Collapse All") }} />
                         </div>

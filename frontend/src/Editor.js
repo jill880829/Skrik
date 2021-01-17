@@ -223,6 +223,10 @@ export default function Editor(props) {
         if(deletePath!=="Untitled")
             sendData(['delete', {"deleter":username,"path":deletePath}])
     }
+    const handleDownload = () => {
+        alert("Download Click")
+        window.location.href = "/api/download"
+    }
     const ext = fileName.split(".")[1];
     return (
         <div>
@@ -232,6 +236,7 @@ export default function Editor(props) {
                         projectName={projectName}
                         returnNewFile={sendNewFile}
                         returnDelete={handleDelete}
+                        returnDownload={handleDownload}
                         returnClickFile={requestFileContext}
                         fileList={filesStructure}
                         treeStructure={treeStructure}
