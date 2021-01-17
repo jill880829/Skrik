@@ -25,7 +25,7 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 
-export default function Structure({projectName,returnNewFile,returnClickFile,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
+export default function Structure({projectName,returnNewFile,returnClickFile,fileList,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
     
     const File = ({ name, filepath, focusOn }) => {
         let ext = name.split(".")[1];
@@ -83,7 +83,14 @@ export default function Structure({projectName,returnNewFile,returnClickFile,tre
             // if(isFolder){
             //     console.log(path)
             // }
-            returnNewFile(path)
+            console.log(fileList)
+            if(fileList.includes(path)){
+                alert("filename exists")
+            }
+            else{
+                returnNewFile(path)
+            }
+            
         }
     }
     const handleAddNewFile = () => {

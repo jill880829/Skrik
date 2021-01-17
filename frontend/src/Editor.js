@@ -16,6 +16,7 @@ import { AiOutlineFile, AiFillRest } from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
+import sort_files from './functions/sort'
 import FileStructure from './Structure'
 import useStructure from './useStructure'
 import { useParams } from 'react-router-dom'
@@ -30,8 +31,8 @@ const FILE_ICONS = {
     json: <SiJson />
 };
 
-const client = new WebSocket('wss://skrik.net/api/wss')
-
+//const client = new WebSocket('wss://skrik.net/api/wss')
+const client = new WebSocket('ws://localhost:4000')
 const codingOptions = [
     { label: 'Python', value: 'python' },
     { label: 'HTML', value: 'xml' },
@@ -142,8 +143,11 @@ export default function Editor(props) {
             if (rmdup.duplicate) {
                 console.log("EXISTS")
             }
-            setFile([...rmdup.list])
-            setTree(transfer([...rmdup.list]))
+            console.log(rmdup.list)
+            const sorted = sort_files(rmdup.list)
+            console.log(sorted)
+            setFile([...sorted])
+            setTree(transfer([...sorted]))
         }
     }
 
@@ -198,7 +202,7 @@ export default function Editor(props) {
         <div>
             <div className='page_container'>
                 <div id='folder_structure'>
-                    <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} treeStructure={treeStructure}
+                    <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} fileList={filesStructure} treeStructure={treeStructure}
                         setTree={setTree} resetStatus={resetStatus} onClickFile={onClickFile} onClickFolder={onClickFolder}
                         AddNewFile={AddNewFile} SaveToTree={SaveToTree} currentFilePath={currentFilePath} />
                 </div>
@@ -234,4 +238,3 @@ export default function Editor(props) {
         </div>
     )
 }
-
