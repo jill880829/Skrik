@@ -127,6 +127,7 @@ const server = http.createServer(app2)
 const wss = new WebSocket.Server({ server })
 let projectUsers = {}
 let buffers = {}
+let connection = {}
 
 wss.on('connection', async ws => {
     const sendData = (client, data) => {
@@ -150,13 +151,13 @@ wss.on('connection', async ws => {
                 projectID = result["id"]
                 var result = await QueryRedis.getUser(payload)
                 author = result["username"]
-            }
-            case 'request_file': {
-                console.log('[projectid] '+projectID)
-                let content = ''
+                ws.author = result["username"]
+                if (connection[projectID] === undefined) {
+                    connection[projectID] = [ws]
+                }
+                else connection[projectID].push(ws)
                 if (buffers[author] === undefined) {
-                    buffers[author] = { filepath: '', line: 0, text: '' }
-                    // console.log(buffers[author])
+                    buffers[author] = { projectID: '', filepath: '', line: 0, text: '' }
                 }
                 if (buffers[author].text != '') {
                     let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
@@ -170,21 +171,35 @@ wss.on('connection', async ws => {
                     if (result['success'] === false) {
                         console.log("[socket] push buffer:", result['description'])
                     }
-                    buffers[author].text = ''
+                }
+                buffers[author] = { projectID: projectID, filepath: '', line: 0, text: '' }
+            }
+            case 'request_file': {
+                console.log('[projectid] '+projectID)
+                let content = ''
+                if (buffers[author].text != '') {
+                    let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
+                    var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'delete', '')
+                    // console.log('delete', buffers[author].line + 1)
+                    if (result['success'] === false) {
+                        console.log("[socket] push buffer:", result['description'])
+                    }
+                    var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'insert', textToDB)
+                    // console.log('insert', buffers[author].line + 1, textToDB)
+                    if (result['success'] === false) {
+                        console.log("[socket] push buffer:", result['description'])
+                    }
                 }
                 filepath = payload
-                buffers[author] = { filepath: filepath, line: 0, text: '' }
+                buffers[author] = { projectID: projectID, filepath: filepath, line: 0, text: '' }
                 var result = await QueryProject.getFile(projectID, payload)
                 if (result['success'] === false) {
                     console.log("[socket] request_file:", result['description'])
                 }
                 else {
-                    // console.log(result['content'])
-                    // console.log(filepath)
-                    // console.log(buffers)
                     for(let buffer of Object.values(buffers)) {
-                        if(buffer.filepath === filepath && buffer.text != '') {
-                            // console.log(buffer.filepath, buffer.line, buffer.text)
+                        if(buffer.projectID === projectID && buffer.filepath === filepath && buffer.text != '') {
+                            console.log(buffer.filepath, buffer.line, buffer.text)
                             let textInBuffer = (buffer.text.slice(-1) === '\n') ? buffer.text.slice(0, -1) : buffer.text
                             result['content'][buffer.line].data = textInBuffer
                         }
@@ -201,13 +216,9 @@ wss.on('connection', async ws => {
             case 'input': {
                 filepath = payload.filepath
                 let content = payload.content
-                // console.log(payload, filepath, content)
                 if (content.length === 2 && content[0].ope + content[1].ope === 1 &&
                     content[0].start === content[1].start && content[0].start + 1 === content[0].end &&
                     content[0].end === content[1].end) {
-                    // if (buffers[author] === undefined) {
-                    //     buffers[author] = { filepath: filepath, line: content[0].start, text: '' }
-                    // }
                     if (content[0].start != buffers[author].line) {
                         if (buffers[author].text != '') {
                             let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
@@ -228,9 +239,6 @@ wss.on('connection', async ws => {
                     buffers[author].text = (content[0].ope === 0) ? content[0].content : content[1].content
                 }
                 else {
-                    // if (buffers[author] === undefined) {
-                    //     buffers[author] = { line: content[0].start, text: '' }
-                    // }
                     if (buffers[author].text != '') {
                         let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
                         var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'delete', '')
@@ -306,7 +314,7 @@ wss.on('connection', async ws => {
                         }
                     }
                 }
-                wss.clients.forEach((client) => {
+                connection[projectID].forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
                         sendData(client, ['output', payload])
                     }
@@ -314,7 +322,7 @@ wss.on('connection', async ws => {
                 break
             }
             case 'path': {
-                wss.clients.forEach((client) => {
+                connection[projectID].forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
                         sendData(client, ['output-path', payload])
                     }
@@ -335,16 +343,19 @@ wss.on('connection', async ws => {
         if (buffers[author] !== undefined && buffers[author].text != '') {
             let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
             var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'delete', '')
-            // console.log('delete', buffers[author].line + 1)
             if (result['success'] === false) {
                 console.log("error", result['description'])
             }
             var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'insert', textToDB)
-            // console.log('insert', buffers[author].line + 1, textToDB)
             if (result['success'] === false) {
                 console.log("error", result['description'])
             }
             buffers[author].text = ''
+        }
+        if(projectID != '') {
+            let remainClient = connection[projectID].filter((client) => client.author != author)
+            connection[projectID] = remainClient
+            remainClient.forEach((client) => console.log(client.author))
         }
     }
 })
