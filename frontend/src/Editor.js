@@ -226,12 +226,12 @@ export default function Editor(props) {
     const ext = fileName.split(".")[1];
     return (
         <div>
-            <span onClick={()=>handleDelete()}>Delete {deletePath} </span>
             <div className='page_container'>
                 <div className='folder_structure'>
                     <FileStructure
                         projectName={projectName}
                         returnNewFile={sendNewFile}
+                        returnDelete={handleDelete}
                         returnClickFile={requestFileContext}
                         fileList={filesStructure}
                         treeStructure={treeStructure}

@@ -30,7 +30,7 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 
-export default function Structure({projectName,returnNewFile,returnClickFile,fileList,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
+export default function Structure({projectName,returnNewFile,returnDelete,returnClickFile,fileList,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
     
     const File = ({ name, filepath, focusOn }) => {
         let ext = name.split(".")[1];
@@ -116,7 +116,7 @@ export default function Structure({projectName,returnNewFile,returnClickFile,fil
                             <VscNewFile onClick={() => handleAddNewFile()} />
                             <VscNewFolder onClick={() => handleAddNewFolder()} />
                             <VscCloudDownload onClick={() => {window.location.href = "/api/download"}}  />
-                            <TiDeleteOutline onClick={() => { alert("Delete The focus file") }} />
+                            <TiDeleteOutline onClick={() => returnDelete()} />
                             <VscCollapseAll onClick={() => { alert("Collapse All") }} />
                         </div>
                     </IconContext.Provider>
