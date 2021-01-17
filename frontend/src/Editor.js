@@ -35,13 +35,8 @@ const FILE_ICONS = {
     json: <SiJson />
 };
 
-<<<<<<< HEAD
 //const client = new WebSocket('wss://skrik.net/api/wss')
 const client = new WebSocket('ws://localhost:4000')
-=======
-var client = new WebSocket('ws://localhost:3002')
-
->>>>>>> origin/anita_0116
 const codingOptions = [
     { label: 'Python', value: 'python' },
     { label: 'HTML', value: 'xml' },
@@ -211,13 +206,8 @@ export default function Editor(props) {
     return (
         <div>
             <div className='page_container'>
-<<<<<<< HEAD
                 <div id='folder_structure'>
                     <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} fileList={filesStructure} treeStructure={treeStructure}
-=======
-                <div className='folder_structure'>
-                    <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} treeStructure={treeStructure}
->>>>>>> origin/anita_0116
                         setTree={setTree} resetStatus={resetStatus} onClickFile={onClickFile} onClickFolder={onClickFolder}
                         AddNewFile={AddNewFile} SaveToTree={SaveToTree} currentFilePath={currentFilePath} />
                 </div>
