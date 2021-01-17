@@ -5,7 +5,7 @@ import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { VscNewFile, VscNewFolder, VscCloudDownload, VscCollapseAll } from "react-icons/vsc";
 import { SiCplusplus, SiJson } from "react-icons/si";
-import "./styles.css";
+import "./css/Structure.css";
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -99,18 +99,22 @@ export default function Structure({projectName,returnNewFile,returnClickFile,fil
     const handleAddNewFolder = () => {
         AddNewFile(true)
     }
-    const FolderStructure = ({ projectName }) => {
+    const StructureHeader = ({ projectName }) => {
         return (
-            <div className="title">
-                <span className="titleName">{projectName}</span>
-                <IconContext.Provider value={{ className: 'react-icons' }}>
-                    <div className="titleFunction">
-                        <VscNewFile onClick={() => handleAddNewFile()} />
-                        <VscNewFolder onClick={() => handleAddNewFolder()} />
-                        <VscCloudDownload onClick={() => {window.location.href = "/api/download"}}  />
-                        <VscCollapseAll onClick={() => { alert("Collapse All") }} />
-                    </div>
-                </IconContext.Provider>
+            <div className='Header'>
+                <div className="header_title">
+                    <span className="header_titleName">{projectName}</span>
+                </div>
+                <div className='Navbar'>
+                    <IconContext.Provider value={{ className: 'navbar_icons' }}>
+                        <div className='navbar_bar'>
+                            <VscNewFile onClick={() => handleAddNewFile()} />
+                            <VscNewFolder onClick={() => handleAddNewFolder()} />
+                            <VscCloudDownload onClick={() => {window.location.href = "/api/download"}}  />
+                            <VscCollapseAll onClick={() => { alert("Collapse All") }} />
+                        </div>
+                    </IconContext.Provider>
+                </div>
             </div>
         )
     }
@@ -164,7 +168,7 @@ export default function Structure({projectName,returnNewFile,returnClickFile,fil
     }
     return (
         <div className="App">
-            <FolderStructure projectName={projectName} />
+            <StructureHeader projectName={projectName} />
             <Tree>
                 {displayStruct(treeStructure)}
             </Tree>

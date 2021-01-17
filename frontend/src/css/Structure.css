@@ -1,0 +1,126 @@
+.App {
+  font-family: "PT Sans";
+}
+.react-icons {
+  /* border: 2px solid rgba(0, 0, 0, 0.089); */
+  margin: 5px;
+  height: 1.25em;
+  width: 1.25em;
+}
+.titleFunction {
+  visibility: hidden;
+}
+.title:hover .titleFunction {
+  visibility: visible;
+  position: absolute;
+  cursor: pointer;
+  margin: 15px;
+  right: 0px;
+}
+.titleName {
+  margin: 15px;
+}
+.title {
+  position: relative;
+  width: 100%;
+  min-height: 1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: red;
+}
+.file {
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+}
+.fileFocus {
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+.fileFocus .fileSpan {
+  margin-left: 5px;
+}
+.fileFocus .fileSpan:hover {
+  cursor: pointer;
+  color: rgb(250, 226, 9);
+}
+.file .fileSpan {
+  margin-left: 5px;
+}
+.file .fileSpan:hover {
+  cursor: pointer;
+  color: rgb(250, 226, 9);
+}
+.file .inputSpan {
+  margin-left: 5px;
+}
+.file .inputSpan:hover {
+  cursor: text;
+  color: rgb(250, 226, 9);
+}
+.folder {
+  padding-left: 20px;
+}
+.folder > .folder--label {
+  display: flex;
+  align-items: center;
+}
+.folder > .folder--label > .folderSpan {
+  margin-left: 5px;
+}
+.folder > .folder--label > .folderSpan:hover {
+  cursor: pointer;
+  color: rgb(250, 226, 9);
+}
+.folderFocus {
+  padding-left: 20px;
+}
+.folderFocus > .folder--label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+.folderFocus > .folder--label > .folderSpan {
+  margin-left: 5px;
+}
+.folderFocus > .folder--label > .folderSpan:hover {
+  cursor: pointer;
+  color: rgb(250, 226, 9);
+}
+
+/*  */
+
+.Header {
+  color: #bbbbbb;
+  border: none;
+}
+
+.header_title {
+  text-align: left;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: none;
+  padding: 1% 2%;
+  background-color: #231f22;
+  font-size: medium;
+}
+.Navbar {
+  background-color: transparent;
+  display: flex;
+  justify-content: flex-end;
+}
+.navbar_icons {
+  margin: 5px;
+  height: 1.25em;
+  width: 1.25em;
+  border: none;
+}
+.navbar_icons:hover {
+  cursor: pointer;
+  color: white;
+}
