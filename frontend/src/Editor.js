@@ -24,6 +24,8 @@ import FileStructure from './Structure'
 import useStructure from './useStructure'
 import { IconContext } from "react-icons";
 import { useParams } from 'react-router-dom'
+import './css/Editor.css'
+
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -226,10 +228,21 @@ export default function Editor(props) {
         <div>
             <span onClick={()=>handleDelete()}>Delete {deletePath} </span>
             <div className='page_container'>
-                <div id='folder_structure'>
-                    <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} fileList={filesStructure} treeStructure={treeStructure}
-                        setTree={setTree} resetStatus={resetStatus} onClickFile={onClickFile} onClickFolder={onClickFolder}
-                        AddNewFile={AddNewFile} SaveToTree={SaveToTree} currentFilePath={currentFilePath} />
+                <div className='folder_structure'>
+                    <FileStructure
+                        projectName={projectName}
+                        returnNewFile={sendNewFile}
+                        returnClickFile={requestFileContext}
+                        fileList={filesStructure}
+                        treeStructure={treeStructure}
+                        setTree={setTree}
+                        resetStatus={resetStatus}
+                        onClickFile={onClickFile}
+                        onClickFolder={onClickFolder}
+                        AddNewFile={AddNewFile}
+                        SaveToTree={SaveToTree}
+                        currentFilePath={currentFilePath}
+                    />
                 </div>
                 <div className='editor_container'>
                     <div id='editor_title'>

@@ -1,0 +1,228 @@
+/* .App {
+  font-family: "PT Sans";
+}
+.react-icons {
+  margin: 5px;
+  height: 1.25em;
+  width: 1.25em;
+}
+.titleFunction {
+  visibility: hidden;
+}
+.title:hover .titleFunction {
+  visibility: visible;
+  position: absolute;
+  cursor: pointer;
+  margin: 15px;
+  right: 0px;
+}
+.titleName {
+  margin: 15px;
+}
+.title {
+  position: relative;
+  width: 100%;
+  min-height: 1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: red;
+}
+.file {
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+}
+.fileFocus {
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+.fileFocus .fileSpan {
+  margin-left: 5px;
+}
+.fileFocus .fileSpan:hover {
+  cursor: pointer;
+  color: rgb(250, 226, 9);
+}
+.file .fileSpan {
+  margin-left: 5px;
+}
+.file .fileSpan:hover {
+  cursor: pointer;
+  color: rgb(250, 226, 9);
+}
+.file .inputSpan {
+  margin-left: 5px;
+}
+.file .inputSpan:hover {
+  cursor: text;
+  color: rgb(250, 226, 9);
+}
+.folder {
+  padding-left: 20px;
+}
+.folder > .folder--label {
+  display: flex;
+  align-items: center;
+}
+.folder > .folder--label > .folderSpan {
+  margin-left: 5px;
+}
+.folder > .folder--label > .folderSpan:hover {
+  cursor: pointer;
+  color: rgb(250, 226, 9);
+}
+.folderFocus {
+  padding-left: 20px;
+}
+.folderFocus > .folder--label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+.folderFocus > .folder--label > .folderSpan {
+  margin-left: 5px;
+}
+.folderFocus > .folder--label > .folderSpan:hover {
+  cursor: pointer;
+  color: rgb(250, 226, 9);
+} */
+
+/*  */
+.App {
+  font-family: "PT Sans";
+}
+.Header {
+  color: #bbbbbb;
+  border: none;
+}
+
+.header_title {
+  text-align: left;
+  font-weight: bold;
+  text-transform: uppercase;
+  border: none;
+  padding: 1% 2%;
+  background-color: #231f22;
+  font-size: medium;
+}
+.Navbar {
+  background-color: transparent;
+  display: flex;
+  justify-content: flex-end;
+}
+.navbar_icons {
+  margin: 5px;
+  height: 1.25em;
+  width: 1.25em;
+  border: none;
+}
+.navbar_icons:hover {
+  cursor: pointer;
+  color: white;
+}
+/* File */
+.fileContainer {
+  display: flex;
+  border: red 1px solid;
+  text-align: right;
+}
+.structureFile {
+  display: flex;
+  align-items: center;
+  padding: 0% 0% 0% 4%;
+  background-color: #231f22;
+  opacity: 0.7;
+  /* border: green 1px solid; */
+}
+.structureFile_Focus {
+  display: flex;
+  align-items: center;
+  padding: 0% 4%;
+  background-color: #231f22;
+  color: #fed64c;
+}
+.structureFile:hover {
+  opacity: 1;
+  cursor: pointer;
+  background-color: #2e2a2d;
+}
+.structureFile_Focus:hover {
+  opacity: 1;
+  cursor: pointer;
+  background-color: #2e2a2d;
+}
+.structureFile .fileSpan {
+  margin-left: 4%;
+}
+.structureFile_Focus .fileSpan {
+  margin-left: 4%;
+}
+.structureFile > .fileDelete {
+  display: flex;
+  text-align: end;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* Folder */
+
+.structureFolder {
+  padding: 0% 4%;
+}
+.structureFolder > .folderLabel {
+  display: flex;
+  align-items: center;
+  background-color: #231f22;
+  opacity: 0.7;
+}
+.structureFolder > .folderLabel > .folderSpan {
+  margin-left: 4%;
+}
+.structureFolder > .folderLabel:hover {
+  opacity: 1;
+  background-color: #2e2a2d;
+  cursor: pointer;
+}
+
+.structureFolder_Focus {
+  padding: 0% 4%;
+}
+.structureFolder_Focus > .folderLabel {
+  display: flex;
+  align-items: center;
+  background-color: #231f22;
+  color: #ff935b;
+  opacity: 1;
+}
+.structureFolder_Focus > .folderLabel > .folderSpan {
+  margin-left: 4%;
+}
+.structureFolder_Focus > .folderLabel:hover {
+  background-color: #2e2a2d;
+  cursor: pointer;
+}
+
+/* Input */
+.structureFile > .inputSpan {
+  background-color: #403e41;
+  border: none;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  color: white;
+}
+
+.structureFile_Focus > .inputSpan {
+  background-color: #403e41;
+  border: none;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  color: white;
+}
+structureFile_Focus > .inputSpan:focus {
+  outline: none;
+}
