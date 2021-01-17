@@ -10,7 +10,7 @@ import { IconContext } from "react-icons";
 import Divider from '@material-ui/core/Divider';
 
 import { ImFacebook2, ImGoogle, ImGithub, ImGit } from "react-icons/im";
-
+import { message } from 'antd'
 
 
 const CssTextField = withStyles({
@@ -81,8 +81,14 @@ const Login = () => {
         }).then(res => {
             console.log(res.status)
             if (res.status === 401) {
-                alert("Username or password wrong! Please check!")
+                const content = {
+                    content: "Username or password wrong! Please check!",
+                    duration: 2
+                }
+                message.error(content)
+                //alert("Username or password wrong! Please check!")
             }
+            
             else if (res.status === 200) {
                 window.location.href = '/Menu'
             }

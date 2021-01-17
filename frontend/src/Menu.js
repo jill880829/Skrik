@@ -14,6 +14,7 @@ import { BsTrash, BsClockHistory, BsFillPeopleFill } from "react-icons/bs";
 import { GoLocation, GoMail } from "react-icons/go";
 import { FaFacebook, FaGithub } from 'react-icons/fa'
 import { BiBuildingHouse } from 'react-icons/bi';
+import { message } from 'antd'
 import './components/project.css'
 
 class Project extends Component {
@@ -71,7 +72,13 @@ function Menu() {
     const [savedData, setData] = useState(['', '', '', '', ''])
     const [update, setUpdate] = useState({});
     // const []
-
+    useEffect(()=>{
+        const content = {
+            content: "Welcome",
+            duration: 2
+        }
+        message.success(content)
+    },[])
     useEffect(async () => {
         const result = await
             fetch('/api/projects', {
@@ -104,6 +111,11 @@ function Menu() {
         else if (result.status===200){
             const backendList = await result.json()
             setList([...transfer(backendList)])
+            const content = {
+                content: "Project List is up to date",
+                duration: 2
+            }
+            message.success(content)
         }
         else{
             alert(`Unknown Error!`)
