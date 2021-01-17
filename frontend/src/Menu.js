@@ -1,19 +1,13 @@
-// TODO:
-// Profile data are all called in 'savedData'
-// 'savedData' is a list which contain 5 string(company, git, fb, location, email)
-// 'USERNAME' must be called by DB, use 'setUSERNAME' to initialize it!
-// Anita's TODO: Every profile's realname and photo must be editable, this is working, but not done yet.
 
 import React, { useState, useEffect, Component } from 'react';
 import Modal from './components/modal';
-//import ReadMoreReact from 'read-more-react';
-// import Project from './components/project'
+
 import { IconContext } from "react-icons";
 import { FcPlus } from "react-icons/fc";
 import { BsTrash, BsClockHistory, BsFillPeopleFill } from "react-icons/bs";
 import { GoLocation, GoMail } from "react-icons/go";
 import { FaFacebook, FaGithub } from 'react-icons/fa'
-import { BiBuildingHouse } from 'react-icons/bi';
+import { BiBuildingHouse , BiLogOutCircle } from 'react-icons/bi';
 import { message } from 'antd'
 import './components/project.css'
 
