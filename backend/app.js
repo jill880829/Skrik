@@ -201,7 +201,7 @@ wss.on('connection', async ws => {
             case 'input': {
                 filepath = payload.filepath
                 let content = payload.content
-                // console.log(payload, filepath, content)
+                console.log(payload, filepath, content)
                 if (content.length === 2 && content[0].ope + content[1].ope === 1 &&
                     content[0].start === content[1].start && content[0].start + 1 === content[0].end &&
                     content[0].end === content[1].end) {
@@ -308,6 +308,7 @@ wss.on('connection', async ws => {
                 }
                 wss.clients.forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
+                        console.log("[broadcast]", payload)
                         sendData(client, ['output', payload])
                     }
                 })
@@ -321,7 +322,14 @@ wss.on('connection', async ws => {
                 })
                 break
             }
-
+            case 'delete': {
+                wss.clients.forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        sendData(client, ['delete', payload])
+                    }
+                })
+                break
+            }
             case 'file': {
 
                 break
