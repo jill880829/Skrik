@@ -60,10 +60,13 @@ export default function Editor(props) {
     const [filesStructure, setFile] = useState(ls);
     const [language, setLan] = useState('python');
     const [fileName, setFileName] = useState('Untitled')
-    const { hash } = useParams()
+    const { hash, username } = useParams()
     const [projectName, setProjectName] = useState("")
     const [filePath, setFilePath] = useState('Untitled')
+    const [deletePath, setDeletePath] = useState("Untitled")
+    const [refresh, setRefresh] = useState(false)
     useEffect(async () => {
+        console.log("Load from backend")
         const result = await fetch(`/api/ls/${hash}`, {
             method: 'GET',
             headers: new Headers({
@@ -94,9 +97,11 @@ export default function Editor(props) {
         else if (result.status === 200) {
             const { project_name, files } = await result.json()
             setProjectName(project_name)
-            console.log(files)
+            //console.log(files)
             if (files.length !== 0) {
                 setFile([...files])
+                const file = rmduplicate(files).list
+                //console.log(file)
                 setTree([...transfer(rmduplicate(files).list)])
             }
         }
@@ -105,7 +110,7 @@ export default function Editor(props) {
         }
         //console.log(result)
         await sendData(['init', hash])
-    }, [])
+    }, [refresh])
 
     function onChangeCode(value) {
         setLan(value.value);
@@ -153,6 +158,12 @@ export default function Editor(props) {
             setFile([...sorted])
             setTree(transfer([...sorted]))
         }
+        else if (task === 'delete'){
+            console.log(update)
+            
+            alert(`${update.deleter} deletes ${update.path}, refresh automatically.`)
+            setRefresh(!refresh)
+        }
     }
 
     client.onopen = () => {
@@ -192,19 +203,28 @@ export default function Editor(props) {
         sendData(['path', ls])
     }
     const requestFileContext = (ls) => {
-        sendData(['request_file', ls])
-        setFilePath(ls)
-        const filenamesplit = ls.split('/')
-        setFileName(filenamesplit[filenamesplit.length - 1])
+        if(ls.type==="file"){
+            sendData(['request_file', ls.name])
+            setFilePath(ls.name)
+            const filenamesplit = ls.name.split('/')
+            setFileName(filenamesplit[filenamesplit.length - 1])
+            
+        }
+        setDeletePath(ls.name)
+        
     }
     const deb = (ls) => {
         rmduplicate(ls)
         console.log(transfer(rmduplicate(ls).list))
     }
+    const handleDelete = () => {
+        if(deletePath!=="Untitled")
+            sendData(['delete', {"deleter":username,"path":deletePath}])
+    }
     const ext = fileName.split(".")[1];
-    
     return (
         <div>
+            <span onClick={()=>handleDelete()}>Delete {deletePath} </span>
             <div className='page_container'>
                 <div id='folder_structure'>
                     <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} fileList={filesStructure} treeStructure={treeStructure}

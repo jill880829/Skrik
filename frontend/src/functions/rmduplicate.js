@@ -4,9 +4,10 @@ const rmduplicate = (ls) => {
     let folderList = []
     let rm=false
     for(let i=0;i<ls.length;i++){
-        if(ls[i][ls[i].length-1]==='/'){
-            folderList.push({"id":i,"name":ls[i]})
-        }
+        // if(ls[i][ls[i].length-1]==='/'){
+        //     folderList.push({"id":i,"name":ls[i]})
+        // }
+        folderList.push({"id":i,"name":ls[i]})
     }
     
     let cnt=0

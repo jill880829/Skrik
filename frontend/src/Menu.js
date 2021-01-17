@@ -154,7 +154,7 @@ function Menu() {
     }
     const intoProject = (e) => {
         console.log('into project')
-        window.location.href = `/Editor/${e}`
+        window.location.href = `/Editor/${e}/${nickname}`
 
     }
     const handleKeyUp = (e) => {

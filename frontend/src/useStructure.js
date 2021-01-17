@@ -54,7 +54,8 @@ const useStructure = (str) => {
     const onClickFolder = (fp) => {
         let fp_arr = fp.split('_')
         setCurrentFilePath(fp_arr)
-        modifyClickTree(fp_arr, true)
+        const foldername = modifyClickTree(fp_arr, true)
+        return foldername
     }
     const IterAddNewFile = (ele, isFolder) => {
         for (let i = 0; i < ele.length; i++) {

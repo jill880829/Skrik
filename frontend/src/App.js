@@ -28,7 +28,7 @@ function App() {
           <Route path="/Login" exact={true}>
             <Login/>
           </Route>
-          <Route path="/Editor/:hash" exact={true} >
+          <Route path="/Editor/:hash/:username" exact={true} >
             <Editor/>  
           </Route>
           

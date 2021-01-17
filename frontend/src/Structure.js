@@ -155,12 +155,13 @@ export default function Structure({projectName,returnNewFile,returnClickFile,fil
         let fp = event.target.parentNode.id
         resetStatus()
         const filename = onClickFile(String(fp))
-        returnClickFile(filename)
+        returnClickFile({"type":"file","name":filename})
     }
     const handleclickFolder = (event) => {
         let fp = event.target.parentNode.parentNode.id
         resetStatus()
-        onClickFolder(String(fp))
+        const foldername = onClickFolder(String(fp))
+        returnClickFile({"type":"folder","name":foldername})
     }
     return (
         <div className="App">
