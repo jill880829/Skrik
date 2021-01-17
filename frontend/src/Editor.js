@@ -1,3 +1,6 @@
+// 20210116_comment
+// Add home button at 'help_home_btn'
+// TODO: Add onClick function to this home btn
 import React, { useState, useEffect } from 'react'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material-darker.css'
@@ -12,13 +15,14 @@ import { diffLines } from 'diff'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { SiCplusplus, SiJson } from "react-icons/si";
-import { AiOutlineFile, AiFillRest } from "react-icons/ai";
+import { AiOutlineFile, AiFillRest, AiFillHome} from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
 import sort_files from './functions/sort'
 import FileStructure from './Structure'
 import useStructure from './useStructure'
+import { IconContext } from "react-icons";
 import { useParams } from 'react-router-dom'
 
 const FILE_ICONS = {
@@ -31,8 +35,13 @@ const FILE_ICONS = {
     json: <SiJson />
 };
 
+<<<<<<< HEAD
 //const client = new WebSocket('wss://skrik.net/api/wss')
 const client = new WebSocket('ws://localhost:4000')
+=======
+var client = new WebSocket('ws://localhost:3002')
+
+>>>>>>> origin/anita_0116
 const codingOptions = [
     { label: 'Python', value: 'python' },
     { label: 'HTML', value: 'xml' },
@@ -198,15 +207,21 @@ export default function Editor(props) {
         console.log(transfer(rmduplicate(ls).list))
     }
     const ext = fileName.split(".")[1];
+    
     return (
         <div>
             <div className='page_container'>
+<<<<<<< HEAD
                 <div id='folder_structure'>
                     <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} fileList={filesStructure} treeStructure={treeStructure}
+=======
+                <div className='folder_structure'>
+                    <FileStructure projectName={projectName} returnNewFile={sendNewFile} returnClickFile={requestFileContext} treeStructure={treeStructure}
+>>>>>>> origin/anita_0116
                         setTree={setTree} resetStatus={resetStatus} onClickFile={onClickFile} onClickFolder={onClickFolder}
                         AddNewFile={AddNewFile} SaveToTree={SaveToTree} currentFilePath={currentFilePath} />
                 </div>
-                <div id='editor_container'>
+                <div className='editor_container'>
                     <div id='editor_title'>
                         <div>
                             {FILE_ICONS[ext] || <AiOutlineFile />}
@@ -233,6 +248,18 @@ export default function Editor(props) {
                         placeholder='Select a code mode...'
                         defaultValue={{ label: "Select a code mode...", value: 0 }}
                     />
+                </div>
+                <div className='help_bar'>
+                    <div style={{display: 'table'}}>
+                        <div className = 'help_btn_bar'>
+                            <button className='help_home_btn'>
+                                <IconContext.Provider value={{ color: 'white', size: '50px' }}>
+                                    <AiFillHome />
+                                </IconContext.Provider>
+                            </button>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>

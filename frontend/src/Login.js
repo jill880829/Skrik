@@ -33,10 +33,6 @@ const Login = () => {
     const [showRegister, setShowReg] = useState(false);
     const [checkIcon, setIconColor] = useState("#a2693b");
 
-
-    const handleSocialLogin = (user) => { console.log(user) }
-
-    const handleSocialLoginFailure = (err) => { console.error(err) }
     const postRegister = () => {
         console.log(username, password)
         const data = { 'username': username, 'password': password };
@@ -107,6 +103,33 @@ const Login = () => {
         }
     }
 
+    const handleEnter = (e, now) => { 
+        if (e.key === 'Enter') {
+            if (now === 'username') {
+                let next = e.target.parentNode.parentNode.parentNode.childNodes[2].childNodes[1].childNodes[1];
+                next.focus()
+            }
+            else if (now === 'password') {
+                let next = e.target.parentNode.parentNode.parentNode.childNodes[4]
+                console.log(next)
+                next.click()
+            }
+            else if (now === 'newName') { 
+                let next = e.target.parentNode.parentNode.parentNode.childNodes[4].childNodes[1].childNodes[1]
+                
+                next.focus()
+            }
+            else if (now === 'newPass') { 
+                let next = e.target.parentNode.parentNode.parentNode.childNodes[5].childNodes[1].childNodes[1]
+                next.focus()
+            }
+            else if (now === 'conPass') { 
+                let next = e.target.parentNode.parentNode.parentNode.childNodes[7]
+                next.click()
+            }
+        }
+    }
+
 
 
 
@@ -138,6 +161,7 @@ const Login = () => {
                                 label='Username'
                                 margin='normal'
                                 variant="outlined"
+                                onKeyPress={(event) => { handleEnter(event,'newName') }}   
                                 onChange={(event) => { setUsername(event.target.value) }}
                                 InputLabelProps={{ style: { color: "#a2693b", } }}
                                 InputProps={{
@@ -151,6 +175,7 @@ const Login = () => {
                                 type="password"
                                 margin='normal'
                                 variant="outlined"
+                                onKeyPress={(event) => { handleEnter(event,'newPass') }}   
                                 onChange={(event) => {
                                     setPassword(event.target.value);
                                 }}
@@ -166,6 +191,7 @@ const Login = () => {
                                 type="password"
                                 margin='normal'
                                 variant="outlined"
+                                onKeyPress={(event) => { handleEnter(event,'conPass') }}   
                                 onChange={(event) => {
                                     setConfirm(event.target.value);
                                     handleKeyUp(event.target.value);
@@ -207,7 +233,8 @@ const Login = () => {
                                 label='Username'
                                 margin='normal'
                                 variant="outlined"
-                                onChange={(event) => { setUsername(event.target.value) }}
+                                onKeyPress={(event) => { handleEnter(event,'username') }}
+                                onChange={(event) => {setUsername(event.target.value)}}
                                 InputLabelProps={{ style: { color: "#a2693b", } }}
                                 InputProps={{
                                     style: { color: "#a2693b", letterSpacing: 1 },
@@ -220,6 +247,7 @@ const Login = () => {
                                 type="password"
                                 margin='normal'
                                 variant="outlined"
+                                onKeyPress={(event) => { handleEnter(event,'password') }}   
                                 onChange={(event) => { setPassword(event.target.value) }}
                                 InputLabelProps={{ style: { color: "#a2693b" } }}
                                 InputProps={{
