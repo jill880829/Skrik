@@ -15,7 +15,7 @@ import { diffLines } from 'diff'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { SiCplusplus, SiJson } from "react-icons/si";
-import { AiOutlineFile, AiFillRest, AiFillHome} from "react-icons/ai";
+import { AiOutlineFile, AiFillRest, AiFillHome } from "react-icons/ai";
 import CodeSelect from './components/codeSelect'
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
@@ -25,7 +25,7 @@ import useStructure from './useStructure'
 import { IconContext } from "react-icons";
 import { useParams } from 'react-router-dom'
 import './css/Editor.css'
-
+import { message } from 'antd'
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -77,40 +77,31 @@ export default function Editor(props) {
         })
         if (result.status === 401) {
             result.text().then(res => {
-                // res.text().then(res => {
-                //     alert(`401 Unauthorized\n${res}`)
-                // })
                 window.location.href = '/Login'
             })
         }
         else if (result.status === 403) {
             result.text().then(res => {
-                alert(`403 Forbidden: Refuse to create the project!\n${res}`)
+                message.error({ content: `403 Forbidden: Refuse to create the project!\n${res}`, duration: 2 })
                 window.location.href = '/Menu'
-                //console.log(res) 
             })
         }
         else if (result.status === 500) {
             result.text().then(res => {
-                alert(`500 Internal Server Error\n${res}`)
-                //console.log(res) 
+                message.error({ content: `500 Internal Server Error\n${res}`, duration: 2 })
             })
         }
         else if (result.status === 200) {
             const { project_name, files } = await result.json()
             setProjectName(project_name)
-            //console.log(files)
             if (files.length !== 0) {
                 setFile([...files])
-                const file = rmduplicate(files).list
-                //console.log(file)
                 setTree([...transfer(rmduplicate(files).list)])
             }
         }
-        else{
-            alert("Unknown Error!")
+        else {
+            message.error({ content: "Unknown Error!", duration: 2 })
         }
-        //console.log(result)
         await sendData(['init', hash])
     }, [refresh])
 
@@ -124,8 +115,8 @@ export default function Editor(props) {
     const [codes, setCodes] = useState('')
     const [opened, setOpened] = useState(false)
 
-    client.onmessage = (message) => {
-        const { data } = message
+    client.onmessage = (msg) => {
+        const { data } = msg
         const [task, update] = JSON.parse(data)
         if (task === 'init-file') {
             setCodes(update)
@@ -133,8 +124,7 @@ export default function Editor(props) {
         }
         else if (task === 'output') {
             let tmp = codes;
-            // console.log(update.content)
-            if(update.filepath === filePath) {
+            if (update.filepath === filePath) {
                 const content = update.content
                 content.forEach((part) => {
                     if (part.ope === 0) {
@@ -160,10 +150,8 @@ export default function Editor(props) {
             setFile([...sorted])
             setTree(transfer([...sorted]))
         }
-        else if (task === 'delete'){
-            console.log(update)
-            
-            alert(`${update.deleter} deletes ${update.path}, refresh automatically.`)
+        else if (task === 'delete') {
+            message.info({ content: `${update.deleter} deletes ${update.path}, refresh automatically.` ,duration:2})
             setRefresh(!refresh)
         }
     }
@@ -198,30 +186,27 @@ export default function Editor(props) {
                 count_line += part.count
             }
         })
-        sendData(['input', {filepath: filePath, content: diff_code}])
+        sendData(['input', { filepath: filePath, content: diff_code }])
     }
 
     const sendNewFile = (ls) => {
         sendData(['path', ls])
     }
     const requestFileContext = (ls) => {
-        if(ls.type==="file"){
+        if (ls.type === "file") {
             sendData(['request_file', ls.name])
             setFilePath(ls.name)
             const filenamesplit = ls.name.split('/')
             setFileName(filenamesplit[filenamesplit.length - 1])
-            
+
         }
         setDeletePath(ls.name)
-        
-    }
-    const deb = (ls) => {
-        rmduplicate(ls)
-        console.log(transfer(rmduplicate(ls).list))
+
     }
     const handleDelete = () => {
-        if(deletePath!=="Untitled")
-            sendData(['delete', {"deleter":username,"path":deletePath}])
+        if (deletePath !== "Untitled")
+            sendData(['delete', { "deleter": username, "path": deletePath }])
+            setDeletePath("Untitled")
     }
     const handleDownload = () => {
         alert("Download Click")
@@ -278,8 +263,8 @@ export default function Editor(props) {
                     />
                 </div>
                 <div className='help_bar'>
-                    <div style={{display: 'table'}}>
-                        <div className = 'help_btn_bar'>
+                    <div style={{ display: 'table' }}>
+                        <div className='help_btn_bar'>
                             <button className='help_home_btn'>
                                 <IconContext.Provider value={{ color: 'white', size: '50px' }}>
                                     <AiFillHome />
@@ -287,7 +272,7 @@ export default function Editor(props) {
                             </button>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>

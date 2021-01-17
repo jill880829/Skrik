@@ -62,7 +62,7 @@ const transfer = (ele) => {
 function Menu() {
     const [list, setList] = useState(transfer(ls));
     const [editMode, setEdit] = useState(false);
-    const [nickname, setNickname] = useState('Anita Lu');
+    const [nickname, setNickname] = useState('Loading...');
     const [newProject, setNewProject] = useState('')
     const [company, setCompany] = useState('');
     const [git, setGit] = useState('');
@@ -90,22 +90,17 @@ function Menu() {
             })
         if(result.status===401){
             result.text().then(res => {
-                // res.text().then(res => {
-                //     alert(`401 Unauthorized\n${res}`)
-                // })
                 window.location.href = '/Login'
             })
         }
         else if(result.status===403){
             result.text().then(res => {
-                alert(`403 Forbidden: Refuse to create the project!\n${res}`)
-                //console.log(res) 
+                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
             })
         }
         else if(result.status===500){
             result.text().then(res => {
-                alert(`500 Internal Server Error\n${res}`)
-                //console.log(res) 
+                message.error({content: `500 Internal Server Error\n${res}`, duration:2})
             })
         }
         else if (result.status===200){
@@ -118,7 +113,7 @@ function Menu() {
             message.success(content)
         }
         else{
-            alert(`Unknown Error!`)
+            message.error({content: `Unknown Error!`, duration:2})
         }
         const resProfile = await
             fetch('/api/get_profile', {
@@ -135,19 +130,15 @@ function Menu() {
         }
         else if(resProfile.status===403){
             resProfile.text().then(res => {
-                alert(`403 Forbidden: Refuse to create the project!\n${res}`)
-                //console.log(res) 
+                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
             })
         }
         else if(resProfile.status===500){
             resProfile.text().then(res => {
-                alert(`500 Internal Server Error\n${res}`)
-                //console.log(res) 
+                message.error({content: `500 Internal Server Error\n${res}`, duration:2})
             })
         }
         else if(resProfile.status===200){
-            //const a = await resProfile.json()
-            //console.log(a)
             const {Nickname, Company, Email, Githubname, Facebookname, Location} = await resProfile.json()
             setNickname(Nickname)
             setCompany(Company)
@@ -188,8 +179,6 @@ function Menu() {
                 }
                 else {
                     let newProject
-                    console.log(list.length)
-                    console.log(list)
                     if (newColab.length === 1 && newColab[0] === "") {
                         newProject = {
                             'project_name': newPro,
@@ -212,24 +201,21 @@ function Menu() {
                     if (res.status === 403) {
 
                         res.text().then(res => {
-                            alert(`403 Forbidden: Refuse to create the project!\n${res}`)
-                            //console.log(res) 
+                            message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
                         })
-                        //alert("403 Forbidden \nRefuse to create the project!")
                     }
                     else if (res.status === 500) {
                         res.text().then(res => {
-                            alert(`500 Internal Server Error\n${res}`)
+                            message.error({content: `500 Internal Server Error\n${res}`, duration:2})
                         })
                     }
                     else if (res.status === 200) {
-                        console.log("success")
                         setNewProject(newPro)
                         modalRef.current.closeModal();
                     }
                     else if (res.status === 401) {
                         res.text().then(res => {
-                            alert(`401 Unauthorized\n${res}`)
+                            message.error({content: `401 Unauthorized\n${res}`, duration:2})
                         })
                         window.location.href = '/Login'
                     }
@@ -270,13 +256,13 @@ function Menu() {
         }).then(res => {
             if (res.status === 401) {
                 res.text().then(res => {
-                    alert(`401 Unauthorized\n${res}`)
+                    message.error({content: `401 Unauthorized\n${res}`, duration:2})
                 })
                 window.location.href = '/Login'
             }
             else if (res.status === 403) {
                 res.text().then(res => {
-                    alert(`403 Forbidden: Refuse to save the profile!\n${res}`)
+                    message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
                 })
             }
             else if (res.status === 200) {

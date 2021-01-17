@@ -40,7 +40,6 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
                 {FILE_ICONS[ext] || <AiOutlineFile />}
                 <span className="fileSpan" 
                 onClick={(event) => handleclickFile(event)} 
-                onDoubleClick = {()=>{console.log("DBCLICK")}}
                     key={filepath + ' span'}>{name}</span>
                 </div>
                 
@@ -66,7 +65,6 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
     const Input = ({ isFolder, filepath, focusOn }) => {
         return (
             <div id={filepath} className={focusOn ? "structureFile_Focus" : "structureFile"} filepath={filepath} key={filepath}>
-                {/* onClick={(event)=>console.log("Click on ",event.target)} */}
                 {isFolder ? <AiOutlineFolder /> : <AiOutlineFile />}
                 <input className="inputSpan" placeholder={isFolder ? "Type folder name here" : "Type file name here"} onKeyPress={(event) => handlePressEnter(event, isFolder)}></input>
             </div>
@@ -82,13 +80,6 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
         if (event.key === 'Enter') {
             let newFileName = event.target.value
             let path = SaveToTree(newFileName, isFolder)
-            // if(!isFolder){
-            //     returnNewFile(path)
-            // }
-            // if(isFolder){
-            //     console.log(path)
-            // }
-            console.log(fileList)
             if(fileList.includes(path)){
                 alert("filename exists")
             }

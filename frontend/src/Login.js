@@ -34,7 +34,6 @@ const Login = () => {
     const [checkIcon, setIconColor] = useState("#a2693b");
 
     const postRegister = () => {
-        console.log(username, password)
         const data = { 'username': username, 'password': password };
         if (checked) {
             // Pass and push data to DB
@@ -53,8 +52,9 @@ const Login = () => {
                     alert("500 Internal Server Error")
                 }
                 else if (res.status === 403) {
-                    console.log(res.data)
-                    alert("403 Forbidden \nRefuse to register this set of username and password!")
+                    res.text().then(res => {
+                        message.error({content:`${res}!\nPlease Change a Username!`,duration:2})
+                    })
                 }
                 else {
                     alert("Unknown Error")
@@ -70,7 +70,6 @@ const Login = () => {
         }
     }
     const postData = () => {
-        console.log(username, password)
         const data = { "username": username, "password": password }
         fetch('/api/login', {
             method: 'POST', // or 'PUT'
@@ -79,14 +78,12 @@ const Login = () => {
                 'Content-Type': 'application/json',
             })
         }).then(res => {
-            console.log(res.status)
             if (res.status === 401) {
                 const content = {
                     content: "Username or password wrong! Please check!",
                     duration: 2
                 }
                 message.error(content)
-                //alert("Username or password wrong! Please check!")
             }
             
             else if (res.status === 200) {
@@ -117,7 +114,6 @@ const Login = () => {
             }
             else if (now === 'password') {
                 let next = e.target.parentNode.parentNode.parentNode.childNodes[4]
-                console.log(next)
                 next.click()
             }
             else if (now === 'newName') { 

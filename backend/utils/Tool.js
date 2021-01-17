@@ -10,18 +10,18 @@ function sort_files(files){
                 continue;
             else if ( a[i] === undefined || a[i] < b[i]) {
                 if((b.match(/\x2f/g) || []).length > (a.match(/\x2f/g) || []).length)
-                    return true;
+                    return 1;
                 else
-                    return false;
+                    return -1;
             }
             else if (b[i] === undefined || a[i] > b[i]){
                 if((a.match(/\x2f/g) || []).length > (b.match(/\x2f/g) || []).length)
-                    return false;
+                    return -1;
                 else
-                    return true;
+                    return 1;
             }
         }
-        return false;
+        return -1;
     });
     return files;
 }
