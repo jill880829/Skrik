@@ -129,10 +129,10 @@ let buffers = {}
 let connection = {}
 
 wss.on('connection', async ws => {
-    const sendData = (client, data) => {
+    const Broadcast = (client, data) => {
         client.send(JSON.stringify(data))
     }
-    const sendInit = (data) => {
+    const sendBack = (data) => {
         ws.send(JSON.stringify(data))
     }
     let author = ''
@@ -206,7 +206,7 @@ wss.on('connection', async ws => {
                     }
                     content = content.slice(0, -1)
                 }
-                sendInit(['init-file', content])
+                sendBack(['init-file', content])
                 break
             }
             case 'input': {
@@ -305,7 +305,7 @@ wss.on('connection', async ws => {
                 connection[projectID].forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
                         console.log("[broadcast]", payload)
-                        sendData(client, ['output', payload])
+                        Broadcast(client, ['output', payload])
                     }
                 })
                 break
@@ -313,7 +313,7 @@ wss.on('connection', async ws => {
             case 'path': {
                 connection[projectID].forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
-                        sendData(client, ['output-path', payload])
+                        Broadcast(client, ['output-path', payload])
                     }
                 })
                 break
@@ -326,7 +326,7 @@ wss.on('connection', async ws => {
                 }
                 connection[projectID].forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
-                        sendData(client, ['delete', payload])
+                        Broadcast(client, ['delete', payload])
                     }
                 })
                 break
@@ -334,9 +334,27 @@ wss.on('connection', async ws => {
             case 'cursor':{
                 connection[projectID].forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
-                        sendData(client, ['other-cursor', payload])
+                        Broadcast(client, ['other-cursor', payload])
                     }
                 })
+            }
+            case 'download': {
+                for(let [line_author, buffer] of Object.entries(buffers)) {
+                    if(buffer.projectID === projectID && buffer.text != '') {
+                        let textToDB = (buffer.text.slice(-1) === '\n') ? buffer.text.slice(0, -1) : buffer.text
+                        var result = await QueryProject.addLineChange(projectID, buffer.filepath, line_author, buffer.line + 1, 'delete', '')
+                        if (result['success'] === false) {
+                            console.log("[socket] push buffer:", result['description'])
+                        }
+                        var result = await QueryProject.addLineChange(projectID, buffer.filepath, line_author, buffer.line + 1, 'insert', textToDB)
+                        if (result['success'] === false) {
+                            console.log("[socket] push buffer:", result['description'])
+                        }
+                    }
+                    buffers[line_author].text = ''
+                }
+                console.log("[clear buffers] In project", projectID)
+                sendBack(['download', {}])
             }
             case 'file': {
 

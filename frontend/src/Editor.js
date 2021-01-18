@@ -168,7 +168,9 @@ export default function Editor(props) {
             if(user!==username){
                 message.info({ content: `${user}'s cursor at line${line}, ch${ch}` ,duration:2})
             }
-            
+        }   
+        else if (task === 'download') {
+            // window.location.href = "/api/download"
         }
     }
 
@@ -232,7 +234,7 @@ export default function Editor(props) {
     }
     const handleDownload = () => {
         alert("Download Click")
-        window.location.href = "/api/download"
+        sendData(['download', {}])
     }
     const ext = fileName.split(".")[1];
     return (
