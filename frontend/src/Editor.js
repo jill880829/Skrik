@@ -163,6 +163,9 @@ export default function Editor(props) {
             message.info({ content: `${update.deleter} deletes ${update.path}, refresh automatically.` ,duration:2})
             setRefresh(!refresh)
         }
+        else if (task === 'download') {
+            window.location.href = "/api/download"
+        }
     }
 
     client.onopen = () => {
@@ -221,7 +224,7 @@ export default function Editor(props) {
     }
     const handleDownload = () => {
         alert("Download Click")
-        window.location.href = "/api/download"
+        sendData(['download', {}])
     }
     const ext = fileName.split(".")[1];
     return (
