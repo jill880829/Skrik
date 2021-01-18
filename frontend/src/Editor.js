@@ -163,6 +163,13 @@ export default function Editor(props) {
             message.info({ content: `${update.deleter} deletes ${update.path}, refresh automatically.` ,duration:2})
             setRefresh(!refresh)
         }
+        else if (task === 'other-cursor') {
+            const {user,line,ch,sticky} = update
+            if(user!==username){
+                message.info({ content: `${user}'s cursor at line${line}, ch${ch}` ,duration:2})
+            }
+            
+        }
     }
 
     client.onopen = () => {
@@ -178,6 +185,10 @@ export default function Editor(props) {
 
     const sendData = (data) => {
         client.send(JSON.stringify(data))
+    }
+
+    const sendCursor = (position) => {
+        sendData(['cursor',{"user":username, ...position}])
     }
 
     const sendCodes = (code) => {
@@ -256,6 +267,7 @@ export default function Editor(props) {
 
                     <ControlledEditor
                         onBeforeChange={(editor, data, value) => { onChange(value); }}
+                        onCursor={(editor, data)=>{sendCursor(data)}}
                         value={opened ? codes : 'Loading...'}
                         className="code_mirror_wrapper"
                         options={{
@@ -266,9 +278,10 @@ export default function Editor(props) {
                             lineNumbers: true,
                             cursorHeight: 0.85,
                             indentUnit: 0,
-                            smartIndent: false,
+                            
                             electricChars: false
                         }}
+                        smartIndent={false}
                         placeholder='Select a code mode...'
                         defaultValue={{ label: "Select a code mode...", value: 0 }}
                     />
