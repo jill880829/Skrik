@@ -36,7 +36,15 @@ const FILE_ICONS = {
     cpp: <SiCplusplus />,
     json: <SiJson />
 };
-
+const codeMap = {
+    py:'python',
+    html: 'xml',
+    js: 'javascript',
+    cpp: 'text/x-c++src',
+    v: 'verilog',
+    css:'css',
+    json:'application/ld+json',
+}
 //const client = new WebSocket('wss://skrik.net/api/wss')
 const client = new WebSocket('ws://localhost:4000')
 const codingOptions = [
@@ -193,6 +201,7 @@ export default function Editor(props) {
         sendData(['path', ls])
     }
     const requestFileContext = (ls) => {
+        console.log(ls)
         if (ls.type === "file") {
             sendData(['request_file', ls.name])
             setFilePath(ls.name)
@@ -240,7 +249,7 @@ export default function Editor(props) {
                             {FILE_ICONS[ext] || <AiOutlineFile />}
                             <span style={{ marginLeft: "10px" }}>{fileName}</span>
                         </div>
-                        <CodeSelect options={codingOptions} onChange={onChangeCode} />
+                        {/* <CodeSelect options={codingOptions} onChange={onChangeCode} /> */}
                     </div>
 
                     <ControlledEditor
@@ -250,7 +259,7 @@ export default function Editor(props) {
                         options={{
                             lineWrapping: true,
                             lint: true,
-                            mode: language,
+                            mode: codeMap[ext],
                             theme: 'material-darker',
                             lineNumbers: true,
                             cursorHeight: 0.85,
@@ -267,7 +276,7 @@ export default function Editor(props) {
                         <div className='help_btn_bar'>
                             <button className='help_home_btn'>
                                 <IconContext.Provider value={{ color: 'white', size: '50px' }}>
-                                    <AiFillHome />
+                                    <AiFillHome onClick={()=>{window.location.href = '/Menu'}}/>
                                 </IconContext.Provider>
                             </button>
                         </div>

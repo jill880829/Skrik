@@ -107,7 +107,7 @@ function Menu() {
             const backendList = await result.json()
             setList([...transfer(backendList)])
             const content = {
-                content: "Project List is up to date",
+                content: "Personal data up to date",
                 duration: 2
             }
             message.success(content)
