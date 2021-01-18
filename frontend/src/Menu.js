@@ -448,7 +448,7 @@ function Menu() {
                 <IconContext.Provider value={{ className:'menuBar_btn' }}>
                     <div style={{display:'flex' ,height:'100%'}}>
                         <div className='menuBar_navbar'>
-                            <BiLogOutCircle className='logoutBtn'/>
+                            <BiLogOutCircle className='logoutBtn' onClick={()=>{window.location.href='/Login'}}/>
                             <FcPlus onClick={openModal} className='plusBtn'/>
                         </div>
                         

@@ -285,8 +285,8 @@ export default function Editor(props) {
                     <IconContext.Provider value={{ className:'helpBar_btn' }}>
                         <div style={{display:'flex' ,height:'100%' }}>
                             <div className='helpBar_navbar'>
-                                <BiLogOutCircle className='logoutBtn'/>
-                                <AiFillHome className='homeBtn'/>
+                                <BiLogOutCircle className='logoutBtn' onClick={()=>{window.location.href='/Login'}}/>
+                                <AiFillHome className='homeBtn' onClick={()=>{window.location.href='/Menu'}}/>
                             </div>
                         </div>
                     </IconContext.Provider>
