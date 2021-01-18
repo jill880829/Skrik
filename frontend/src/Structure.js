@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { IconContext } from "react-icons";
 import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons/ai";
-import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
+import { DiJsBadge, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { VscNewFile, VscNewFolder, VscCloudDownload, VscCollapseAll } from "react-icons/vsc";
 import { TiDeleteOutline} from "react-icons/ti";
 import { SiCplusplus, SiJson } from "react-icons/si";
@@ -10,7 +10,7 @@ import "./css/Structure.css";
 // import { borderRadius } from "react-select/src/theme";
 
 const FILE_ICONS = {
-    js: <DiJavascript1 />,
+    js: <DiJsBadge />,
     css: <DiCss3Full />,
     html: <DiHtml5 />,
     jsx: <DiReact />,
