@@ -26,6 +26,7 @@ import { IconContext } from "react-icons";
 import { useParams } from 'react-router-dom'
 import './css/Editor.css'
 import { message } from 'antd'
+import {BiLogOutCircle } from 'react-icons/bi';
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -263,7 +264,7 @@ export default function Editor(props) {
                     />
                 </div>
                 <div className='help_bar'>
-                    <div style={{ display: 'table' }}>
+                    {/* <div style={{ display: 'table' }}>
                         <div className='help_btn_bar'>
                             <button className='help_home_btn'>
                                 <IconContext.Provider value={{ color: 'white', size: '50px' }}>
@@ -271,7 +272,15 @@ export default function Editor(props) {
                                 </IconContext.Provider>
                             </button>
                         </div>
-                    </div>
+                    </div> */}
+                    <IconContext.Provider value={{ className:'helpBar_btn' }}>
+                        <div style={{display:'flex' ,height:'100%' }}>
+                            <div className='helpBar_navbar'>
+                                <BiLogOutCircle className='logoutBtn'/>
+                                <AiFillHome className='homeBtn'/>
+                            </div>
+                        </div>
+                    </IconContext.Provider>
 
                 </div>
             </div>

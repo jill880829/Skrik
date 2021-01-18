@@ -15,6 +15,7 @@
   height: 100%;
   width: 20%;
   background-color: #231f22;
+  /* background-color: darkblue; */
   border-right: #bbbbbb 3px double;
   color: white;
   padding: 1%;
@@ -25,16 +26,46 @@
   display: inline-block;
   height: 100%;
   width: 60%;
-  /* background-color: hsl(225, 6%, 25%); */
   background-color: #2e2a2e;
+  /* background-color: darkred; */
 }
 .help_bar {
   display: inline-block;
   width: 5%;
+  height: 100%;
+  padding: 1%;
+  /* background-color: darkorchid; */
   background-color: #222222;
-  justify-content: space-between;
-  flex-direction: column;
 }
+.helpBar_btn {
+  height: 3em;
+  width: 3em;
+  margin: 1%;
+  color: white;
+}
+.helpBar_navbar {
+  display: inline-block;
+  align-self: flex-end;
+}
+
+.homeBtn {
+  opacity: 0.7;
+}
+.logoutBtn {
+  opacity: 0.7;
+}
+
+.homeBtn:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+.logoutBtn:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+/*  */
+
 .help_btn_bar {
   height: 100vh;
   width: 5vw;
