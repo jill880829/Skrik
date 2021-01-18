@@ -331,6 +331,13 @@ wss.on('connection', async ws => {
                 })
                 break
             }
+            case 'cursor':{
+                connection[projectID].forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        sendData(client, ['other-cursor', payload])
+                    }
+                })
+            }
             case 'file': {
 
                 break
