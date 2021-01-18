@@ -38,7 +38,7 @@ const FILE_ICONS = {
 };
 
 //const client = new WebSocket('wss://skrik.net/api/wss')
-const client = new WebSocket('ws://localhost:4000')
+const client = new WebSocket('ws://localhost:3002')
 const codingOptions = [
     { label: 'Python', value: 'python' },
     { label: 'HTML', value: 'xml' },
@@ -99,7 +99,7 @@ export default function Editor(props) {
         else if (result.status === 200) {
             const { project_name, files } = await result.json()
             setProjectName(project_name)
-            //console.log(files)
+            console.log(files)
             if (files.length !== 0) {
                 setFile([...files])
                 const file = rmduplicate(files).list
@@ -111,7 +111,6 @@ export default function Editor(props) {
             alert("Unknown Error!")
         }
         //console.log(result)
-        await sendData(['init', hash])
     }, [refresh])
 
     function onChangeCode(value) {
@@ -171,11 +170,12 @@ export default function Editor(props) {
     client.onopen = () => {
         console.log('websocket open')
         setOpened(true)
+        sendData(['init', hash])
     }
 
     client.onclose = () => {
         console.log('websocket close')
-        setOpened(true)
+        setOpened(false)
     }
 
     const sendData = (data) => {
