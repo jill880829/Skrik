@@ -47,7 +47,7 @@ const codeMap = {
     json:'application/ld+json',
 }
 //const client = new WebSocket('wss://skrik.net/api/wss')
-const client = new WebSocket('ws://localhost:4000')
+const client = new WebSocket('ws://localhost:3002')
 const codingOptions = [
     { label: 'Python', value: 'python' },
     { label: 'HTML', value: 'xml' },
@@ -111,7 +111,7 @@ export default function Editor(props) {
         else {
             message.error({ content: "Unknown Error!", duration: 2 })
         }
-        await sendData(['init', hash])
+        //console.log(result)
     }, [refresh])
 
     function onChangeCode(value) {
@@ -168,11 +168,12 @@ export default function Editor(props) {
     client.onopen = () => {
         console.log('websocket open')
         setOpened(true)
+        sendData(['init', hash])
     }
 
     client.onclose = () => {
         console.log('websocket close')
-        setOpened(true)
+        setOpened(false)
     }
 
     const sendData = (data) => {
