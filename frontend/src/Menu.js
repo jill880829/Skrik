@@ -10,6 +10,7 @@ import { FaFacebook, FaGithub } from 'react-icons/fa'
 import { BiBuildingHouse , BiLogOutCircle } from 'react-icons/bi';
 import { message } from 'antd'
 import './components/project.css'
+import './css/Menu.css'
 
 class Project extends Component {
     render() {
@@ -269,9 +270,9 @@ function Menu() {
         })
     }
     return (
-        <div id='menu_container' >
-            <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'transparent' }}></div>
-            <div style={{ float: 'left', width: '20%', height: '100%', backgroundColor: 'transparent' }}>
+        <div className='menu_container' >
+            {/* <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'transparent' }}></div> */}
+            <div className='menuProfile' >
                 <div className='menu_profile'>
                     <div className="profile_container">
                         <div style={{ display: 'flex' }}>
@@ -279,7 +280,6 @@ function Menu() {
                         </div>
                         <div className="profile_names">
                             <p id='profile_realname'>{nickname}</p>
-                            {/* <p id='profile_username'>{USERNAME}</p> */}
                         </div>
 
                         {editMode ?
@@ -427,7 +427,8 @@ function Menu() {
                     </div>
                 </div>
             </div>
-            <div style={{ float: 'left', width: '68%', height: '100%', padding: '30px' }}>
+            <div className='menuMenu'>
+                {/* style={{ float: 'left', width: '68%', height: '100%', padding: '30px' }} */}
                 <div className='menu_menu' >
                     {list.map(project => (
                         <Project
@@ -443,14 +444,17 @@ function Menu() {
                     }
                 </div>
             </div>
-            <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'transparent' }}>
-                <button id='menu_add_btn' onClick={openModal}>
-                    <IconContext.Provider value={{ color: 'gray', size: '50px' }}>
-                        <FcPlus />
-                    </IconContext.Provider>
-                </button>
+            <div className='menuBar'>
+                <IconContext.Provider value={{ className:'menuBar_btn' }}>
+                    <div style={{display:'flex' ,height:'100%'}}>
+                        <div className='menuBar_navbar'>
+                            <BiLogOutCircle className='logoutBtn'/>
+                            <FcPlus onClick={openModal} className='plusBtn'/>
+                        </div>
+                        
+                    </div>
+                </IconContext.Provider>
             </div>
-            <div style={{ float: 'right', width: '4%', height: '100%', backgroundColor: 'transparent' }}></div>
             <Modal ref={modalRef}>
                 <span className='menu_modal_span'>Create a project</span>
                 <div className='menu_modal_inputs'>

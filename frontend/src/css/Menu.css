@@ -1,0 +1,242 @@
+/********************/
+/*       Menu      */
+/********************/
+
+.menu_container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  padding: 0.5% 2%;
+  border: none;
+  /* background-color: darkgreen; */
+
+  background-color: #222222;
+}
+.menuProfile {
+  display: inline-block;
+  height: 100%;
+  width: 20%;
+  /* background-color: darkblue; */
+  padding: 1%;
+  border-right: #231f22 2px dotted;
+}
+
+.menuMenu {
+  display: inline-block;
+  height: 100%;
+  width: 75%;
+  /* background-color: darkred; */
+  padding: 1%;
+}
+
+.menuBar {
+  display: inline-block;
+  height: 100%;
+  width: 5%;
+  /* background-color: darkorchid; */
+  padding: 1%;
+}
+
+.menuBar_btn {
+  height: 4em;
+  width: 4em;
+  margin: 1%;
+  color: white;
+  /* border: green 3px solid; */
+}
+
+.menuBar_navbar {
+  display: inline-block;
+  align-self: flex-end;
+}
+.plusBtn {
+  opacity: 0.7;
+}
+.logoutBtn {
+  opacity: 0.7;
+}
+
+.plusBtn:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+.logoutBtn:hover {
+  cursor: pointer;
+  opacity: 1;
+}
+
+.menu_wrapper {
+  margin-left: 5%;
+  margin-right: 5%;
+  height: 80%;
+  width: 80%;
+  display: inline-block;
+  position: relative;
+}
+.menu_modal_span {
+  display: inline-block;
+  font-size: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.menu_modal_inputs {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.menu_modal_input {
+  display: inline-block;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+  font-size: 16px;
+  border-radius: 15px;
+}
+
+.menu_modal_input_warning {
+  display: inline-block;
+  border-color: red;
+  border-radius: 15px;
+}
+
+.menu_modal_warning_hidden {
+  display: inline-block;
+  color: red;
+  font-weight: lighter;
+  font-size: 5px;
+  padding-left: 10px;
+  visibility: hidden;
+}
+
+.menu_modal_warning_visible {
+  display: inline-block;
+  color: red;
+  font-weight: lighter;
+  font-size: 5px;
+  padding-left: 10px;
+  visibility: visible;
+}
+
+.menu_modal_btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.menu_modal_btn {
+  padding: 5px 10px 5px 10px;
+  margin-left: 5px;
+  border-color: #cccccc;
+  box-shadow: transparent;
+  border-width: 0.5px;
+  border-radius: 5px;
+}
+.menu_btn_confirm {
+  background-color: #48a147;
+  color: white;
+}
+
+.menu_btn_close {
+  background-color: #e5e5e5;
+}
+
+.menu_folder {
+  background-color: #dddddd;
+  height: 100px;
+  width: 100px;
+  text-align: center;
+  vertical-align: middle;
+  display: table-cell;
+  border-radius: 15%;
+}
+.menu_menu {
+  /* background-color: green; */
+  width: 100%;
+  height: 100%;
+  flex: 1;
+  flex-direction: "row";
+  flex-wrap: "wrap";
+}
+
+#menu_add_btn {
+  background-color: transparent;
+  border: transparent 0px;
+  height: 50px;
+  width: 50px;
+  border-radius: 100%;
+  padding-top: 90vh;
+}
+
+/********************/
+/*   Menu_Profile   */
+/********************/
+
+.menu_profile {
+  width: 100%;
+  height: 100%;
+  padding-left: 5%;
+  padding-right: 5%;
+  padding-top: 15%;
+  padding-bottom: 15%;
+}
+.profile_container {
+  /* background-color: green; */
+  width: 100%;
+  height: 100%;
+}
+.profile_photo {
+  border-radius: 50%;
+
+  width: 80%;
+  height: auto;
+  text-align: center;
+  display: block;
+  margin: auto;
+}
+.profile_names {
+  padding-left: 10%;
+  padding-right: 10%;
+  color: #bbbbbb;
+}
+
+#profile_realname {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+#profile_username {
+  font-size: 20px;
+}
+
+.profile_edit_btn {
+  width: 80%;
+  background-color: #555555;
+  color: white;
+  border: 0 transparent;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.profile_detail {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: left;
+}
+.profile_edit_input {
+  background-color: #181818;
+  border-color: transparent;
+  color: white;
+  border-radius: 10px;
+  padding: 1px 10px 1px;
+  width: 80%;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+.profile_span {
+  color: #bbbbbb;
+  background-color: transparent;
+  width: 80%;
+}

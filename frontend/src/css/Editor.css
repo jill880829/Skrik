@@ -14,12 +14,10 @@
   display: inline-block;
   height: 100%;
   width: 20%;
-  /* text-align: center; */
   background-color: #231f22;
   border-right: #bbbbbb 3px double;
   color: white;
   padding: 1%;
-  /* position: absolute; */
 }
 .editor_container {
   flex-grow: 1;
