@@ -76,6 +76,8 @@ export default function Editor(props) {
     const [filePath, setFilePath] = useState('Untitled')
     const [deletePath, setDeletePath] = useState("Untitled")
     const [refresh, setRefresh] = useState(false)
+    const [otherEdit, setOtherEdit] = useState(false)
+
     useEffect(async () => {
         console.log("Load from backend")
         const result = await fetch(`/api/ls/${hash}`, {
@@ -145,6 +147,12 @@ export default function Editor(props) {
                         else tmp = sliceLines(tmp, 0, part.start) + '\n' + sliceLines(tmp, part.end)
                     }
                 })
+                if(update.editor===username){
+                    setOtherEdit(false)
+                }
+                else{
+                    setOtherEdit(true)
+                }
                 setCodes(tmp)
             }
         }
@@ -209,7 +217,7 @@ export default function Editor(props) {
                 count_line += part.count
             }
         })
-        sendData(['input', { filepath: filePath, content: diff_code }])
+        sendData(['input', { filepath: filePath, content: diff_code, editor: username}])
     }
 
     const sendNewFile = (ls) => {
@@ -268,9 +276,10 @@ export default function Editor(props) {
                     </div>
 
                     <ControlledEditor
-                        onBeforeChange={(editor, data, value) => { onChange(value); }}
+                        onBeforeChange={(editor, data, value) => { setOtherEdit(false); onChange(value); }}
                         onCursor={(editor, data)=>{sendCursor(data)}}
                         value={opened ? codes : 'Loading...'}
+                        autoCursor={ otherEdit ? false:true }
                         className="code_mirror_wrapper"
                         options={{
                             lineWrapping: true,
