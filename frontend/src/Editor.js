@@ -321,6 +321,7 @@ export default function Editor(props) {
                             onChange(value);
                             
                         }}
+                        autoCursor={otherEdit?false:true}
                         onChange={(editor, data, value) => { 
                             if (!(Object.entries(bookMarks).length === 0 && bookMarks.constructor === Object)) { 
                                 console.log('Clear old bookmarks', bookMarks)
