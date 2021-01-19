@@ -103,8 +103,12 @@ export default function Editor(props) {
             })
         }
         else if (result.status === 200) {
+            // const a = await result.json()
+            // console.log(a)
             const { project_name, files, collaborators} = await result.json()
             setCollaborators(collaborators)
+        
+            console.log(collaborators)
             setProjectName(project_name)
             if (files.length !== 0) {
                 setFile([...files])
