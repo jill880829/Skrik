@@ -172,6 +172,7 @@ wss.on('connection', async ws => {
                     }
                 }
                 buffers[author] = { projectID: projectID, filepath: '', line: 0, text: '' }
+                sendBack(['init-finish', {}])
             }
             case 'request_file': {
                 console.log('[projectid] '+projectID)

@@ -145,13 +145,17 @@ export default function Editor(props) {
         sendCodes(value);
     }
 
+    const [projectInit, setProjectInit] = useState(false)
     const [codes, setCodes] = useState('')
     const [opened, setOpened] = useState(false)
 
     client.onmessage = (msg) => {
         const { data } = msg
         const [task, update] = JSON.parse(data)
-        if (task === 'init-file') {
+        if (task === 'init-finish') {
+            setProjectInit(true)
+        }
+        else if (task === 'init-file') {
             setCodes(update)
             setOpened(true)
         }
@@ -213,17 +217,17 @@ export default function Editor(props) {
 
     client.onopen = () => {
         console.log('websocket open')
-        setOpened(true)
-        sendData(['init', hash])
+        client.send(JSON.stringify(['init', hash]))
     }
 
     client.onclose = () => {
         console.log('websocket close')
         setOpened(false)
+        setProjectInit(false)
     }
 
     const sendData = (data) => {
-        client.send(JSON.stringify(data))
+        if(projectInit) client.send(JSON.stringify(data))
     }
 
     const sendCursor = (position) => {
