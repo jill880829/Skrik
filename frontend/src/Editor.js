@@ -1,6 +1,3 @@
-// 20210116_comment
-// Add home button at 'help_home_btn'
-// TODO: Add onClick function to this home btn
 import React, { useState, useEffect } from 'react'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/material-darker.css'
@@ -27,6 +24,12 @@ import { useParams } from 'react-router-dom'
 import './css/Editor.css'
 import { message } from 'antd'
 import {BiLogOutCircle } from 'react-icons/bi';
+
+// const USERMARK_COLOR = '#00aa00'
+const BOOKMARK_COLOR = [
+    '#00aa00', '#0000aa', '#aa0000', '#cccc00', '#cc00cc',
+    '#00cccc', '#6666cc', '#88cc88', '#cc6666', '#ffffff'
+]
 
 const FILE_ICONS = {
     js: <DiJavascript1 />,
@@ -77,9 +80,17 @@ export default function Editor(props) {
     const [deletePath, setDeletePath] = useState("Untitled")
     const [refresh, setRefresh] = useState(false)
     const [otherEdit, setOtherEdit] = useState(false)
-    const [projectCollaborators,setCollaborators] = useState('')
+    const [collabs, setCollabs] = useState('')
+    // Cursors and Bookmarks (include mine)
+    const [bookMarks, setBookMarks] = useState({})
+    
+    const [cursors, setCursors] = useState({})
+    
+
+
     useEffect(async () => {
         console.log("Load from backend")
+        
         const result = await fetch(`/api/ls/${hash}`, {
             method: 'GET',
             headers: new Headers({
@@ -103,13 +114,20 @@ export default function Editor(props) {
             })
         }
         else if (result.status === 200) {
-            // const a = await result.json()
-            // console.log(a)
             const { project_name, files, collaborators} = await result.json()
-            setCollaborators(collaborators)
-        
-            console.log(collaborators)
-            setProjectName(project_name)
+            setCollabs(collaborators);
+            console.log('Colabs: ', collaborators);
+            if (Object.entries(cursors).length === 0 && cursors.constructor === Object) { 
+                let tmp_cursors = {}
+                for (var i = 0; i < collaborators.length; i++) { 
+                    let tmp_pos = { line: i, ch: i, sticky: null }
+                    tmp_cursors[collaborators[i]] = tmp_pos
+                }
+                console.log('init cursors: ', tmp_cursors)
+                setCursors(tmp_cursors)
+            }
+
+            setProjectName(project_name);
             if (files.length !== 0) {
                 setFile([...files])
                 setTree([...transfer(rmduplicate(files).list)])
@@ -118,7 +136,6 @@ export default function Editor(props) {
         else {
             message.error({ content: "Unknown Error!", duration: 2 })
         }
-        //console.log(result)
     }, [refresh])
 
     function onChangeCode(value) {
@@ -179,7 +196,14 @@ export default function Editor(props) {
         else if (task === 'other-cursor') {
             const {user,line,ch,sticky} = update
             if(user!==username){
-                message.info({ content: `${user}'s cursor at line${line}, ch${ch}` ,duration:2})
+                // message.info({ content: `${user}'s cursor at line${line}, ch${ch}`, duration: 2 })
+                let last_cursors = cursors;
+                last_cursors[user] = {
+                    line: line,
+                    ch: ch,
+                    sticky:sticky
+                }
+                setCursors(last_cursors)
             }
         }   
         else if (task === 'download') {
@@ -281,7 +305,71 @@ export default function Editor(props) {
                     </div>
 
                     <ControlledEditor
-                        onBeforeChange={(editor, data, value) => { setOtherEdit(false); onChange(value); }}
+                        onBeforeChange={(editor, data, value) => {
+                            setOtherEdit(false);
+                            onChange(value);
+                            
+                        }}
+                        onChange={(editor, data, value) => { 
+                            if (!(Object.entries(bookMarks).length === 0 && bookMarks.constructor === Object)) { 
+                                console.log('Clear old bookmarks', bookMarks)
+                                for (var i = 0; i < collabs.length - 1; i++) { 
+                                    if(collabs[i] !== username) bookMarks[collabs[i]].clear();
+                                }
+                            }
+                            let initBookMarks = {}
+                            for (var i = 0; i < collabs.length; i++) { 
+                               
+                                if (collabs[i] !== username) { 
+                                    const newSpan = document.createElement('span')
+                                    newSpan.style.borderLeftStyle = 'solid'
+                                    newSpan.style.borderLeftWidth = '2px'
+                                    newSpan.style.borderLeftColor = BOOKMARK_COLOR[i%10]
+                                    
+                                    var newBookMark = editor.getDoc().setBookmark({
+                                        line: cursors[collabs[i]].line,
+                                        ch: cursors[collabs[i]].ch,
+                                        sticky: cursors[collabs[i]].sticky
+                                    }, { widget: newSpan })
+                                    initBookMarks[collabs[i]] = newBookMark
+                                }
+                            }
+                            setBookMarks(initBookMarks)
+                            // if (Object.entries(bookMarks).length === 0 && bookMarks.constructor === Object) {
+                            //     // create bookmarks and store into bookMarks
+                            //     let initBookMarks = {}
+                            //     for (var i = 0; i < collabs.length; i++) { 
+                            //         if (collabs[i] !== username) { 
+                            //             const newSpan = document.createElement('span')
+                            //             newSpan.style.borderLeftStyle = 'solid'
+                            //             newSpan.style.borderLeftWidth = '2px'
+                            //             newSpan.style.borderLeftColor = BOOKMARK_COLOR[i%10]
+                                        
+                            //             var newBookMark = editor.getDoc().setBookmark({
+                            //                 line: cursors[collabs[i]].line,
+                            //                 ch: cursors[collabs[i]].ch,
+                            //                 sticky: cursors[collabs[i]].sticky
+                            //             }, { widget: newSpan })
+                            //             initBookMarks[collabs[i]] = newBookMark
+                            //         }
+                            //     }
+                            //     setBookMarks(initBookMarks)
+                            // }
+                            // else { 
+                            //     //change bookmark position
+                            //     let lastBookMarks = bookMarks;
+                            //     for (var i = 0; i < collabs.length; i++) { 
+                            //         if (collabs[i] !== username) {
+                            //             lastBookMarks[collabs[i]] = {
+                            //                 line: cursors[collabs[i]].line,
+                            //                 ch: cursors[collabs[i]].ch,
+                            //                 sticky:cursors[collabs[i]].sticky
+                            //             }
+                            //         }
+                            //     }
+                            //     setBookMarks(lastBookMarks)
+                            // }
+                        }}
                         onCursor={(editor, data)=>{sendCursor(data)}}
                         value={opened ? codes : 'Loading...'}
                         // autoCursor={ otherEdit ? false:true }
