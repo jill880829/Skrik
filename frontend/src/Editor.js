@@ -232,7 +232,7 @@ export default function Editor(props) {
             }
         }   
         else if (task === 'download') {
-            // window.location.href = "/api/download"
+            window.location.href = "/api/download"
         }
     }
 
