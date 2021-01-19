@@ -77,7 +77,7 @@ export default function Editor(props) {
     const [deletePath, setDeletePath] = useState("Untitled")
     const [refresh, setRefresh] = useState(false)
     const [otherEdit, setOtherEdit] = useState(false)
-
+    const [projectCollaborators,setCollaborators] = useState('')
     useEffect(async () => {
         console.log("Load from backend")
         const result = await fetch(`/api/ls/${hash}`, {
@@ -103,7 +103,8 @@ export default function Editor(props) {
             })
         }
         else if (result.status === 200) {
-            const { project_name, files } = await result.json()
+            const { project_name, files, collaborators} = await result.json()
+            setCollaborators(collaborators)
             setProjectName(project_name)
             if (files.length !== 0) {
                 setFile([...files])
@@ -279,7 +280,7 @@ export default function Editor(props) {
                         onBeforeChange={(editor, data, value) => { setOtherEdit(false); onChange(value); }}
                         onCursor={(editor, data)=>{sendCursor(data)}}
                         value={opened ? codes : 'Loading...'}
-                        autoCursor={ otherEdit ? false:true }
+                        // autoCursor={ otherEdit ? false:true }
                         className="code_mirror_wrapper"
                         options={{
                             lineWrapping: true,

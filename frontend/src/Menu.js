@@ -100,6 +100,7 @@ function Menu() {
         }
         else if (result.status===200){
             const backendList = await result.json()
+            console.log(backendList)
             setList([...transfer(backendList)])
             const content = {
                 content: "Personal data up to date",

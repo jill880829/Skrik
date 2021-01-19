@@ -104,10 +104,12 @@ router.get('/ls/:idsha', async function (req, res) {
             return res.status(403).send(result["description"]);
     }
     var project_name_res = await QueryProject.getProjectName(projectid);
+    const projectusers = await QueryProject.getProjectUsers(projectid);
+    console.log(projectusers,projectusers["users"])
     var files = result["files"];
     if (files !== null)
         files = Tool.sort_files(files);
-    return res.json({"project_name": project_name_res["name"], "files":files});
+    return res.json({"project_name": project_name_res["name"], "files":files, "collaborators":projectusers["users"]});
 
 });
 
