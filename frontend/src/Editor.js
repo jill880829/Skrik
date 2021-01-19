@@ -13,7 +13,6 @@ import { Controlled as ControlledEditor } from 'react-codemirror2'
 import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { SiCplusplus, SiJson } from "react-icons/si";
 import { AiOutlineFile, AiFillRest, AiFillHome } from "react-icons/ai";
-import CodeSelect from './components/codeSelect'
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
 import sort_files from './functions/sort'
@@ -23,7 +22,7 @@ import { IconContext } from "react-icons";
 import { useParams } from 'react-router-dom'
 import './css/Editor.css'
 import { message } from 'antd'
-import {BiLogOutCircle } from 'react-icons/bi';
+import { BiLogOutCircle } from 'react-icons/bi';
 
 // const USERMARK_COLOR = '#00ff00'
 const BOOKMARK_COLOR = [
@@ -41,32 +40,25 @@ const FILE_ICONS = {
     json: <SiJson />
 };
 const codeMap = {
-    py:'python',
+    py: 'python',
     html: 'xml',
     js: 'javascript',
     cpp: 'text/x-c++src',
     v: 'verilog',
-    css:'css',
-    json:'application/ld+json',
+    css: 'css',
+    json: 'application/ld+json',
 }
 //const client = new WebSocket('wss://skrik.net/api/wss')
 const client = new WebSocket('ws://localhost:3002')
-const codingOptions = [
-    { label: 'Python', value: 'python' },
-    { label: 'HTML', value: 'xml' },
-    { label: 'Javascript', value: 'javascript' },
-    { label: 'C++', value: 'text/x-c++src' },
-    { label: 'Verilog', value: 'verilog' },
-    { label: 'CSS', value: 'css' },
-]
-function defaultSpan(crName,color) {
+
+function defaultSpan(crName, color) {
     const newSpan = document.createElement('span')
     const tmpDiv = document.createElement('div')
 
     // const cursorName = document.createElement('span')
     tmpDiv.innerHTML = crName;
     var width = crName.length * 8 + 16;
-    
+
     tmpDiv.style.backgroundColor = color;
     tmpDiv.className = 'cursorName'
     tmpDiv.style.width = width.toString() + 'px';
@@ -85,7 +77,6 @@ export default function Editor(props) {
         { type: "blankFolder", displayAddBlank: false, },
         { type: "blankFile", displayAddBlank: false, },]);
     const [filesStructure, setFile] = useState(ls);
-    const [language, setLan] = useState('python');
     const [fileName, setFileName] = useState('Untitled')
     const { hash, username } = useParams()
     const [projectName, setProjectName] = useState("")
@@ -97,12 +88,10 @@ export default function Editor(props) {
     // Cursors and Bookmarks (include mine)
     const [bookMarks, setBookMarks] = useState({})
     const [cursors, setCursors] = useState({})
-    
-
 
     useEffect(async () => {
         console.log("Load from backend")
-        
+
         const result = await fetch(`/api/ls/${hash}`, {
             method: 'GET',
             headers: new Headers({
@@ -126,12 +115,12 @@ export default function Editor(props) {
             })
         }
         else if (result.status === 200) {
-            const { project_name, files, collaborators} = await result.json()
+            const { project_name, files, collaborators } = await result.json()
             setCollabs(collaborators);
             // console.log('Colabs: ', collaborators);
-            if (Object.entries(cursors).length === 0 && cursors.constructor === Object) { 
+            if (Object.entries(cursors).length === 0 && cursors.constructor === Object) {
                 let tmp_cursors = {}
-                for (var i = 0; i < collaborators.length; i++) { 
+                for (var i = 0; i < collaborators.length; i++) {
                     let tmp_pos = { line: i, ch: i, sticky: null }
                     tmp_cursors[collaborators[i]] = tmp_pos
                 }
@@ -148,14 +137,13 @@ export default function Editor(props) {
         else {
             message.error({ content: "Unknown Error!", duration: 2 })
         }
+        setFileName("Untitled")
     }, [refresh])
 
-    function onChangeCode(value) {
-        setLan(value.value);
+    function onChange(value, cursor) {
+        sendCodes(value, { ...cursor, user: username });
     }
-    function onChange(value,cursor) {
-        sendCodes(value,{...cursor,user: username});
-    }
+
     const [projectInit, setProjectInit] = useState(false)
     const [codes, setCodes] = useState('')
     const [opened, setOpened] = useState(false)
@@ -184,54 +172,49 @@ export default function Editor(props) {
                         else tmp = sliceLines(tmp, 0, part.start) + '\n' + sliceLines(tmp, part.end)
                     }
                 })
-                if(update.editor===username){
+                if (update.editor === username) {
                     setOtherEdit(false)
                 }
-                else{
+                else {
                     setOtherEdit(true)
                 }
                 setCodes(tmp)
             }
-            const {user,line,ch,sticky} = update.cursor
-            if(user!==username){
+            const { user, line, ch, sticky } = update.cursor
+            if (user !== username) {
                 //message.info({ content: `${user}'s cursor at line${line}, ch${ch}`, duration: 2 })
                 let last_cursors = cursors;
                 last_cursors[user] = {
                     line: line,
                     ch: ch,
-                    sticky:sticky
+                    sticky: sticky
                 }
                 setCursors(last_cursors)
             }
         }
         else if (task === 'output-path') {
             const rmdup = rmduplicate([...filesStructure, update])
-            if (rmdup.duplicate) {
-                console.log("EXISTS")
-            }
-            console.log(rmdup.list)
             const sorted = sort_files(rmdup.list)
-            console.log(sorted)
             setFile([...sorted])
             setTree(transfer([...sorted]))
         }
         else if (task === 'delete') {
-            message.info({ content: `${update.deleter} deletes ${update.path}, refresh automatically.` ,duration:2})
+            message.info({ content: `${update.deleter} deletes ${update.path}, refresh automatically.`, duration: 2 })
             setRefresh(!refresh)
         }
         else if (task === 'other-cursor') {
-            const {user,line,ch,sticky} = update
-            if(user!==username){
+            const { user, line, ch, sticky } = update
+            if (user !== username) {
                 // message.info({ content: `${user}'s cursor at line${line}, ch${ch}`, duration: 2 })
                 let last_cursors = cursors;
                 last_cursors[user] = {
                     line: line,
                     ch: ch,
-                    sticky:sticky
+                    sticky: sticky
                 }
                 setCursors(last_cursors)
             }
-        }   
+        }
         else if (task === 'download') {
             window.location.href = "/api/download"
         }
@@ -249,17 +232,12 @@ export default function Editor(props) {
     }
 
     const sendData = (data) => {
-        if(projectInit) {
+        if (projectInit) {
             client.send(JSON.stringify(data))
         }
-       
     }
 
-    const sendCursor = (position) => {
-        sendData(['cursor',{"user":username, ...position}])
-    }
-
-    const sendCodes = (code,cursor) => {
+    const sendCodes = (code, cursor) => {
         let diff = diffLines(codes, code)
         let diff_code = []
         let count_line = 0
@@ -275,8 +253,8 @@ export default function Editor(props) {
                 count_line += part.count
             }
         })
-        
-        sendData(['input', { filepath: filePath, content: diff_code, editor: username, cursor:cursor}])
+
+        sendData(['input', { filepath: filePath, content: diff_code, editor: username, cursor: cursor }])
     }
 
     const sendNewFile = (ls) => {
@@ -291,17 +269,19 @@ export default function Editor(props) {
 
         }
         setDeletePath(ls.name)
-
     }
     const handleDelete = () => {
         if (deletePath !== "Untitled")
             sendData(['delete', { "deleter": username, "path": deletePath }])
-            setDeletePath("Untitled")
+        setDeletePath("Untitled")
+        setFileName("Untitled")
     }
     const handleDownload = () => {
-        alert("Download Click")
+        message.info({ content: "Start download the project", duration: 2 })
+        // alert("Download Click")
         sendData(['download', {}])
     }
+
     const ext = fileName.split(".")[1];
     return (
         <div>
@@ -324,72 +304,68 @@ export default function Editor(props) {
                         currentFilePath={currentFilePath}
                     />
                 </div>
-                <div className='editor_container'>
-                    <div id='editor_title'>
-                        <div>
-                            {FILE_ICONS[ext] || <AiOutlineFile />}
-                            <span style={{ marginLeft: "10px" }}>{fileName}</span>
+                {fileName !== 'Untitled' ?
+                    <div className='editor_container'>
+                        <div id='editor_title'>
+                            <div>
+                                {FILE_ICONS[ext] || <AiOutlineFile />}
+                                <span style={{ marginLeft: "10px" }}>{fileName}</span>
+                            </div>
                         </div>
-                        {/* <CodeSelect options={codingOptions} onChange={onChangeCode} /> */}
-                    </div>
 
-                    <ControlledEditor
-                        onBeforeChange={(editor, data, value) => {
-                            setOtherEdit(false);
-                            onChange(value,editor.getCursor());
-                        }}
-                        autoCursor={otherEdit?false:true}
-                        onChange={(editor, data, value) => { 
-                            
-                                
-                            if (!(Object.entries(bookMarks).length === 0 && bookMarks.constructor === Object)) { 
-                                // console.log('Clear old bookmarks', bookMarks)
-                                for (var i = 0; i < collabs.length; i++) { 
-                                    if(collabs[i] !== username) bookMarks[collabs[i]].clear();
+                        <ControlledEditor
+                            onBeforeChange={(editor, data, value) => {
+                                setOtherEdit(false);
+                                onChange(value, editor.getCursor());
+                            }}
+                            autoCursor={otherEdit ? false : true}
+                            onChange={(editor, data, value) => {
+                                if (!(Object.entries(bookMarks).length === 0 && bookMarks.constructor === Object)) {
+                                    // console.log('Clear old bookmarks', bookMarks)
+                                    for (var i = 0; i < collabs.length; i++) {
+                                        if (collabs[i] !== username) bookMarks[collabs[i]].clear();
+                                    }
                                 }
-                            }
-                            let initBookMarks = {}
-                            for (var i = 0; i < collabs.length; i++) { 
-                                if (collabs[i] !== username) { 
-                                    const newSpan = new defaultSpan(collabs[i],BOOKMARK_COLOR[i % 10])
-                                    var newBookMark = editor.getDoc().setBookmark({
-                                        line: cursors[collabs[i]].line,
-                                        ch: cursors[collabs[i]].ch+2,
-                                        sticky: cursors[collabs[i]].sticky
+                                let initBookMarks = {}
+                                for (var i = 0; i < collabs.length; i++) {
+                                    if (collabs[i] !== username) {
+                                        const newSpan = new defaultSpan(collabs[i], BOOKMARK_COLOR[i % 10])
+                                        var newBookMark = editor.getDoc().setBookmark({
+                                            line: cursors[collabs[i]].line,
+                                            ch: cursors[collabs[i]].ch + 2,
+                                            sticky: cursors[collabs[i]].sticky
                                         }, { widget: newSpan })
-                                    initBookMarks[collabs[i]] = newBookMark
+                                        initBookMarks[collabs[i]] = newBookMark
+                                    }
                                 }
-                            }
-                            setBookMarks(initBookMarks)
-                        }}
-                    
-                        onCursor={(editor, data)=>{ 
-                            sendCursor(data)}}
-                        value={opened ? codes : 'Loading...'}
-                        // autoCursor={ otherEdit ? false:true }
-                        className="code_mirror_wrapper"
-                        options={{
-                            lineWrapping: true,
-                            lint: true,
-                            mode: codeMap[ext],
-                            theme: 'material-darker',
-                            lineNumbers: true,
-                            cursorHeight: 1,
-                            curserWidth:2,
-                            indentUnit: 0,
-                            electricChars: false
-                        }}
-                        smartIndent={false}
-                        placeholder='Select a code mode...'
-                        defaultValue={{ label: "Select a code mode...", value: 0 }}
-                    />
-                </div>
+                                setBookMarks(initBookMarks)
+                            }}
+                            value={opened ? codes : 'Loading...'}
+                            className="code_mirror_wrapper"
+                            options={{
+                                lineWrapping: true,
+                                lint: true,
+                                mode: codeMap[ext],
+                                theme: 'material-darker',
+                                lineNumbers: true,
+                                cursorHeight: 1,
+                                curserWidth: 2,
+                                indentUnit: 0,
+                                electricChars: false
+                            }}
+                            smartIndent={false}
+                            placeholder='Select a code mode...'
+                            defaultValue={{ label: "Select a code mode...", value: 0 }}
+                        />
+                    </div>
+                    : <div className='display_wrapper'><img className='default_display' src="https://i.imgur.com/qCO0nq4.png" /></div>}
+                
                 <div className='help_bar'>
-                    <IconContext.Provider value={{ className:'helpBar_btn' }}>
-                        <div style={{display:'flex' ,height:'100%' }}>
+                    <IconContext.Provider value={{ className: 'helpBar_btn' }}>
+                        <div style={{ display: 'flex', height: '100%' }}>
                             <div className='helpBar_navbar'>
-                                <BiLogOutCircle className='logoutBtn' onClick={()=>{window.location.href='/Login'}}/>
-                                <AiFillHome className='homeBtn' onClick={()=>{window.location.href='/Menu'}}/>
+                                <BiLogOutCircle className='logoutBtn' onClick={() => { window.location.href = '/Login' }} />
+                                <AiFillHome className='homeBtn' onClick={() => { window.location.href = '/Menu' }} />
                             </div>
                         </div>
                     </IconContext.Provider>

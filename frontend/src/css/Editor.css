@@ -140,3 +140,15 @@ button:focus {
   display: block;
   cursor: pointer;
 }
+.display_wrapper{
+  text-align: center;
+  display:flex;
+  justify-content: center;
+  align-items: center; 
+}
+.default_display {
+  max-width: 75%;
+  max-height: 75%;
+  filter: grayscale(100%);
+  opacity: 0.7;
+}
