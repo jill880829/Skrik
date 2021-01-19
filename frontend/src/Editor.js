@@ -339,40 +339,6 @@ export default function Editor(props) {
                                 }
                             }
                             setBookMarks(initBookMarks)
-                            // if (Object.entries(bookMarks).length === 0 && bookMarks.constructor === Object) {
-                            //     // create bookmarks and store into bookMarks
-                            //     let initBookMarks = {}
-                            //     for (var i = 0; i < collabs.length; i++) { 
-                            //         if (collabs[i] !== username) { 
-                            //             const newSpan = document.createElement('span')
-                            //             newSpan.style.borderLeftStyle = 'solid'
-                            //             newSpan.style.borderLeftWidth = '2px'
-                            //             newSpan.style.borderLeftColor = BOOKMARK_COLOR[i%10]
-                                        
-                            //             var newBookMark = editor.getDoc().setBookmark({
-                            //                 line: cursors[collabs[i]].line,
-                            //                 ch: cursors[collabs[i]].ch,
-                            //                 sticky: cursors[collabs[i]].sticky
-                            //             }, { widget: newSpan })
-                            //             initBookMarks[collabs[i]] = newBookMark
-                            //         }
-                            //     }
-                            //     setBookMarks(initBookMarks)
-                            // }
-                            // else { 
-                            //     //change bookmark position
-                            //     let lastBookMarks = bookMarks;
-                            //     for (var i = 0; i < collabs.length; i++) { 
-                            //         if (collabs[i] !== username) {
-                            //             lastBookMarks[collabs[i]] = {
-                            //                 line: cursors[collabs[i]].line,
-                            //                 ch: cursors[collabs[i]].ch,
-                            //                 sticky:cursors[collabs[i]].sticky
-                            //             }
-                            //         }
-                            //     }
-                            //     setBookMarks(lastBookMarks)
-                            // }
                         }}
                         onCursor={(editor, data)=>{sendCursor(data)}}
                         value={opened ? codes : 'Loading...'}
