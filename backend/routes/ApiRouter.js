@@ -129,14 +129,6 @@ router.post('/create_project', jsonParser, async function (req, res) {
             return res.status(403).send(result["description"]);
     }
     return res.send(result["description"]);
-
-aaaaa
-
-
-
-
-
-
 });
 
 /* TODO download project */
@@ -208,6 +200,35 @@ router.post('/set_profile', async function (req, res){
     return res.send(result["description"]);
 });
 
+/* delete project */
+router.post('/delete_project', jsonParser, async function (req, res) {
+    if(! req.isAuthenticated())
+        return res.status(401).send("Invalid User!!!");
+    var user = req.session.passport.user;
+    var idsha = req.body.idsha;
+    var get_res = await QueryRedis.getID(idsha);
+    if (get_res["success"] === false) 
+        return res.status(403).send(get_res["description"]);
+    else
+        var projectid = get_res["id"];
+
+    let projectname = QueryProject.getProjectName(projectid);
+    if(projectname.split('/')[0] !== user){
+        console.log('[/api/delete_project]: User is not Owner')
+        return res.status(403).send(' You are not Owner');
+    }
+
+    var result = await QueryProject.deleteProject(projectid);
+    if (result["success"] === false) 
+    {
+        if (result["description"].includes("Failed!!!"))
+            return res.status(500).send(result["description"]);
+        else
+            return res.status(403).send(result["description"]);
+    }
+    console.log('[/api/delete_project]: successfully delete project')
+    return res.send(result["description"]);
+});
 
 module.exports = router;
 

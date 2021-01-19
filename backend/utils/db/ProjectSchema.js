@@ -5,7 +5,7 @@ const Schema = mongoose.Schema
 const LineChangeSchema = new Schema(
 {
     Index: { type: Number, required: true },
-    Type: { type: String, enum: ["insert", "delete", "drop"], required: true },
+    Type: { type: String, enum: ["insert", "update", "delete", "drop"], required: true },
     CreateTime: { type: String, required: true },
     UpdateTime: { type: String, required: true },
     DeleteTime: { type: String },

@@ -4,8 +4,8 @@ const QueryUser = require('./QueryUser');
 
 // mongo setup
 
-var username = process.env.USERNAME || 'Skrik User';
-var password = process.env.PASSWORD || 'password';
+var username = process.env.USERNAME || 'SkrikUser';
+var password = process.env.PASSWORD || 'rgheklnvkfsvewahaorebn';
 var database = process.env.DATABASE || 'skrik';
 var dburl = process.env.DBURL || 'localhost:27017';
 const mongoDB = `mongodb://${username}:${password}@${dburl}/${database}`
@@ -127,15 +127,22 @@ async function test_v2(){
     
 }
 async function test_v3(){
-    // var a = await QueryUser.setProfile('a_3', '哈哈是我啦', 'Skrik', '哈哈是我啦', '哈哈是我啦', '不告訴你', '不告訴你');
+    // var a = await QueryProject.addLineChange('60069f2fcd96ad16c3110379','/testdir/haha','test', 1, 'insert', 'wrong!');
     // console.log(a);
-    // var a = await QueryUser.getProfile('a_3');
+    // var a = await QueryProject.addLineChange('60069f2fcd96ad16c3110379','/testdir/haha','test', 2, 'insert', 'Good!3');
     // console.log(a);
-    var a = await QueryProject.getFile('5ff74f19facae41a4c27f5c2', '/testdir/lala');
+    // var a = await QueryProject.addLineChange('60069f2fcd96ad16c3110379','/testdir/haha','test', 3, 'insert', 'wrong!4');
+    // console.log(a);
+    // var a = await QueryProject.addLineChange('60069f2fcd96ad16c3110379','/testdir/haha','test', 2, 'insert', 'Good!2');
+    // console.log(a);
+    // var a = await QueryProject.addLineChange('60069f2fcd96ad16c3110379','/testdir/haha','test', 1, 'update', 'Good!1');
+    // console.log(a);
+    // var a = await QueryProject.addLineChange('60069f2fcd96ad16c3110379','/testdir/haha','test', 5, 'insert', 'Good!4');
+    // console.log(a);
+    // var a = await QueryProject.addLineChange('60069f2fcd96ad16c3110379','/testdir/haha','test', 4, 'delete', '');
+    // console.log(a);
+    var a = await QueryProject.getFile('60069f2fcd96ad16c3110379','/testdir/haha');
     console.log(a);
-    // var a = await QueryProject.getFile('5ff181955bf3050a232a7e61','/testfile','c_2', 5, 'insert', 'All right...');
-    // console.log(a);
-    
 }
 // init();
 // test();

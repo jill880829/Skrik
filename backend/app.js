@@ -333,6 +333,7 @@ wss.on('connection', async ws => {
                 break
             }
             case 'cursor':{
+                console.log(projectID)
                 connection[projectID].forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {
                         Broadcast(client, ['other-cursor', payload])

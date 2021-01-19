@@ -138,6 +138,52 @@ export default function Editor(props) {
         }
     }, [refresh])
 
+    client.onmessage = (message) => {
+        const { data } = message
+        const [task, update] = JSON.parse(data)
+        if (task === 'init-file') {
+            setCodes(update)
+            setOpened(true)
+        }
+        else if (task === 'output') {
+            let tmp = codes;
+            // console.log(update.content)
+            if(update.filepath === filePath) {
+                const content = update.content
+                content.forEach((part) => {
+                    if (part.ope === 0) {
+                        if (part.start === 0) tmp = part.content + sliceLines(tmp, part.start)
+                        else tmp = sliceLines(tmp, 0, part.start) + '\n' + part.content + sliceLines(tmp, part.start)
+                    }
+                    else {
+                        if (part.start === 0) tmp = sliceLines(tmp, part.end)
+                        else tmp = sliceLines(tmp, 0, part.start) + '\n' + sliceLines(tmp, part.end)
+                    }
+                })
+                setCodes(tmp)
+            }
+        }
+        else if (task === 'output-path') {
+            const rmdup = rmduplicate([...filesStructure, update])
+            if (rmdup.duplicate) {
+                console.log("EXISTS")
+            }
+            setFile([...rmdup.list])
+            setTree(transfer([...rmdup.list]))
+        }
+    }
+
+    client.onopen = () => {
+        console.log('websocket open')
+        sendData(['init',hash])
+        setOpened(true)
+    }
+
+    client.onclose = () => {
+        console.log('websocket close')
+        setOpened(true)
+    }
+
     function onChangeCode(value) {
         setLan(value.value);
     }
@@ -340,7 +386,12 @@ export default function Editor(props) {
                             }
                             setBookMarks(initBookMarks)
                         }}
-                        onCursor={(editor, data)=>{sendCursor(data)}}
+                        onCursor={(editor, data)=>{
+                            console.log('aaaaa' + editor)
+                            if(data !== undefined)
+                                sendCursor(data)}
+                            // console.log('aaa')
+                        }
                         value={opened ? codes : 'Loading...'}
                         // autoCursor={ otherEdit ? false:true }
                         className="code_mirror_wrapper"
