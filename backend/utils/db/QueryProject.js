@@ -244,48 +244,6 @@ async function listFiles(projectid){
 
 }
 
-// get content in file (pre)
-/*
-async function getFile_pre(projectid, filename){
-    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
-        return { "success": false, "description": "Invalid Projectid!!!" };    
-    projectid = projectid.toLowerCase();
-    if (typeof(filename) !== "string" || filename.match(regxfile) === null)
-        return { "success": false, "description": "Invalid File Name!!!" };
-    
-    try{
-        var project = await Projects.findById(projectid);
-    } catch (err) {
-        console.error("[db] error querying File in project database: ", err);
-        return { "success": false, "description": "Project Not Found!!!", "content": null };
-    }
-    if(project === null)
-        return { "success": false, "description": "Project Not Found!!!", "content": null };
-    else if (project.Deleted === true)
-        return { "success": false, "description": "Project Has Been Deleted!!!", "content": null };
-
-    var file = project.Files.find(function(item){
-        return item.FileName === filename;
-        });
-    if(file === undefined)
-        return { "success": false, "description": "File Not Found!!!", "content": null };
-    if( file.Deleted === true)
-        return { "success": false, "description": "File Has Already Been Deleted!!!", "content": null };
-    
-    data = []
-    for (let linechange of file.LineChanges)
-    {
-        if(linechange.Type === "insert")
-            data.splice(linechange.Index - 1, 0, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
-        else if(linechange.Type === "drop")
-            data = [];
-        else
-            data.splice(linechange.Index - 1, 1);
-    }
-    return { "success": true, "description": "Finish Getting File !!!", "content": data };
-}
-*/
-
 async function getFile(projectid, filename){
     if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!" };    
@@ -319,12 +277,13 @@ async function getFile(projectid, filename){
             await data.splice(linechange.Index - 1, 0, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
         }
         else if(linechange.Type === "update")
-            data[linechange.Index-1] = { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data };
+            await data.splice(linechange.Index - 1, 0, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
         else if(linechange.Type === "drop")
             data = [];
         else
             await data.splice(linechange.Index - 1, 1);
     }
+
     return { "success": true, "description": "Finish Getting File !!!", "content": data };
 }
 
