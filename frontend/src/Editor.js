@@ -127,14 +127,14 @@ export default function Editor(props) {
         else if (result.status === 200) {
             const { project_name, files, collaborators} = await result.json()
             setCollabs(collaborators);
-            console.log('Colabs: ', collaborators);
+            // console.log('Colabs: ', collaborators);
             if (Object.entries(cursors).length === 0 && cursors.constructor === Object) { 
                 let tmp_cursors = {}
                 for (var i = 0; i < collaborators.length; i++) { 
                     let tmp_pos = { line: i, ch: i, sticky: null }
                     tmp_cursors[collaborators[i]] = tmp_pos
                 }
-                console.log('init cursors: ', tmp_cursors)
+                // console.log('init cursors: ', tmp_cursors)
                 setCursors(tmp_cursors)
             }
 
@@ -149,59 +149,12 @@ export default function Editor(props) {
         }
     }, [refresh])
 
-    client.onmessage = (message) => {
-        const { data } = message
-        const [task, update] = JSON.parse(data)
-        if (task === 'init-file') {
-            setCodes(update)
-            setOpened(true)
-        }
-        else if (task === 'output') {
-            let tmp = codes;
-            // console.log(update.content)
-            if(update.filepath === filePath) {
-                const content = update.content
-                content.forEach((part) => {
-                    if (part.ope === 0) {
-                        if (part.start === 0) tmp = part.content + sliceLines(tmp, part.start)
-                        else tmp = sliceLines(tmp, 0, part.start) + '\n' + part.content + sliceLines(tmp, part.start)
-                    }
-                    else {
-                        if (part.start === 0) tmp = sliceLines(tmp, part.end)
-                        else tmp = sliceLines(tmp, 0, part.start) + '\n' + sliceLines(tmp, part.end)
-                    }
-                })
-                setCodes(tmp)
-            }
-        }
-        else if (task === 'output-path') {
-            const rmdup = rmduplicate([...filesStructure, update])
-            if (rmdup.duplicate) {
-                console.log("EXISTS")
-            }
-            setFile([...rmdup.list])
-            setTree(transfer([...rmdup.list]))
-        }
-    }
-
-    client.onopen = () => {
-        console.log('websocket open')
-        sendData(['init',hash])
-        setOpened(true)
-    }
-
-    client.onclose = () => {
-        console.log('websocket close')
-        setOpened(true)
-    }
-
     function onChangeCode(value) {
         setLan(value.value);
     }
-    function onChange(value) {
-        sendCodes(value);
+    function onChange(value,cursor) {
+        sendCodes(value,{...cursor,user: username});
     }
-
     const [projectInit, setProjectInit] = useState(false)
     const [codes, setCodes] = useState('')
     const [opened, setOpened] = useState(false)
@@ -237,6 +190,17 @@ export default function Editor(props) {
                     setOtherEdit(true)
                 }
                 setCodes(tmp)
+            }
+            const {user,line,ch,sticky} = update.cursor
+            if(user!==username){
+                //message.info({ content: `${user}'s cursor at line${line}, ch${ch}`, duration: 2 })
+                let last_cursors = cursors;
+                last_cursors[user] = {
+                    line: line,
+                    ch: ch,
+                    sticky:sticky
+                }
+                setCursors(last_cursors)
             }
         }
         else if (task === 'output-path') {
@@ -284,14 +248,17 @@ export default function Editor(props) {
     }
 
     const sendData = (data) => {
-        if(projectInit) client.send(JSON.stringify(data))
+        if(projectInit) {
+            client.send(JSON.stringify(data))
+        }
+       
     }
 
     const sendCursor = (position) => {
         sendData(['cursor',{"user":username, ...position}])
     }
 
-    const sendCodes = (code) => {
+    const sendCodes = (code,cursor) => {
         let diff = diffLines(codes, code)
         let diff_code = []
         let count_line = 0
@@ -307,14 +274,14 @@ export default function Editor(props) {
                 count_line += part.count
             }
         })
-        sendData(['input', { filepath: filePath, content: diff_code, editor: username}])
+        
+        sendData(['input', { filepath: filePath, content: diff_code, editor: username, cursor:cursor}])
     }
 
     const sendNewFile = (ls) => {
         sendData(['path', ls])
     }
     const requestFileContext = (ls) => {
-        console.log(ls)
         if (ls.type === "file") {
             sendData(['request_file', ls.name])
             setFilePath(ls.name)
@@ -368,13 +335,14 @@ export default function Editor(props) {
                     <ControlledEditor
                         onBeforeChange={(editor, data, value) => {
                             setOtherEdit(false);
-                            onChange(value);
-                            
+                            onChange(value,editor.getCursor());
                         }}
                         autoCursor={otherEdit?false:true}
                         onChange={(editor, data, value) => { 
+                            
+                                
                             if (!(Object.entries(bookMarks).length === 0 && bookMarks.constructor === Object)) { 
-                                console.log('Clear old bookmarks', bookMarks)
+                                // console.log('Clear old bookmarks', bookMarks)
                                 for (var i = 0; i < collabs.length; i++) { 
                                     if(collabs[i] !== username) bookMarks[collabs[i]].clear();
                                 }
@@ -387,24 +355,22 @@ export default function Editor(props) {
                                     // newSpan.style.borderLeftWidth = '2px'
                                     // newSpan.style.borderLeftColor = BOOKMARK_COLOR[i%10]
                                     const newSpan = new defaultSpan(BOOKMARK_COLOR[i % 10])
-                                    console.log('add span0 ',newSpan)
+                                    // console.log('add span0 ',newSpan)
                                     // console.log('add span1 ',newSpan1)
                                     var newBookMark = editor.getDoc().setBookmark({
                                         line: cursors[collabs[i]].line,
                                         ch: cursors[collabs[i]].ch,
                                         sticky: cursors[collabs[i]].sticky
                                         }, { widget: newSpan })
+                                    //console.log(newBookMark)
                                     initBookMarks[collabs[i]] = newBookMark
                                 }
                             }
                             setBookMarks(initBookMarks)
                         }}
-                        onCursor={(editor, data)=>{
-                            console.log('aaaaa' + editor)
-                            if(data !== undefined)
-                                sendCursor(data)}
-                            // console.log('aaa')
-                        }
+                    
+                        onCursor={(editor, data)=>{ 
+                            sendCursor(data)}}
                         value={opened ? codes : 'Loading...'}
                         // autoCursor={ otherEdit ? false:true }
                         className="code_mirror_wrapper"
