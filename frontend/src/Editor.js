@@ -27,8 +27,8 @@ import {BiLogOutCircle } from 'react-icons/bi';
 
 // const USERMARK_COLOR = '#00ff00'
 const BOOKMARK_COLOR = [
-    // '#00ff00', '#0000ff', '#ff0000', '#ffff00', '#ff00ff',
-    '#00ffff', '#aaaaff', '#aaffaa', '#ffaaaa', '#ffffff','#00ff00', '#0000ff', '#ff0000', '#ffff00', '#ff00ff',
+    '#00aa00', '#0283ff', '#ff0000', '#fec703', '#ff00ff',
+    '#00ffff', '#aaaaff', '#aaffaa', '#ffaaaa', '#ffffff',
 ]
 
 const FILE_ICONS = {
@@ -59,25 +59,26 @@ const codingOptions = [
     { label: 'Verilog', value: 'verilog' },
     { label: 'CSS', value: 'css' },
 ]
-function defaultSpan(color) {
+function defaultSpan(crName,color) {
     const newSpan = document.createElement('span')
-    newSpan.style.borderLeftStyle = 'solid'
-    newSpan.style.borderLeftWidth = '2px'
-    newSpan.style.borderLeftColor = color
+    const tmpDiv = document.createElement('div')
 
+    // const cursorName = document.createElement('span')
+    tmpDiv.innerHTML = crName;
+    var width = crName.length * 8 + 16;
+    
+    tmpDiv.style.backgroundColor = color;
+    tmpDiv.className = 'cursorName'
+    tmpDiv.style.width = width.toString() + 'px';
+    newSpan.appendChild(tmpDiv)
+    newSpan.style.borderLeftStyle = 'solid';
+    newSpan.style.borderLeftWidth = '2px';
+    newSpan.style.borderLeftColor = color;
+    newSpan.className = 'blink';
+    newSpan.classList.add('newSpan')
     return newSpan
-
 }
-// const defaultSpan = (color) => { 
-// // console.log('>~<',color)
-    
-//         <span style={{
-//             borderLeftColor: color,
-//             borderLeftStyle: 'solid',
-//             borderLeftWidth:'2px'
-//         }}></span>
-    
-// }
+
 export default function Editor(props) {
     const ls = []
     const { treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure([
@@ -350,19 +351,12 @@ export default function Editor(props) {
                             let initBookMarks = {}
                             for (var i = 0; i < collabs.length; i++) { 
                                 if (collabs[i] !== username) { 
-                                    // const newSpan = document.createElement('span')
-                                    // newSpan.style.borderLeftStyle = 'solid'
-                                    // newSpan.style.borderLeftWidth = '2px'
-                                    // newSpan.style.borderLeftColor = BOOKMARK_COLOR[i%10]
-                                    const newSpan = new defaultSpan(BOOKMARK_COLOR[i % 10])
-                                    // console.log('add span0 ',newSpan)
-                                    // console.log('add span1 ',newSpan1)
+                                    const newSpan = new defaultSpan(collabs[i],BOOKMARK_COLOR[i % 10])
                                     var newBookMark = editor.getDoc().setBookmark({
                                         line: cursors[collabs[i]].line,
-                                        ch: cursors[collabs[i]].ch,
+                                        ch: cursors[collabs[i]].ch+2,
                                         sticky: cursors[collabs[i]].sticky
                                         }, { widget: newSpan })
-                                    //console.log(newBookMark)
                                     initBookMarks[collabs[i]] = newBookMark
                                 }
                             }

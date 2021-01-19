@@ -113,3 +113,30 @@ button:focus {
   border-bottom-left-radius: 0.5rem;
   overflow: hidden;
 }
+
+.blink {
+  animation: blink-animation 1s steps(3, start) infinite;
+  -webkit-animation: blink-animation 1s steps(3, start) infinite;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+.cursorName {
+  display: table-cell;
+  font-size: 8px;
+  z-index: 10;
+  float: right;
+  border-radius: 5px;
+  text-align: center;
+}
+.newSpan:hover {
+  display: block;
+  cursor: pointer;
+}
