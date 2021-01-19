@@ -25,10 +25,10 @@ import './css/Editor.css'
 import { message } from 'antd'
 import {BiLogOutCircle } from 'react-icons/bi';
 
-// const USERMARK_COLOR = '#00aa00'
+// const USERMARK_COLOR = '#00ff00'
 const BOOKMARK_COLOR = [
-    '#00aa00', '#0000aa', '#aa0000', '#cccc00', '#cc00cc',
-    '#00cccc', '#6666cc', '#88cc88', '#cc6666', '#ffffff'
+    // '#00ff00', '#0000ff', '#ff0000', '#ffff00', '#ff00ff',
+    '#00ffff', '#aaaaff', '#aaffaa', '#ffaaaa', '#ffffff','#00ff00', '#0000ff', '#ff0000', '#ffff00', '#ff00ff',
 ]
 
 const FILE_ICONS = {
@@ -59,18 +59,30 @@ const codingOptions = [
     { label: 'Verilog', value: 'verilog' },
     { label: 'CSS', value: 'css' },
 ]
+function defaultSpan(color) {
+    const newSpan = document.createElement('span')
+    newSpan.style.borderLeftStyle = 'solid'
+    newSpan.style.borderLeftWidth = '2px'
+    newSpan.style.borderLeftColor = color
 
+    return newSpan
+
+}
+// const defaultSpan = (color) => { 
+// // console.log('>~<',color)
+    
+//         <span style={{
+//             borderLeftColor: color,
+//             borderLeftStyle: 'solid',
+//             borderLeftWidth:'2px'
+//         }}></span>
+    
+// }
 export default function Editor(props) {
     const ls = []
-    const { treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure([{
-        type: "blankFolder",
-        displayAddBlank: false,
-    },
-    {
-        type: "blankFile",
-        displayAddBlank: false,
-    },
-    ]);
+    const { treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath } = useStructure([
+        { type: "blankFolder", displayAddBlank: false, },
+        { type: "blankFile", displayAddBlank: false, },]);
     const [filesStructure, setFile] = useState(ls);
     const [language, setLan] = useState('python');
     const [fileName, setFileName] = useState('Untitled')
@@ -83,7 +95,6 @@ export default function Editor(props) {
     const [collabs, setCollabs] = useState('')
     // Cursors and Bookmarks (include mine)
     const [bookMarks, setBookMarks] = useState({})
-    
     const [cursors, setCursors] = useState({})
     
 
@@ -360,27 +371,29 @@ export default function Editor(props) {
                             onChange(value);
                             
                         }}
+                        autoCursor={otherEdit?false:true}
                         onChange={(editor, data, value) => { 
                             if (!(Object.entries(bookMarks).length === 0 && bookMarks.constructor === Object)) { 
                                 console.log('Clear old bookmarks', bookMarks)
-                                for (var i = 0; i < collabs.length - 1; i++) { 
+                                for (var i = 0; i < collabs.length; i++) { 
                                     if(collabs[i] !== username) bookMarks[collabs[i]].clear();
                                 }
                             }
                             let initBookMarks = {}
                             for (var i = 0; i < collabs.length; i++) { 
-                               
                                 if (collabs[i] !== username) { 
-                                    const newSpan = document.createElement('span')
-                                    newSpan.style.borderLeftStyle = 'solid'
-                                    newSpan.style.borderLeftWidth = '2px'
-                                    newSpan.style.borderLeftColor = BOOKMARK_COLOR[i%10]
-                                    
+                                    // const newSpan = document.createElement('span')
+                                    // newSpan.style.borderLeftStyle = 'solid'
+                                    // newSpan.style.borderLeftWidth = '2px'
+                                    // newSpan.style.borderLeftColor = BOOKMARK_COLOR[i%10]
+                                    const newSpan = new defaultSpan(BOOKMARK_COLOR[i % 10])
+                                    console.log('add span0 ',newSpan)
+                                    // console.log('add span1 ',newSpan1)
                                     var newBookMark = editor.getDoc().setBookmark({
                                         line: cursors[collabs[i]].line,
                                         ch: cursors[collabs[i]].ch,
                                         sticky: cursors[collabs[i]].sticky
-                                    }, { widget: newSpan })
+                                        }, { widget: newSpan })
                                     initBookMarks[collabs[i]] = newBookMark
                                 }
                             }
@@ -401,9 +414,9 @@ export default function Editor(props) {
                             mode: codeMap[ext],
                             theme: 'material-darker',
                             lineNumbers: true,
-                            cursorHeight: 0.85,
+                            cursorHeight: 1,
+                            curserWidth:2,
                             indentUnit: 0,
-                            
                             electricChars: false
                         }}
                         smartIndent={false}
@@ -412,15 +425,6 @@ export default function Editor(props) {
                     />
                 </div>
                 <div className='help_bar'>
-                    {/* <div style={{ display: 'table' }}>
-                        <div className='help_btn_bar'>
-                            <button className='help_home_btn'>
-                                <IconContext.Provider value={{ color: 'white', size: '50px' }}>
-                                    <AiFillHome onClick={()=>{window.location.href = '/Menu'}}/>
-                                </IconContext.Provider>
-                            </button>
-                        </div>
-                    </div> */}
                     <IconContext.Provider value={{ className:'helpBar_btn' }}>
                         <div style={{display:'flex' ,height:'100%' }}>
                             <div className='helpBar_navbar'>
@@ -429,7 +433,6 @@ export default function Editor(props) {
                             </div>
                         </div>
                     </IconContext.Provider>
-
                 </div>
             </div>
         </div>
