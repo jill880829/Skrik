@@ -18,7 +18,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: frontend
-        image: asia.gcr.io/skrik-299012/frontend:v0.0.4
+        image: asia.gcr.io/skrik-299012/frontend:v0.0.7
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

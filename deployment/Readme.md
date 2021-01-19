@@ -22,4 +22,6 @@ docker ports:
 ## versions
 
     v0.0.4: single line ok; oauth ok
-    v0.0.5: websocket version demo
+    v0.0.5: websocket version demo (v0.0.4 frontend)
+    v0.0.6: websocket with splited room
+    

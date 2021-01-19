@@ -4,6 +4,7 @@ metadata:
   name: skrik-ingress
   annotations:
     kubernetes.io/ingress.global-static-ip-name: anonymouskuo-com
+    kubernetes.io/ingress.allow-http: "false"
 spec:
   tls:
   - hosts:

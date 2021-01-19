@@ -2,7 +2,7 @@
 include backend/.env
 export $(shell sed 's/=.*//' backend/.env)
 
-NOW := v0.0.5
+NOW := v0.0.7
 PROJECT_ID := skrik-299012
 
 init:
@@ -56,7 +56,7 @@ deploy_frontend_build:
 	echo asia.gcr.io/$(PROJECT_ID)/$$(echo $$DOCKER_NAME):$(NOW)
 
 deploy_backend_conf:
-	kubectl delete secret backend-secret
+	-kubectl delete secret backend-secret
 	kubectl create secret generic backend-secret \
 		--from-literal=MONGO_USERNAME="$(MONGO_USERNAME)" \
 		--from-literal=MONGO_PASSWORD="$(MONGO_PASSWORD)" \
@@ -72,19 +72,19 @@ deploy_backend_conf:
 		--from-literal=REDIS_PASSWORD="$(REDIS_PASSWORD)"
 
 deploy_db_conf:
-	kubectl delete secret mongo-secret
+	-kubectl delete secret mongo-secret
 	kubectl create secret generic mongo-secret \
 		--from-literal=MONGO_INITDB_ROOT_USERNAME="$(MONGO_INITDB_ROOT_USERNAME)" \
 		--from-literal=MONGO_INITDB_ROOT_PASSWORD="$(MONGO_INITDB_ROOT_PASSWORD)" \
 		--from-literal=MONGO_INITDB_DATABASE="$(MONGO_INITDB_DATABASE)"
 
 deploy_redis_conf:
-	kubectl delete secret redis-secret
+	-kubectl delete secret redis-secret
 	kubectl create secret generic redis-secret \
 		--from-literal=redis.conf="requirepass $(REDIS_PASSWORD)"
 
 deploy_mongo_express_conf:
-	kubectl delete secret mongo-express-secret
+	-kubectl delete secret mongo-express-secret
 	kubectl create secret generic mongo-express-secret \
 		--from-literal=ME_CONFIG_MONGODB_ADMINUSERNAME="$(MONGO_INITDB_ROOT_USERNAME)" \
 		--from-literal=ME_CONFIG_MONGODB_ADMINPASSWORD="$(MONGO_INITDB_ROOT_PASSWORD)" \

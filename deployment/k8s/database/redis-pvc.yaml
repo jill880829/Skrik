@@ -1,4 +1,23 @@
 apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-pv
+spec:
+  storageClassName: standard
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: redis-pvc
+    namespace: default
+  gcePersistentDisk:
+    pdName: redis-pv
+    fsType: ext4
+---
+apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: redis-pvc
