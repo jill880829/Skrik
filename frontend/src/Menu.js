@@ -252,7 +252,7 @@ function Menu() {
                         </div>
 
                         {editMode ?
-                            <div>
+                            <div className = 'profile_edit_mode'>
                                 <div className="profile_detail">
                                     <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
                                         <BiBuildingHouse style={{ verticalAlign: 'middle' }} />
@@ -312,19 +312,18 @@ function Menu() {
                                     >
                                     </input>
                                 </div>
-                                <div style={{ display: 'flex', textAlign: 'center', justifyContent: 'center' }}>
-                                    <button onClick={save} style={{ display: 'inline-block', margin: '20px', padding: '2px 10px', backgroundColor: ' #48a147', borderColor: 'transparent', borderRadius: '10px', color: 'white' }}>Save</button>
-                                    <button onClick={back2Profile} style={{ display: 'inline-block', margin: '20px', padding: '2px 10px', backgroundColor: ' #aaaaaa', borderColor: 'transparent', borderRadius: '10px', color: 'white' }}>Cancel</button>
+                                <div className='profile_last_btns_list'>
+                                    <button className='profile_last_btn' onClick={save} style={{ backgroundColor: ' #48a147' }}>Save</button>
+                                    <button className='profile_last_btn' onClick={back2Profile} style={{ backgroundColor: ' #aaaaaa'}}>Cancel</button>
                                 </div>
-
                             </div>
                             :
-                            <div>
+                            <div className='profile_display_mode'>
                                 <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                                     <button className='profile_edit_btn' variant='contained' onClick={editProfile}>Edit Profile</button>
                                 </div>
                                 <div style={{ height: 20 }} />
-                                <div>
+                                <div className = 'profile_display_list'>
                                     {savedData[0] !== '' && savedData[0] !== undefined ?
                                         <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
@@ -397,7 +396,6 @@ function Menu() {
                 </div>
             </div>
             <div className='menuMenu'>
-                {/* style={{ float: 'left', width: '68%', height: '100%', padding: '30px' }} */}
                 <div className='menu_menu' >
                     {list.map(project => (
                         <Project
@@ -420,7 +418,6 @@ function Menu() {
                             <BiLogOutCircle className='logoutBtn' onClick={()=>{window.location.href='/Login'}}/>
                             <FcPlus onClick={openModal} className='plusBtn'/>
                         </div>
-                        
                     </div>
                 </IconContext.Provider>
             </div>
@@ -428,16 +425,16 @@ function Menu() {
                 <span className='menu_modal_span'>Create a project</span>
                 <div className='menu_modal_inputs'>
                     <div>
-                        <p style={{ display: 'inline-block' }}>Project Name</p>
+                        <p style={{ display: 'inline-block', fontSize:'20px'}}>Project Name</p>
                         <p className='menu_modal_warning_hidden'>* Project Name error!</p>
                     </div>
                     <input className='menu_modal_input' type='text' name='name' id='name' onKeyUp={handleKeyUp} />
-                    Collaborators
+                        <p style={{ display: 'inline-block', fontSize:'20px'}}>Collaborators</p>
                     <input className='menu_modal_input' ></input>
                     <p style={{ color: '#CCCCCC', fontSize: 10, lineHeight: 0.8 }}>* Use ";" to split collaborators</p>
                 </div>
                 <div className='menu_modal_btns'>
-                    <button className='menu_modal_btn menu_btn_close' onClick={() => modalRef.current.closeModal()}>Close</button>
+                    <button className='menu_modal_btn menu_btn_close' onClick={() => modalRef.current.closeModal()}>Cancel</button>
                     <button className='menu_modal_btn menu_btn_confirm' onClick={confirmModal}>Confirm</button>
                 </div>
             </Modal>

@@ -1,7 +1,7 @@
 import React,{ useState, Component }  from 'react'
 import './project.css';
 import {IconContext} from "react-icons";
-import { BsTrash, BsClockHistory, BsFillPeopleFill,BsTagFill } from "react-icons/bs";
+import { BsTrash, BsFillPeopleFill,BsTagFill } from "react-icons/bs";
 
 const handleTitle = (name) => { 
     const title = (name.split('/'))[1]
@@ -14,11 +14,6 @@ const handleCollab = (colab) => {
     const count = colab.length - 1
     if (count < 2) return (count + ' collaborator')
     else return (count + ' collaborators')
-}
-
-const handleParentClick = (event,intoProject) => { 
-    console.log('event: ',event);
-
 }
 
 class Project extends Component {
@@ -45,8 +40,6 @@ class Project extends Component {
                             </div>
                         </div>
                     </div>
-                        
-
                     </div>
                     <div className='project_sec_col'>
                         <div className='project_trash_div'>
@@ -57,30 +50,7 @@ class Project extends Component {
                             </IconContext.Provider>
                         </div>
                     </div>
-                    
-                    
                 </div>
-                
-                
-
-                    {/* <div className='project_history'>
-                        <IconContext.Provider value={{ color: 'gray', size: '12px', className: 'project_history' }}>
-                            <div>
-                                <BsClockHistory /> <span>changed {hist} days ago</span>
-                            </div>
-                            <div>
-                                <BsFillPeopleFill /> <span>{colab.length - 1} collaborators</span>
-                            </div>
-                        </IconContext.Provider>
-                    </div> */}
-                    {/* <div className='project_btn' onClick={deleteProject}>
-                        <button className='project_trash' >
-                            <IconContext.Provider value={{ color: 'gray', size: '16px', className: 'project_icon' }}>
-                                <BsTrash />
-                            </IconContext.Provider>
-                        </button>
-                    </div> */}
-                
             </div>
         );
     }
