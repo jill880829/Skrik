@@ -42,9 +42,6 @@ const useStructure = (str) => {
         setTree([...treeStructure])
         return(filename)
     }
-    const loadStructure = (data) => {
-        //console.log("Function for reading message from backend")
-    }
     const onClickFile = (fp) => {
         let fp_arr = fp.split('_')
         setCurrentFilePath(fp_arr)

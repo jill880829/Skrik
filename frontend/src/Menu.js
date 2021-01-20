@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from './components/modal';
 import { IconContext } from "react-icons";
 import { FcPlus } from "react-icons/fc";

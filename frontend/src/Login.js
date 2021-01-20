@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Button, Grid, TextField } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -9,7 +8,7 @@ import { IoCheckbox } from "react-icons/io5";
 import { IconContext } from "react-icons";
 import Divider from '@material-ui/core/Divider';
 
-import { ImFacebook2, ImGoogle, ImGithub, ImGit } from "react-icons/im";
+import { ImFacebook2, ImGoogle, ImGithub} from "react-icons/im";
 import { message } from 'antd'
 
 
@@ -28,7 +27,7 @@ const CssTextField = withStyles({
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [confirm, setConfirm] = useState("");
+    //const [confirm, setConfirm] = useState("");
     const [checked, setChecked] = useState(false);
     const [showRegister, setShowReg] = useState(false);
     const [checkIcon, setIconColor] = useState("#a2693b");
@@ -195,7 +194,7 @@ const Login = () => {
                                 variant="outlined"
                                 onKeyPress={(event) => { handleEnter(event,'conPass') }}   
                                 onChange={(event) => {
-                                    setConfirm(event.target.value);
+                                    //setConfirm(event.target.value);
                                     handleKeyUp(event.target.value);
                                 }}
                                 InputLabelProps={{ style: { color: "#a2693b" } }}

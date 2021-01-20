@@ -10,9 +10,9 @@ import 'codemirror/mode/clike/clike'
 import sliceLines from 'slice-lines'
 import { diffLines } from 'diff'
 import { Controlled as ControlledEditor } from 'react-codemirror2'
-import { DiJavascript1, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
+import { DiJsBadge, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { SiCplusplus, SiJson } from "react-icons/si";
-import { AiOutlineFile, AiFillRest, AiFillHome } from "react-icons/ai";
+import { AiOutlineFile, AiFillHome } from "react-icons/ai";
 import transfer from './functions/transfer'
 import rmduplicate from './functions/rmduplicate'
 import sort_files from './functions/sort'
@@ -31,7 +31,7 @@ const BOOKMARK_COLOR = [
 ]
 
 const FILE_ICONS = {
-    js: <DiJavascript1 />,
+    js: <DiJsBadge />,
     css: <DiCss3Full />,
     html: <DiHtml5 />,
     jsx: <DiReact />,
@@ -306,7 +306,7 @@ export default function Editor(props) {
     const handleRename = (ls) => {
         
         const arr = filePath.split('/')
-        const old = arr.pop()
+        arr.pop()
         const _new = (arr.join('/')+'/'+ls)
         sendData(['rename', { old:filePath, new:_new, name:username }])
         

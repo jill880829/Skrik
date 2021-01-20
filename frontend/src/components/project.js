@@ -1,4 +1,4 @@
-import React,{ useState, Component }  from 'react'
+import React,{ Component }  from 'react'
 import './project.css';
 import {IconContext} from "react-icons";
 import { BsTrash, BsFillPeopleFill,BsTagFill } from "react-icons/bs";

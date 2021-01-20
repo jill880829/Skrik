@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { IconContext } from "react-icons";
 import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons/ai";
 import { DiJsBadge, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
-import { VscNewFile, VscNewFolder, VscCloudDownload, VscCollapseAll } from "react-icons/vsc";
+import { VscNewFile, VscNewFolder, VscCloudDownload } from "react-icons/vsc";
 import { TiPencil, TiDeleteOutline} from "react-icons/ti";
 import { SiCplusplus, SiJson } from "react-icons/si";
+import { message } from 'antd'
 import "./css/Structure.css";
 
 
@@ -29,7 +30,7 @@ const Collapsible = styled.div`
   height: ${p => (p.isOpen ? "0" : "auto")};
   overflow: hidden;
 `;
-
+const regxfile = /^[ /A-Za-z0-9_.-]+$/;
 export default function Structure({projectName,returnNewFile,returnDelete,returnRename,returnDownload,returnClickFile,fileList,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
     
 
@@ -80,12 +81,16 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
     const handlePressEnter = (event, isFolder) => {
         if (event.key === 'Enter') {
             let newFileName = event.target.value
-            let path = SaveToTree(newFileName, isFolder)
-            if(fileList.includes(path)){
-                alert("filename exists")
-            }
+            if(newFileName.match(regxfile) === null)
+                message.error({content: 'Invalid Filename', duration: 1.5})
             else{
-                returnNewFile(path)
+                let path = SaveToTree(newFileName, isFolder)
+                if(fileList.includes(path)){
+                    message.error({content: 'Filename Exists', duration: 1.5})
+                }
+                else{
+                    returnNewFile(path)
+                }
             }
         }
     }
@@ -114,7 +119,6 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
                             <VscCloudDownload onClick={() => returnDownload()}  />
                             <TiDeleteOutline onClick={() => returnDelete()} />
                             <TiPencil onClick={() => handleRename()} />
-                            {/* <VscCollapseAll onClick={() => { alert("Collapse All") }} /> */}
                         </div>
                     </IconContext.Provider>
                 </div>
