@@ -131,7 +131,7 @@ router.post('/create_project', jsonParser, async function (req, res) {
     return res.send(result["description"]);
 });
 
-/* TODO download project */
+/* download project */
 router.get('/download', async function (req, res){
     if(! req.isAuthenticated())
         return res.status(401).send("Invalid User!!!");
@@ -166,8 +166,8 @@ router.get('/download', async function (req, res){
     var filename = projectname + '-' + rand_dir;
     Tool.write_file_structure(filepath, filelist, datas);
     await Tool.zip_project(baseDir + 'tmp/',filename);
-    res.download(filepath + '.zip')
-   return;
+    return res.download(filepath + '.zip')
+    
 });
 
 /* get profile */
@@ -230,6 +230,42 @@ router.post('/delete_project', jsonParser, async function (req, res) {
     return res.send(result["description"]);
 });
 
-module.exports = router;
+/* rename file */
+router.post('/rename_file', jsonParser, async function (req, res) {
+    if(! req.isAuthenticated())
+        return res.status(401).send("Invalid User!!!");
+    let filename = req.body.oldname;
+    let newfilename = req.body.newname;
+    let user = req.session.passport.user;
+    let projectid = req.session.passport.projectid;
+    var result = await QueryProject.renameFile(projectid, filename, newfilename, user);
+    if (result["success"] === false) 
+    {
+        if (result["description"] === "Querying user Failed!!!")
+            return res.status(500).send(result["description"]);
+        else
+            return res.status(403).send(result["description"]);
+    }
+    return res.send(result["description"]);
+});
 
-  
+/* delete file */
+router.post('/delete_file', jsonParser, async function (req, res) {
+    if(! req.isAuthenticated())
+        return res.status(401).send("Invalid User!!!");
+    let filename = req.body.filename;
+    let user = req.session.passport.user;
+    let projectid = req.session.passport.projectid;
+    var result = await QueryProject.deleteFile(projectid, filename, user);
+    if (result["success"] === false) 
+    {
+        if (result["description"] === "Querying user Failed!!!")
+            return res.status(500).send(result["description"]);
+        else
+            return res.status(403).send(result["description"]);
+    }
+    return res.send(result["description"]);
+
+});
+
+module.exports = router;  
