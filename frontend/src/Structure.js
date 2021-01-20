@@ -4,7 +4,7 @@ import { IconContext } from "react-icons";
 import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons/ai";
 import { DiJsBadge, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { VscNewFile, VscNewFolder, VscCloudDownload, VscCollapseAll } from "react-icons/vsc";
-import { TiDeleteOutline} from "react-icons/ti";
+import { TiPencil, TiDeleteOutline} from "react-icons/ti";
 import { SiCplusplus, SiJson } from "react-icons/si";
 import "./css/Structure.css";
 // import { borderRadius } from "react-select/src/theme";
@@ -108,6 +108,7 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
                             <VscNewFolder onClick={() => handleAddNewFolder()} />
                             <VscCloudDownload onClick={() => returnDownload()}  />
                             <TiDeleteOutline onClick={() => returnDelete()} />
+                            <TiPencil onClick={() => returnDelete()} />
                             <VscCollapseAll onClick={() => { alert("Collapse All") }} />
                         </div>
                     </IconContext.Provider>
