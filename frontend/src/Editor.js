@@ -259,7 +259,7 @@ export default function Editor(props) {
             }
         })
 
-        sendData(['input', { filepath: filePath, content: diff_code, editor: username, cursor: cursor }])
+        sendData(['input', { filepath: filePath, content: diff_code, editor: username, cursor: cursor, timestamp: Date.now() }])
     }
 
     const sendNewFile = (ls) => {

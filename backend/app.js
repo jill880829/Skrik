@@ -127,6 +127,7 @@ const server = http.createServer(app2)
 const wss = new WebSocket.Server({ server })
 let buffers = {}
 let connection = {}
+let timestamp = 0
 
 wss.on('connection', async ws => {
     const Broadcast = (client, data) => {
@@ -162,7 +163,7 @@ wss.on('connection', async ws => {
                 }
                 if (buffers[author].text != '') {
                     let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
-                    var result = QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'update', textToDB)
+                    var result = QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'update', textToDB, timestamp++)
                     if (result['success'] === false) {
                         console.log("[socket] push buffer:", result['description'])
                     }
@@ -175,7 +176,7 @@ wss.on('connection', async ws => {
                 let content = ''
                 if (buffers[author].text != '') {
                     let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
-                    var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'update', textToDB)
+                    var result = await QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'update', textToDB, timestamp++)
                     if (result['success'] === false) {
                         console.log("[socket] push buffer:", result['description'])
                     }
@@ -194,24 +195,28 @@ wss.on('connection', async ws => {
                             result['content'][buffer.line].data = textInBuffer
                         }
                     }
+                    console.log(projectID, filepath)
+                    console.log(result['content'])
                     for(let text of result['content']) {
                         content += (text["data"] + '\n')
                     }
-                    content = content.slice(0, -1)
+                    if(content != '') content = content.slice(0, -1)
                 }
+                console.log(content)
                 sendBack(['init-file', content])
                 break
             }
             case 'input': {
                 filepath = payload.filepath
                 let content = payload.content
+                timestamp = payload.timestamp * 1000
                 if (content.length === 2 && content[0].ope + content[1].ope === 1 &&
                     content[0].start === content[1].start && content[0].start + 1 === content[0].end &&
                     content[0].end === content[1].end) {
                     if (content[0].start != buffers[author].line) {
                         if (buffers[author].text != '') {
                             let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
-                            var result = QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'update', textToDB)
+                            var result = QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'update', textToDB, timestamp++)
                             if (result['success'] === false) {
                                 console.log("[socket] input:", result['description'])
                             }
@@ -224,7 +229,7 @@ wss.on('connection', async ws => {
                 else {
                     if (buffers[author].text != '') {
                         let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
-                        var result = QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'update', textToDB)
+                        var result = QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'update', textToDB, timestamp++)
                         if (result['success'] === false) {
                             console.log("[socket] input:", result['description'])
                         }
@@ -239,7 +244,7 @@ wss.on('connection', async ws => {
                                     let idxToInt = parseInt(idx)
                                     let line = textToDB[idxToInt]
                                     console.log("[dataToDB]", idxToInt, line)
-                                    var result = QueryProject.addLineChange(projectID, filepath, author, element.start + idxToInt + 1, 'insert', line)
+                                    var result = QueryProject.addLineChange(projectID, filepath, author, element.start + idxToInt + 1, 'insert', line, timestamp++)
                                     if (result['success'] === false) {
                                         console.log("[socket] input:", result['description'])
                                     }
@@ -252,7 +257,7 @@ wss.on('connection', async ws => {
                                     let idxToInt = parseInt(idx)
                                     let line = textToDB[idxToInt]
                                     console.log("[dataToDB]", idxToInt, line)
-                                    var result = QueryProject.addLineChange(projectID, filepath, author, element.start + 1, 'delete', '')
+                                    var result = QueryProject.addLineChange(projectID, filepath, author, element.start + 1, 'delete', '', timestamp++)
                                     if (result['success'] === false) {
                                         console.log("[socket] input:", result['description'])
                                     }
@@ -266,8 +271,8 @@ wss.on('connection', async ws => {
                         for(let idx in textToDB) {
                             let idxToInt = parseInt(idx)
                             let line = textToDB[idxToInt]
-                            console.log("[dataToDB]", idxToInt, line)
-                            var result = QueryProject.addLineChange(projectID, filepath, author, content[0].start + idxToInt + 1, 'insert', line)
+                            console.log("[dataToDB]", content[0].start + idxToInt, line)
+                            var result = QueryProject.addLineChange(projectID, filepath, author, content[0].start + idxToInt + 1, 'insert', line, timestamp++)
                             if (result['success'] === false) {
                                 console.log("[socket] input:", result['description'])
                             }
@@ -279,8 +284,8 @@ wss.on('connection', async ws => {
                         for(let idx in textToDB) {
                             let idxToInt = parseInt(idx)
                             let line = textToDB[idxToInt]
-                            console.log("[dataToDB]", idxToInt, line)
-                            var result = QueryProject.addLineChange(projectID, filepath, author, content[0].start + 1, 'delete', '')
+                            console.log("[dataToDB]", content[0].start, line)
+                            var result = QueryProject.addLineChange(projectID, filepath, author, content[0].start + 1, 'delete', '', timestamp++)
                             if (result['success'] === false) {
                                 console.log("[socket] input:", result['description'])
                             }
@@ -330,7 +335,7 @@ wss.on('connection', async ws => {
                 for(let [line_author, buffer] of Object.entries(buffers)) {
                     if(buffer.projectID === projectID && buffer.text != '') {
                         let textToDB = (buffer.text.slice(-1) === '\n') ? buffer.text.slice(0, -1) : buffer.text
-                        var result = QueryProject.addLineChange(projectID, buffer.filepath, line_author, buffer.line + 1, 'update', textToDB)
+                        var result = await QueryProject.addLineChange(projectID, buffer.filepath, line_author, buffer.line + 1, 'update', textToDB, timestamp++)
                         if (result['success'] === false) {
                             console.log("[socket] push buffer:", result['description'])
                         }
@@ -352,7 +357,7 @@ wss.on('connection', async ws => {
         console.log("[socket] disconnected")
         if (buffers[author] !== undefined && buffers[author].text != '') {
             let textToDB = (buffers[author].text.slice(-1) === '\n') ? buffers[author].text.slice(0, -1) : buffers[author].text
-            var result = QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'update', textToDB)
+            var result = QueryProject.addLineChange(projectID, filepath, author, buffers[author].line + 1, 'update', textToDB, timestamp++)
             if (result['success'] === false) {
                 console.log("error", result['description'])
             }
