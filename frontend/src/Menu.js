@@ -34,14 +34,7 @@ function Menu() {
     const [email, setEmail] = useState('');
     const [savedData, setData] = useState(['', '', '', '', ''])
     const [update, setUpdate] = useState({});
-    // const []
-    useEffect(()=>{
-        const content = {
-            content: "Welcome",
-            duration: 2
-        }
-        message.success(content)
-    },[])
+
     useEffect(async () => {
         const result = await
             fetch('/api/projects', {
@@ -58,12 +51,12 @@ function Menu() {
         }
         else if(result.status===403){
             result.text().then(res => {
-                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
+                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
             })
         }
         else if(result.status===500){
             result.text().then(res => {
-                message.error({content: `500 Internal Server Error\n${res}`, duration:2})
+                message.error({content: `500 Internal Server Error\n${res}`, duration:1.5})
             })
         }
         else if (result.status===200){
@@ -77,7 +70,7 @@ function Menu() {
             message.success(content)
         }
         else{
-            message.error({content: `Unknown Error!`, duration:2})
+            message.error({content: `Unknown Error!`, duration:1.5})
         }
         const resProfile = await
             fetch('/api/get_profile', {
@@ -94,12 +87,12 @@ function Menu() {
         }
         else if(resProfile.status===403){
             resProfile.text().then(res => {
-                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
+                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
             })
         }
         else if(resProfile.status===500){
             resProfile.text().then(res => {
-                message.error({content: `500 Internal Server Error\n${res}`, duration:2})
+                message.error({content: `500 Internal Server Error\n${res}`, duration:1.5})
             })
         }
         else if(resProfile.status===200){
@@ -117,6 +110,7 @@ function Menu() {
     const modalRef = React.useRef();
 
     const openModal = () => {
+        if (editMode === true) setEdit(false);
         modalRef.current.openModal();
     }
     const intoProject = (e) => {
@@ -124,12 +118,15 @@ function Menu() {
         window.location.href = `/Editor/${e}/${nickname}`
 
     }
-    const handleKeyUp = (e) => {
-        if (e.key === 'Enter' && e.target.value !== "") {
-            console.log(e.target.value)
-        }
-    }
+    // const handleModalKeyUp = (e) => {
+    //     if (e.key === 'Enter' && e.target.value !== "") {
+    //         var ConfirmBtn = document.getElementById('confirmBtn');
+    //         confirmModal(ConfirmBtn)
+            
+    //     }
+    // }
     const confirmModal = async (e) => {
+        // console.log('e',e)
         if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].nodeName.toLowerCase() === 'input') {
             if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].value !== '') {
                 let inputPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1]
@@ -165,12 +162,12 @@ function Menu() {
                     if (res.status === 403) {
 
                         res.text().then(res => {
-                            message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
+                            message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
                         })
                     }
                     else if (res.status === 500) {
                         res.text().then(res => {
-                            message.error({content: `500 Internal Server Error\n${res}`, duration:2})
+                            message.error({content: `500 Internal Server Error\n${res}`, duration:1.5})
                         })
                     }
                     else if (res.status === 200) {
@@ -179,7 +176,7 @@ function Menu() {
                     }
                     else if (res.status === 401) {
                         res.text().then(res => {
-                            message.error({content: `401 Unauthorized\n${res}`, duration:2})
+                            message.error({content: `401 Unauthorized\n${res}`, duration:1.5})
                         })
                         window.location.href = '/Login'
                     }
@@ -197,7 +194,7 @@ function Menu() {
         setList(newList)
     }
     const editProfile = () => {
-        console.log('edit');
+        // console.log('edit');
         setEdit(true);
     }
     const back2Profile = () => { setEdit(false); }
@@ -220,13 +217,13 @@ function Menu() {
         }).then(res => {
             if (res.status === 401) {
                 res.text().then(res => {
-                    message.error({content: `401 Unauthorized\n${res}`, duration:2})
+                    message.error({content: `401 Unauthorized\n${res}`, duration:1.5})
                 })
                 window.location.href = '/Login'
             }
             else if (res.status === 403) {
                 res.text().then(res => {
-                    message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
+                    message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
                 })
             }
             else if (res.status === 200) {
@@ -239,8 +236,8 @@ function Menu() {
         })
     }
     return (
+        
         <div className='menu_container' >
-            {/* <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'transparent' }}></div> */}
             <div className='menuProfile' >
                 <div className='menu_profile'>
                     <div className="profile_container">
@@ -260,6 +257,7 @@ function Menu() {
                                     <div style={{ marginLeft: '20px' }}></div>
                                     <input className='profile_edit_input'
                                         placeholder='Company'
+                                        // onKeyUp={ }
                                         onChange={(event) => { setCompany(event.target.value) }}
                                         defaultValue={savedData[0]}>
                                     </input>
@@ -428,14 +426,14 @@ function Menu() {
                         <p style={{ display: 'inline-block', fontSize:'20px'}}>Project Name</p>
                         <p className='menu_modal_warning_hidden'>* Project Name error!</p>
                     </div>
-                    <input className='menu_modal_input' type='text' name='name' id='name' onKeyUp={handleKeyUp} />
+                    <input className='menu_modal_input' type='text' name='name' id='name'  />
                         <p style={{ display: 'inline-block', fontSize:'20px'}}>Collaborators</p>
                     <input className='menu_modal_input' ></input>
                     <p style={{ color: '#CCCCCC', fontSize: 10, lineHeight: 0.8 }}>* Use ";" to split collaborators</p>
                 </div>
                 <div className='menu_modal_btns'>
                     <button className='menu_modal_btn menu_btn_close' onClick={() => modalRef.current.closeModal()}>Cancel</button>
-                    <button className='menu_modal_btn menu_btn_confirm' onClick={confirmModal}>Confirm</button>
+                    <button id = 'confirmBtn' className='menu_modal_btn menu_btn_confirm' onClick={confirmModal}>Confirm</button>
                 </div>
             </Modal>
         </div>
