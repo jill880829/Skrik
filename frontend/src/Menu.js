@@ -61,7 +61,7 @@ function Menu() {
         }
         else if (result.status===200){
             const backendList = await result.json()
-            console.log(backendList)
+            //console.log(backendList)
             setList([...transfer(backendList)])
             const content = {
                 content: "Personal data up to date",
@@ -123,9 +123,7 @@ function Menu() {
     }
 
     const intoProject = (e) => {
-        console.log('into project')
         window.location.href = `/Editor/${e}/${nickname}`
-
     }
     // const handleModalKeyUp = (e) => {
     //     if (e.key === 'Enter' && e.target.value !== "") {
@@ -141,9 +139,13 @@ function Menu() {
                 let inputPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1]
                 let newPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1].value;
                 let newColab = (e.target.parentNode.parentNode.childNodes[1].childNodes[3].value).split(';');
-                const same = list.filter(project => { if (project.name === newPro) return true })
+                console.log(list)
+                const same = list.filter(project => { 
+                    if (project.name.split('/')[1] === newPro && project.name.split('/')[0] === nickname) return true 
+                })
                 if (same.length > 0) {
-                    console.log('This project name has already existed!');
+                    message.error({content:'This project name has already existed!',duration:1.5})
+                    
                     inputPro.classList.add('menu_modal_input_warning');
                     inputPro.parentNode.childNodes[0].childNodes[1].className = 'menu_modal_warning_visible'
                 }
@@ -193,7 +195,7 @@ function Menu() {
                 }
             }
             else {
-                console.log('cant create!')
+                // console.log('cant create!')
             }
         }
     }
@@ -219,19 +221,27 @@ function Menu() {
             else if (res.status === 403) {
                 res.text().then(res => {
                     message.error({content: `403 Forbidden: Refuse to delete the project!\n${res}`, duration:1.5})
+                    if(res === "Project Has Been Deleted!!!"){
+                        message.info({content: `Wait for automatically refresh!`, duration:1.5})
+                        setUpdate(res)
+                    }
+                })
+            }
+            else if (res.status === 500) {
+                res.text().then(res => {
+                    message.error({content: `500 Internal Server Error\n${res}`, duration:1.5})
                 })
             }
             else if (res.status === 200) {
                 setUpdate(passData);
             }
             else {
-                console.log("ERROR")
+                message.error({content: `Unknown Error!`, duration:1.5})
             }
         })
     }
 
     const editProfile = () => {
-        // console.log('edit');
         if(!waiting)
             setEdit(true);
         else{
@@ -261,7 +271,7 @@ function Menu() {
             "Location": location,
         }
         fetch('/api/set_profile', {
-            method: 'POST', // or 'PUT'
+            method: 'POST',
             body: JSON.stringify(passData),
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -284,7 +294,7 @@ function Menu() {
                 setWaiting(true);
             }
             else {
-                console.log("ERROR")
+                // console.log("ERROR")
             }
         })
     }
