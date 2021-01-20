@@ -264,7 +264,7 @@ const Login = () => {
                             <Button id='login_join_btn' onClick={toRegister}>Interested in joining?</Button>
                             <div id='login_separator'>or</div>
                             <div id='login_social_login_container'>
-                                <Button
+                                {/* <Button
                                     onClick={() => { window.location.href = '/api/login/fb' }}
                                     variant='contained'
                                     id='login_fb_btn'
@@ -277,7 +277,7 @@ const Login = () => {
                                     id='login_google_btn'
                                     startIcon={<ImGoogle style={{ marginRight: 10, marginLeft: 5 }} />}>
                                     Login with Google
-                            </Button>
+                            </Button> */}
                                 <Button
                                     onClick={() => { window.location.href = '/api/login/github' }}
                                     variant='contained'

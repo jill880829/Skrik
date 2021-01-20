@@ -170,6 +170,7 @@ wss.on('connection', async ws => {
                 }
                 buffers[author] = { projectID: projectID, filepath: '', line: 0, text: '' }
                 sendBack(['init-finish', {}])
+                break;
             }
             case 'request_file': {
                 console.log('[projectid] '+projectID)
@@ -204,7 +205,7 @@ wss.on('connection', async ws => {
                 }
                 console.log(content)
                 sendBack(['init-file', content])
-                break
+                break;
             }
             case 'input': {
                 filepath = payload.filepath
@@ -298,7 +299,7 @@ wss.on('connection', async ws => {
                         Broadcast(client, ['output', payload])
                     }
                 })
-                break
+                break;
             }
             case 'path': {
                 connection[projectID].forEach((client) => {
@@ -306,7 +307,7 @@ wss.on('connection', async ws => {
                         Broadcast(client, ['output-path', payload])
                     }
                 })
-                break
+                break;
             }
             case 'delete': {
                 console.log("[delete]", payload)
@@ -326,7 +327,7 @@ wss.on('connection', async ws => {
                         Broadcast(client, ['delete', payload])
                     }
                 })
-                break
+                break;
             }
             case 'cursor':{
                 console.log(projectID)
@@ -337,6 +338,7 @@ wss.on('connection', async ws => {
                         Broadcast(client, ['other-cursor', payload])
                     }
                 })
+                break;
             }
             case 'download': {
                 for(let [line_author, buffer] of Object.entries(buffers)) {
@@ -351,6 +353,7 @@ wss.on('connection', async ws => {
                 }
                 console.log("[clear buffers] In project", projectID)
                 sendBack(['download', {}])
+                break;
             }
             case 'rename': {
                 console.log("[rename]", payload)
@@ -370,6 +373,7 @@ wss.on('connection', async ws => {
                         Broadcast(client, ['rename', payload])
                     }
                 })
+                break;
             }
             case 'file': {
 
