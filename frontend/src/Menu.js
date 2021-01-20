@@ -1,48 +1,16 @@
 
 import React, { useState, useEffect, Component } from 'react';
 import Modal from './components/modal';
-
 import { IconContext } from "react-icons";
 import { FcPlus } from "react-icons/fc";
-import { BsTrash, BsClockHistory, BsFillPeopleFill } from "react-icons/bs";
+
 import { GoLocation, GoMail } from "react-icons/go";
 import { FaFacebook, FaGithub } from 'react-icons/fa'
 import { BiBuildingHouse , BiLogOutCircle } from 'react-icons/bi';
 import { message } from 'antd'
 import './components/project.css'
 import './css/Menu.css'
-
-class Project extends Component {
-    render() {
-        const { id, key, name, hist, colab, intoProject, deleteProject } = this.props;
-        return (
-            <div id={id} key={key} className='project_container' onClick={intoProject}>
-                <div className='project_wrapper' style={{ position: 'relative' }} onClick={this.intoProject}>
-                    <p className='project_title'>{name}</p>
-                    <div className='project_history'>
-                        <IconContext.Provider value={{ color: 'gray', size: '12px', className: 'project_history' }}>
-                            <div>
-                                <BsClockHistory /> <span>changed {hist} days ago</span>
-                            </div>
-                            <div>
-                                <BsFillPeopleFill /> <span>{colab.length - 1} collaborators</span>
-                            </div>
-                        </IconContext.Provider>
-                    </div>
-                    <div className='project_btn' onClick={deleteProject}>
-                        <button className='project_trash' >
-                            <IconContext.Provider value={{ color: 'gray', size: '16px', className: 'project_icon' }}>
-                                <BsTrash />
-                            </IconContext.Provider>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-}
-
-
+import Project from './components/project'
 
 const ls = []
 const transfer = (ele) => {

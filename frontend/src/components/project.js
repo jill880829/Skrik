@@ -1,34 +1,89 @@
 import React,{ useState, Component }  from 'react'
-import './project.css'
+import './project.css';
 import {IconContext} from "react-icons";
-import { BsTrash,BsClockHistory } from "react-icons/bs";
-import { render } from 'react-dom';
-import swal from 'sweetalert';
+import { BsTrash, BsClockHistory, BsFillPeopleFill,BsTagFill } from "react-icons/bs";
 
+const handleTitle = (name) => { 
+    const title = (name.split('/'))[1]
+    if(title.length > 20)
+        return (title.substring(0, 17) + '...')
+    else return (title)
+}
+const handleOwner = (name) => { return (name.split('/'))[0]; }
+const handleCollab = (colab) => { 
+    const count = colab.length - 1
+    if (count < 2) return (count + ' collaborator')
+    else return (count + ' collaborators')
+}
 
+const handleParentClick = (event,intoProject) => { 
+    console.log('event: ',event);
 
-class Project extends Component { 
-    render() { 
-        const { id, name, hist } = this.props;
+}
+
+class Project extends Component {
+    render() {
+        const { id, key, name, hist, colab, intoProject, deleteProject } = this.props;
         return (
-            <div id={id} className='project_container'>
-                <div className='project_wrapper' style={{ position: 'relative' }} onclick={this.intoProject}>
-                    <p className='project_title'>{name}</p>
-                    <div className='project_history'>
-                        <IconContext.Provider value={{ color: 'gray', size: '12px', className: 'project_history' }}>
-                            <BsClockHistory /> <span>changed {hist} days ago</span>
-                        </IconContext.Provider>
+            <div id={id} key={key} className='project_container' >
+                <div className='project_wrapper' >
+                    <div className='project_fir_col' onClick={intoProject}>
+                        <div className='project_fir_row'><span>{handleTitle(name)}</span></div>
+                        <div className = 'project_sec_row'>
+                        <div className='project_info_div'>
+                            <div className='info_row'>
+                                <IconContext.Provider value={{className:'info_icons'}}>
+                                    <BsTagFill />
+                                    <span className = 'info_span'>{ handleOwner(name)}</span>
+                                </IconContext.Provider>
+                            </div>
+                            <div className='info_row'>
+                                <IconContext.Provider value={{className:'info_icons'}}>
+                                    <BsFillPeopleFill />
+                                    <span className='info_span'>{ handleCollab(colab)}</span>
+                                </IconContext.Provider>
+                            </div>
+                        </div>
                     </div>
-                    <div className='project_btn'>
-                        <button className='project_trash'>  {/*onClick={ Delete} */}
+                        
+
+                    </div>
+                    <div className='project_sec_col'>
+                        <div className='project_trash_div'>
+                            <IconContext.Provider value={{className:'trash_icon' }}>
+                                <div className = 'trash_btn' onClick={()=>console.log("trash")}>
+                                    <BsTrash />
+                                </div>
+                            </IconContext.Provider>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                
+                
+
+                    {/* <div className='project_history'>
+                        <IconContext.Provider value={{ color: 'gray', size: '12px', className: 'project_history' }}>
+                            <div>
+                                <BsClockHistory /> <span>changed {hist} days ago</span>
+                            </div>
+                            <div>
+                                <BsFillPeopleFill /> <span>{colab.length - 1} collaborators</span>
+                            </div>
+                        </IconContext.Provider>
+                    </div> */}
+                    {/* <div className='project_btn' onClick={deleteProject}>
+                        <button className='project_trash' >
                             <IconContext.Provider value={{ color: 'gray', size: '16px', className: 'project_icon' }}>
                                 <BsTrash />
                             </IconContext.Provider>
                         </button>
-                    </div>
-                </div>
+                    </div> */}
+                
             </div>
         );
     }
 }
+
 export default Project;
