@@ -15,7 +15,6 @@
   height: 100%;
   width: 20%;
   background-color: #231f22;
-  /* background-color: darkblue; */
   border-right: #bbbbbb 3px double;
   color: white;
   padding: 1%;
@@ -27,7 +26,6 @@
   height: 100%;
   width: 60%;
   background-color: #2e2a2e;
-  /* background-color: darkred; */
 }
 .help_bar {
   display: inline-block;
@@ -135,20 +133,29 @@ button:focus {
   float: right;
   border-radius: 5px;
   text-align: center;
+  visibility: hidden;
 }
 .newSpan:hover {
   display: block;
   cursor: pointer;
 }
-.display_wrapper{
+.display_wrapper {
   text-align: center;
-  display:flex;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: #2e2a2e;
+  padding: 3%;
 }
 .default_display {
-  max-width: 75%;
-  max-height: 75%;
-  filter: grayscale(100%);
-  opacity: 0.7;
+  background-image: url("https://i.imgur.com/rFID3Zf.png");
+  background-repeat: no-repeat;
+  height: 60%;
+  width: 60%;
+  background-position: center;
+  background-size: contain;
+  filter: grayscale(140%);
+  opacity: 0.5;
 }

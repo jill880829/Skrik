@@ -66,8 +66,17 @@ function defaultSpan(crName, color) {
     newSpan.style.borderLeftStyle = 'solid';
     newSpan.style.borderLeftWidth = '2px';
     newSpan.style.borderLeftColor = color;
-    newSpan.className = 'blink';
-    newSpan.classList.add('newSpan')
+    // newSpan.className = 'blink';
+    // newSpan.classList.add('newSpan')
+    newSpan.addEventListener("mouseover", function (event) {
+        tmpDiv.style.visibility = 'visible'
+        newSpan.style.cursor = 'pointer'
+        setTimeout(function () {
+            tmpDiv.style.visibility = 'hidden'
+            newSpan.style.cursor = 'default'
+        }, 3000);
+    }, false);
+    
     return newSpan
 }
 
@@ -124,7 +133,6 @@ export default function Editor(props) {
                     let tmp_pos = { line: i, ch: i, sticky: null }
                     tmp_cursors[collaborators[i]] = tmp_pos
                 }
-                // console.log('init cursors: ', tmp_cursors)
                 setCursors(tmp_cursors)
             }
 
@@ -358,7 +366,13 @@ export default function Editor(props) {
                             defaultValue={{ label: "Select a code mode...", value: 0 }}
                         />
                     </div>
-                    : <div className='display_wrapper'><img className='default_display' src="https://i.imgur.com/qCO0nq4.png" /></div>}
+                    :
+                    <div className='editor_container'>
+                        <div className='display_wrapper'>
+                            <div className='default_display'></div>
+                        </div>
+                    </div>
+                }
                 
                 <div className='help_bar'>
                     <IconContext.Provider value={{ className: 'helpBar_btn' }}>
