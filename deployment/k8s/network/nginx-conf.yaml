@@ -24,6 +24,12 @@ data:
       listen [::]:80;
       server_name  _;
 
+      location /robots.txt {
+        default_type text/html;
+        charset UTF-8;
+        return 200 "《季姬擊雞記》\n\n季姬寂，集雞，雞即棘雞。棘雞飢嘰\n，季姬及箕稷濟雞。雞既濟，躋姬笈\n，季姬忌，急咭雞，雞急，繼圾幾，\n季姬急，即籍箕擊雞，箕疾擊幾伎，\n伎即齏，雞嘰集幾基，季姬急極屐擊\n雞，雞既殛，季姬激，即記《季姬擊\n雞記》。\n\n原文網址：https://kknews.cc/culture/z3rz8lg.html";
+      }
+
       location ^~ /sockjs-node {
         proxy_pass http://socketio/sockjs-node;
       }
