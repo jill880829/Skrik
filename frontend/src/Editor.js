@@ -207,6 +207,10 @@ export default function Editor(props) {
             message.info({ content: `${update.deleter} deletes ${update.path}, refresh automatically.`, duration: 2 })
             setRefresh(!refresh)
         }
+        else if (task === 'rename') {
+            message.info({ content: `${update.name} renames ${update.old} to ${update.new}.`, duration: 2 })
+            setRefresh(!refresh)
+        }
         else if (task === 'other-cursor') {
             const { user, line, ch, sticky } = update
             if (user !== username) {
@@ -283,12 +287,19 @@ export default function Editor(props) {
         setDeletePath("Untitled")
         setFileName("Untitled")
     }
+    
     const handleDownload = () => {
         message.info({ content: "Start download the project", duration: 2 })
         // alert("Download Click")
         sendData(['download', {}])
     }
 
+    const handleRename = (ls) => {
+        const arr = filePath.split('/')
+        const old = arr.pop()
+        const _new = (arr.join('/')+'/'+ls)
+        sendData(['rename', { old:filePath, new:_new, name:username }])
+    }
     const ext = fileName.split(".")[1];
     return (
         <div>
@@ -298,6 +309,7 @@ export default function Editor(props) {
                         projectName={projectName}
                         returnNewFile={sendNewFile}
                         returnDelete={handleDelete}
+                        returnRename={handleRename}
                         returnDownload={handleDownload}
                         returnClickFile={requestFileContext}
                         fileList={filesStructure}
