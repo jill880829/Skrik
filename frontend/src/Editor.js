@@ -91,7 +91,6 @@ export default function Editor(props) {
 
     useEffect(async () => {
         console.log("Load from backend")
-
         const result = await fetch(`/api/ls/${hash}`, {
             method: 'GET',
             headers: new Headers({
@@ -127,11 +126,17 @@ export default function Editor(props) {
                 // console.log('init cursors: ', tmp_cursors)
                 setCursors(tmp_cursors)
             }
-
             setProjectName(project_name);
             if (files.length !== 0) {
                 setFile([...files])
                 setTree([...transfer(rmduplicate(files).list)])
+            }
+            else{
+                setFile([])
+                setTree([
+                    { type: "blankFolder", displayAddBlank: false, },
+                    { type: "blankFile", displayAddBlank: false, }])
+                //setTree([...transfer([])])
             }
         }
         else {
@@ -271,7 +276,9 @@ export default function Editor(props) {
         setDeletePath(ls.name)
     }
     const handleDelete = () => {
+        console.log(deletePath)
         if (deletePath !== "Untitled")
+            console.log("DE:")
             sendData(['delete', { "deleter": username, "path": deletePath }])
         setDeletePath("Untitled")
         setFileName("Untitled")
