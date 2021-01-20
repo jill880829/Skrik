@@ -65,7 +65,7 @@ function Menu() {
             setList([...transfer(backendList)])
             const content = {
                 content: "Personal data up to date",
-                duration: 2
+                duration:1.5
             }
             message.success(content)
         }
@@ -127,15 +127,11 @@ function Menu() {
         window.location.href = `/Editor/${e}/${nickname}`
 
     }
-    // const handleModalKeyUp = (e) => {
-    //     if (e.key === 'Enter' && e.target.value !== "") {
-    //         var ConfirmBtn = document.getElementById('confirmBtn');
-    //         confirmModal(ConfirmBtn)
-            
-    //     }
-    // }
+    const handleSaveProfile = (e) => { 
+        if (e.key === 'Enter' ) save()
+    }
+    
     const confirmModal = async (e) => {
-        // console.log('e',e)
         if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].nodeName.toLowerCase() === 'input') {
             if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].value !== '') {
                 let inputPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1]
@@ -199,9 +195,6 @@ function Menu() {
     }
 
     const deleteProject = (id) => {
-        // const newList = list.filter(project => project.id !== id)
-        // setList(newList)
-        // console.log(id)
         const passData = {idsha: id}
         fetch('/api/delete_project', {
             method: 'POST', // or 'PUT'
@@ -231,7 +224,6 @@ function Menu() {
     }
 
     const editProfile = () => {
-        // console.log('edit');
         if(!waiting)
             setEdit(true);
         else{
@@ -310,7 +302,7 @@ function Menu() {
                                     <div style={{ marginLeft: '20px' }}></div>
                                     <input className='profile_edit_input'
                                         placeholder='Company'
-                                        // onKeyUp={ }
+                                        onKeyUp={ handleSaveProfile }
                                         onChange={(event) => { setCompany(event.target.value) }}
                                         defaultValue={savedData[0]}>
                                     </input>
@@ -324,6 +316,7 @@ function Menu() {
                                         placeholder='Github Username'
                                         onChange={(event) => { setGit(event.target.value) }}
                                         defaultValue={savedData[1]}
+                                        onKeyUp={ handleSaveProfile }
                                     >
                                     </input>
                                 </div>
@@ -336,6 +329,7 @@ function Menu() {
                                         placeholder='Facebook Username'
                                         onChange={(event) => { setFb(event.target.value) }}
                                         defaultValue={savedData[2]}
+                                        onKeyUp={ handleSaveProfile }
                                     >
                                     </input>
                                 </div>
@@ -348,6 +342,7 @@ function Menu() {
                                         placeholder='Location'
                                         onChange={(event) => { setLoc(event.target.value) }}
                                         defaultValue={savedData[3]}
+                                        onKeyUp={ handleSaveProfile }
                                     >
                                     </input>
                                 </div>
@@ -360,6 +355,7 @@ function Menu() {
                                         placeholder='Email Address'
                                         onChange={(event) => { setEmail(event.target.value) }}
                                         defaultValue={savedData[4]}
+                                        onKeyUp={ handleSaveProfile }
                                     >
                                     </input>
                                 </div>

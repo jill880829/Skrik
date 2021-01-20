@@ -381,7 +381,8 @@ export default function Editor(props) {
                                 cursorHeight: 1,
                                 curserWidth: 2,
                                 indentUnit: 0,
-                                electricChars: false
+                                electricChars: false,
+                                
                             }}
                             smartIndent={false}
                             placeholder='Select a code mode...'
