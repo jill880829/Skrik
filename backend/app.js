@@ -310,9 +310,16 @@ wss.on('connection', async ws => {
             }
             case 'delete': {
                 console.log("[delete]", payload)
-                var result = QueryProject.deleteFile(projectID, payload.path, payload.deleter)
+                var result = await QueryProject.getValidPath(projectID, payload.path)
                 if (result['success'] === false) {
-                    console.log("[deleteFile]", result['description'])
+                    console.log("[deleteFile]-query valid path:", result['description'])
+                }
+                for (let filepath of result["content"]){
+                    console.log(filepath)
+                    var result = await QueryProject.deleteFile(projectID, filepath, payload.deleter)
+                    if (result['success'] === false) {
+                        console.log("[deleteFile]-deletefile:", result['description'])
+                    }
                 }
                 connection[projectID].forEach((client) => {
                     if (client.readyState === WebSocket.OPEN) {

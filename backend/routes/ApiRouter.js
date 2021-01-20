@@ -2,7 +2,6 @@ var express = require('express');
 var bodyParser = require('body-parser')
 var router = express.Router();
 const sha256 = require('crypto-js/sha256');
-const fs = require('fs');
 const crypto = require('crypto');
 
 const QueryUser = require('../utils/db/QueryUser');
@@ -249,23 +248,10 @@ router.post('/rename_file', jsonParser, async function (req, res) {
     return res.send(result["description"]);
 });
 
-/* delete file */
-router.post('/delete_file', jsonParser, async function (req, res) {
-    if(! req.isAuthenticated())
-        return res.status(401).send("Invalid User!!!");
-    let filename = req.body.filename;
-    let user = req.session.passport.user;
-    let projectid = req.session.passport.projectid;
-    var result = await QueryProject.deleteFile(projectid, filename, user);
-    if (result["success"] === false) 
-    {
-        if (result["description"] === "Querying user Failed!!!")
-            return res.status(500).send(result["description"]);
-        else
-            return res.status(403).send(result["description"]);
-    }
-    return res.send(result["description"]);
 
+router.get('/logout', function (req, res) {
+    req.logout()
+    res.send("success")
 });
 
 module.exports = router;  

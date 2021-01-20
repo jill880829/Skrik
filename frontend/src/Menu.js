@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, Component } from 'react';
 import Modal from './components/modal';
 
@@ -158,16 +157,19 @@ function Menu() {
     const openModal = () => {
         modalRef.current.openModal();
     }
+
     const intoProject = (e) => {
         console.log('into project')
         window.location.href = `/Editor/${e}/${nickname}`
 
     }
+
     const handleKeyUp = (e) => {
         if (e.key === 'Enter' && e.target.value !== "") {
             console.log(e.target.value)
         }
     }
+
     const confirmModal = async (e) => {
         if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].nodeName.toLowerCase() === 'input') {
             if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].value !== '') {
@@ -235,11 +237,23 @@ function Menu() {
         const newList = list.filter(project => project.id !== id)
         setList(newList)
     }
+
     const editProfile = () => {
         console.log('edit');
         setEdit(true);
     }
+
     const back2Profile = () => { setEdit(false); }
+    const logout = () => {
+        fetch('/api/logout', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }) 
+        window.location.href='/Login';
+    }
     const save = () => {
         setData([company, git, fb, location, email]);
         const passData = {
@@ -456,7 +470,7 @@ function Menu() {
                 <IconContext.Provider value={{ className:'menuBar_btn' }}>
                     <div style={{display:'flex' ,height:'100%'}}>
                         <div className='menuBar_navbar'>
-                            <BiLogOutCircle className='logoutBtn' onClick={()=>{window.location.href='/Login'}}/>
+                            <BiLogOutCircle className='logoutBtn' onClick={logout}/>
                             <FcPlus onClick={openModal} className='plusBtn'/>
                         </div>
                         

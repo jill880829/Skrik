@@ -370,9 +370,34 @@ async function getProjectName(projectid){
     return { "success": true, "description": "Project Querying Finished!!!", "name":  project.ProjectName};
 }
 
+// query matched path
+async function getValidPath(projectid, path){
+    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
+        return { "success": false, "description": "Invalid Projectid!!!" };    
+    projectid = projectid.toLowerCase();
+    if (typeof(path) !== "string" || path.match(regxfile) === null)
+        return { "success": false, "description": "Invalid path!!!" };
+    
+    try{
+        var project = await Projects.findById(projectid);
+    } catch (err) {
+        console.error("[db] error querying File in project database: ", err);
+        return { "success": false, "description": "Project Not Found!!!", "content": null };
+    }
+    if(project === null)
+        return { "success": false, "description": "Project Not Found!!!", "content": null };
+    else if (project.Deleted === true)
+        return { "success": false, "description": "Project Has Been Deleted!!!", "content": null };
+
+    let valid_path = []
+    project.Files.forEach(function(file){
+        if( file.Deleted === false && file.FileName.slice(0,path.length) === path)
+            valid_path.push(file.FileName)
+      });
+    return { "success": true, "description": "Finish Querying path !!!", "content": valid_path };
+}
 
 
-//  
 module.exports = {createProject: createProject,
                   deleteProject: deleteProject,
                   deleteFile: deleteFile, 
@@ -381,4 +406,5 @@ module.exports = {createProject: createProject,
                   getFile: getFile,
                   getProjectUsers: getProjectUsers,
                   getProjectName: getProjectName,
-                  renameFile: renameFile};
+                  renameFile: renameFile,
+                  getValidPath: getValidPath};
