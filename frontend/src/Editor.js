@@ -97,6 +97,7 @@ export default function Editor(props) {
     // Cursors and Bookmarks (include mine)
     const [bookMarks, setBookMarks] = useState({})
     const [cursors, setCursors] = useState({})
+    
 
     useEffect(async () => {
         console.log("Load from backend")
@@ -303,10 +304,12 @@ export default function Editor(props) {
     }
 
     const handleRename = (ls) => {
+        
         const arr = filePath.split('/')
         const old = arr.pop()
         const _new = (arr.join('/')+'/'+ls)
         sendData(['rename', { old:filePath, new:_new, name:username }])
+        
     }
     const ext = fileName.split(".")[1];
     return (

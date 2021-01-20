@@ -44,7 +44,7 @@ class Project extends Component {
                     <div className='project_sec_col'>
                         <div className='project_trash_div'>
                             <IconContext.Provider value={{className:'trash_icon' }}>
-                                <div className = 'trash_btn' onClick={()=>console.log("trash")}>
+                                <div className = 'trash_btn' onClick={()=>deleteProject(id)}>
                                     <BsTrash />
                                 </div>
                             </IconContext.Provider>

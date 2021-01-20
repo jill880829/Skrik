@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, Component } from 'react';
 import Modal from './components/modal';
 import { IconContext } from "react-icons";
@@ -34,6 +33,7 @@ function Menu() {
     const [email, setEmail] = useState('');
     const [savedData, setData] = useState(['', '', '', '', ''])
     const [update, setUpdate] = useState({});
+    const [waiting, setWaiting] = useState(true)
 
     useEffect(async () => {
         const result = await
@@ -103,7 +103,7 @@ function Menu() {
             Githubname   = Githubname===undefined   ? '' : Githubname
             Facebookname = Facebookname===undefined ? '' : Facebookname
             Location     = Location===undefined     ? '' : Location
-
+            
             setNickname(Nickname)
             setCompany(Company)
             setGit(Githubname)
@@ -111,6 +111,7 @@ function Menu() {
             setLoc(Location)
             setEmail(Email)
             setData([Company, Githubname, Facebookname, Location, Email]);
+            setWaiting(false)
         }
     }, [newProject,update])
     
@@ -120,6 +121,7 @@ function Menu() {
         if (editMode === true) setEdit(false);
         modalRef.current.openModal();
     }
+
     const intoProject = (e) => {
         console.log('into project')
         window.location.href = `/Editor/${e}/${nickname}`
@@ -197,14 +199,57 @@ function Menu() {
     }
 
     const deleteProject = (id) => {
-        const newList = list.filter(project => project.id !== id)
-        setList(newList)
+        // const newList = list.filter(project => project.id !== id)
+        // setList(newList)
+        // console.log(id)
+        const passData = {idsha: id}
+        fetch('/api/delete_project', {
+            method: 'POST', // or 'PUT'
+            body: JSON.stringify(passData),
+            headers: new Headers({
+                'Content-Type': 'application/json',
+            })
+        }).then(res => {
+            if (res.status === 401) {
+                res.text().then(res => {
+                    message.error({content: `401 Unauthorized\n${res}`, duration:1.5})
+                })
+                window.location.href = '/Login'
+            }
+            else if (res.status === 403) {
+                res.text().then(res => {
+                    message.error({content: `403 Forbidden: Refuse to delete the project!\n${res}`, duration:1.5})
+                })
+            }
+            else if (res.status === 200) {
+                setUpdate(passData);
+            }
+            else {
+                console.log("ERROR")
+            }
+        })
     }
+
     const editProfile = () => {
         // console.log('edit');
-        setEdit(true);
+        if(!waiting)
+            setEdit(true);
+        else{
+            message.warning({content:"Please wait until your profile up to date"})
+        }
     }
+
     const back2Profile = () => { setEdit(false); }
+    const logout = () => {
+        fetch('/api/logout', {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }) 
+        window.location.href='/Login';
+    }
     const save = () => {
         setData([company, git, fb, location, email]);
         const passData = {
@@ -236,6 +281,7 @@ function Menu() {
             else if (res.status === 200) {
                 setEdit(false);
                 setUpdate(passData);
+                setWaiting(true);
             }
             else {
                 console.log("ERROR")
@@ -420,7 +466,7 @@ function Menu() {
                 <IconContext.Provider value={{ className:'menuBar_btn' }}>
                     <div style={{display:'flex' ,height:'100%'}}>
                         <div className='menuBar_navbar'>
-                            <BiLogOutCircle className='logoutBtn' onClick={()=>{window.location.href='/Login'}}/>
+                            <BiLogOutCircle className='logoutBtn' onClick={logout}/>
                             <FcPlus onClick={openModal} className='plusBtn'/>
                         </div>
                     </div>

@@ -25,6 +25,7 @@
   display: inline-block;
   height: 100%;
   width: 75%;
+  overflow: auto;
   /* background-color: darkred; */
   padding: 1%;
 }

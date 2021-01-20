@@ -114,7 +114,7 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
                             <VscCloudDownload onClick={() => returnDownload()}  />
                             <TiDeleteOutline onClick={() => returnDelete()} />
                             <TiPencil onClick={() => handleRename()} />
-                            <VscCollapseAll onClick={() => { alert("Collapse All") }} />
+                            {/* <VscCollapseAll onClick={() => { alert("Collapse All") }} /> */}
                         </div>
                     </IconContext.Provider>
                 </div>
