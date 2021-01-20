@@ -11,7 +11,8 @@ const LineChangeSchema = new Schema(
     DeleteTime: { type: String },
     Deleted: { type: Boolean, required: true },
     User: { type: String, required: true },
-    Data: { type: String }
+    Data: { type: String },
+    OrderedTime: { type: Number, required: true }
 })
 
 // no timestamp => timestamp is in linechange schema

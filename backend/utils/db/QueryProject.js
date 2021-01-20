@@ -1,4 +1,5 @@
 const path = require('path');
+// const { time } = require('../redis');
 const Projects = require('./ProjectSchema');
 const UserData = require('./UserDataSchema');
 const regxstr = /^[ A-Za-z0-9_.-]+$/;
@@ -6,9 +7,8 @@ const regxfile = /^[ /A-Za-z0-9_.-]+$/;
 const regxhex = /^[A-Fa-f0-9]+$/;
 const regxnewline = /[\n]/;
 
-// add LineChange (insert or delete a line)
-
-async function addLineChange(projectid, filename, username, linenum, commit_type, content) {
+// add LineChange (insert, update, or delete a line)
+async function addLineChange(projectid, filename, username, linenum, commit_type, content, timestamp) {
     if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!" };
     projectid = projectid.toLowerCase();
@@ -22,6 +22,8 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
         return { "success": false, "description": "Invalid Commit Type!!!" };
     if (typeof(content) !== "string" || content.match(regxnewline) !== null)
         return { "success": false, "description": "Invalid content!!!" };
+    if (typeof(timestamp) !== "number" || timestamp < 1)
+        return { "success": false, "description": "Invalid timestamp!!!" };
     try{
         var project = await Projects.findById(projectid);
     } catch(err) {
@@ -56,13 +58,16 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
 
     // add linechange
     try{
+        console.log(typeof(timestamp))
+        console.log(timestamp)
         await file.LineChanges.push({Index: linenum, 
                                Type: commit_type, 
                                CreateTime: Date.now(), 
                                UpdateTime: Date.now(),
                                Deleted: false,
                                User: username,
-                               Data: content});
+                               Data: content,
+                               OrderedTime: timestamp});
         await project.save();
     } catch (err) {
         console.error("[db] error adding LineChange: " + err);
@@ -70,8 +75,6 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
     }
     return { "success": true, "description": "LineChange Creation Finished!!!" };
 }
-
-
 
 // delete a file in projectid
 async function deleteFile(projectid, filename, username){
@@ -244,6 +247,7 @@ async function listFiles(projectid){
 
 }
 
+// get file content in specific file
 async function getFile(projectid, filename){
     if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
         return { "success": false, "description": "Invalid Projectid!!!" };    
@@ -270,18 +274,22 @@ async function getFile(projectid, filename){
     if( file.Deleted === true)
         return { "success": false, "description": "File Has Already Been Deleted!!!", "content": null };
     
-    data = []
-    for (let linechange of file.LineChanges)
+    let data = []
+    let LineChanges = file.LineChanges.sort(function(a,b){
+        return a.OrderedTime - b.OrderedTime;
+    })
+
+    for (let linechange of LineChanges)
     {
         if(linechange.Type === "insert"){
-            await data.splice(linechange.Index - 1, 0, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
+            data.splice(linechange.Index - 1, 0, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
         }
         else if(linechange.Type === "update")
-            await data.splice(linechange.Index - 1, 0, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
+            data.splice(linechange.Index - 1, 1, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
         else if(linechange.Type === "drop")
             data = [];
         else
-            await data.splice(linechange.Index - 1, 1);
+            data.splice(linechange.Index - 1, 1);
     }
 
     return { "success": true, "description": "Finish Getting File !!!", "content": data };
@@ -323,7 +331,7 @@ async function getProjectName(projectid){
     return { "success": true, "description": "Project Querying Finished!!!", "name":  project.ProjectName};
 }
 
-
+// 
 module.exports = {createProject: createProject,
                   deleteProject: deleteProject,
                   deleteFile: deleteFile, 
