@@ -48,8 +48,8 @@ const codeMap = {
     css: 'css',
     json: 'application/ld+json',
 }
-//const client = new WebSocket('wss://skrik.net/api/wss')
-const client = new WebSocket('ws://localhost:3002')
+const client = new WebSocket('wss://skrik.net/api/wss')
+// const client = new WebSocket('ws://localhost:3002')
 
 function defaultSpan(crName, color) {
     const newSpan = document.createElement('span')
