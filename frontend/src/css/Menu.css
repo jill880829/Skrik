@@ -6,8 +6,9 @@
   height: 100vh;
   width: 100vw;
   display: flex;
-  padding: 0.5% 2%;
+  padding: 2%;
   border: none;
+  /* padding: 2% 0% 2% 0%; */
   /* background-color: darkgreen; */
 
   background-color: #222222;
@@ -16,9 +17,9 @@
   display: inline-block;
   height: 100%;
   width: 20%;
-  /* background-color: darkblue; */
   padding: 1%;
   border-right: #231f22 2px dotted;
+  /* background-color: darkblue; */
 }
 
 .menuMenu {
@@ -39,8 +40,8 @@
 }
 
 .menuBar_btn {
-  height: 4em;
-  width: 4em;
+  height: 3em;
+  width: 3em;
   margin: 1%;
   color: white;
   /* border: green 3px solid; */
@@ -51,10 +52,10 @@
   align-self: flex-end;
 }
 .plusBtn {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 .logoutBtn {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .plusBtn:hover {

@@ -1,0 +1,86 @@
+/********************/
+/*       Login      */
+/********************/
+
+#login_login_btn {
+  background-color: #a2693b;
+  color: white;
+}
+#login_login_btn:hover {
+  background-color: #db9853;
+  color: white;
+}
+#login_join_btn {
+  background-color: transparent;
+  color: #888888;
+}
+#login_join_btn:hover {
+  background-color: transparent;
+  color: #bbbbbb;
+}
+#login_separator {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  text-align: center;
+  color: white;
+}
+#login_social_login_container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.login_social_btn {
+  margin-top: 40px;
+  font-size: 11px;
+  height: 40px;
+  width: 100%;
+  font-size: 12px;
+  display: inline-block;
+  border-radius: 4px;
+  text-align: left;
+  color: white;
+}
+
+#login_fb_btn {
+  background: #3b5998;
+  color: white;
+  border: transparent;
+  justify-content: left;
+  text-transform: unset;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+#login_fb_btn:hover {
+  opacity: 1;
+}
+#login_google_btn {
+  background: #db3236;
+  color: white;
+  border: transparent;
+  justify-content: left;
+  text-transform: unset;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+#login_google_btn:hover {
+  opacity: 1;
+}
+#login_git_btn {
+  border: transparent;
+  color: #fff;
+  background: #444;
+  justify-content: left;
+  text-transform: unset;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+#login_git_btn:hover {
+  opacity: 1;
+}

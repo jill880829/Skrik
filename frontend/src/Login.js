@@ -10,6 +10,7 @@ import Divider from '@material-ui/core/Divider';
 
 import { ImFacebook2, ImGoogle, ImGithub} from "react-icons/im";
 import { message } from 'antd'
+import './css/Login.css'
 
 
 const CssTextField = withStyles({
@@ -152,7 +153,7 @@ const Login = () => {
                     />
                 </Grid>
                 {showRegister &&
-                    <Grid container item xs={12} sm={6} style={{ padding: 10, backgroundColor: ' hsl(225, 6%, 13%)' }} direction='column' justify='space-between' alignItems='center'>
+                    <Grid container item xs={12} sm={6} style={{ padding: 10, backgroundColor: ' #231f22' }} direction='column' justify='space-between' alignItems='center'>
                         <div />
                         <div style={{ display: 'flex', flexDirection: 'column', padding: 30, borderRadius: '10%' }}>
                             <h1 style={{ color: 'lightgray', textAlign: 'center' }}>Register</h1>
@@ -177,9 +178,7 @@ const Login = () => {
                                 margin='normal'
                                 variant="outlined"
                                 onKeyPress={(event) => { handleEnter(event,'newPass') }}   
-                                onChange={(event) => {
-                                    setPassword(event.target.value);
-                                }}
+                                onChange={(event) => {setPassword(event.target.value);}}
                                 InputLabelProps={{ style: { color: "#a2693b" } }}
                                 InputProps={{
                                     style: { color: "#a2693b", letterSpacing: 1, size: 30 },
@@ -220,7 +219,7 @@ const Login = () => {
                     </Grid>
                 }
                 {!showRegister &&
-                <Grid container item xs={12} sm={6} style={{ padding: 10, backgroundColor: ' hsl(225, 6%, 13%)' }} direction='column' justify='space-between' alignItems='center'>
+                <Grid container item xs={12} sm={6} style={{ padding: 10, backgroundColor: '#231f22' }} direction='column' justify='space-between' alignItems='center'>
                     <div />
                     <div style={{ display: 'flex', flexDirection: 'column', padding: 30, borderRadius: '10%' }}>
                             <Grid container justify='center'>

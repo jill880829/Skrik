@@ -8,7 +8,7 @@
   width: 100vw;
   border: none;
   padding: 0.5% 2%;
-  background-color: #2e2e2e;
+  background-color: #231f22;
 }
 .folder_structure {
   display: inline-block;
@@ -33,7 +33,7 @@
   height: 100%;
   padding: 1%;
   /* background-color: darkorchid; */
-  background-color: #222222;
+  background-color: #231f22;
 }
 .helpBar_btn {
   height: 3em;
@@ -47,10 +47,10 @@
 }
 
 .homeBtn {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 .logoutBtn {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .homeBtn:hover {
