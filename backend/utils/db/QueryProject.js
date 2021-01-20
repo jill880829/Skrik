@@ -76,6 +76,77 @@ async function addLineChange(projectid, filename, username, linenum, commit_type
     return { "success": true, "description": "LineChange Creation Finished!!!" };
 }
 
+// list file in project
+async function listFiles(projectid){
+    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
+        return { "success": false, "description": "Invalid Projectid!!!" };    
+    projectid = projectid.toLowerCase();
+    try {
+        var project = await Projects.findById(projectid);
+    } catch (err) {
+        console.error("[db] error deleting project in project database: " + err);
+        return { "success": false, "description": "Project Querying Failed!!!", "files": null  };
+    }
+    if(project === null)
+        return { "success": false, "description": "Project Not Found!!!", "files": null  };
+    else if (project.Deleted === true)
+        return { "success": false, "description": "Project Has Been Deleted!!!", "files": null };
+    
+    filenames = [];
+    project.Files.forEach(function(file){
+        if (file.Deleted === false)
+            filenames.push(file.FileName);
+    });
+    return { "success": true, "description": "List Files!!!", "files": filenames };
+
+}
+
+// get file content in specific file
+async function getFile(projectid, filename){
+    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
+        return { "success": false, "description": "Invalid Projectid!!!" };    
+    projectid = projectid.toLowerCase();
+    if (typeof(filename) !== "string" || filename.match(regxfile) === null)
+        return { "success": false, "description": "Invalid File Name!!!" };
+    
+    try{
+        var project = await Projects.findById(projectid);
+    } catch (err) {
+        console.error("[db] error querying File in project database: ", err);
+        return { "success": false, "description": "Project Not Found!!!", "content": null };
+    }
+    if(project === null)
+        return { "success": false, "description": "Project Not Found!!!", "content": null };
+    else if (project.Deleted === true)
+        return { "success": false, "description": "Project Has Been Deleted!!!", "content": null };
+
+    var file = project.Files.find(function(item){
+        return item.FileName === filename;
+        });
+    if(file === undefined)
+        return { "success": false, "description": "File Not Found!!!", "content": null };
+    if( file.Deleted === true)
+        return { "success": false, "description": "File Has Already Been Deleted!!!", "content": null };
+    
+    let data = []
+    let LineChanges = file.LineChanges.sort(function(a,b){
+        return a.OrderedTime - b.OrderedTime;
+    })
+    for (let linechange of LineChanges)
+    {
+        if(linechange.Type === "insert")
+            data.splice(linechange.Index - 1, 0, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
+        else if(linechange.Type === "update")
+            data.splice(linechange.Index - 1, 1, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
+        else if(linechange.Type === "drop")
+            data.length = 0;
+        else
+            data.splice(linechange.Index - 1, 1);
+    }
+
+    return { "success": true, "description": "Finish Getting File !!!", "content": data };
+}
+
 // delete a file in projectid
 async function deleteFile(projectid, filename, username){
     if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
@@ -110,13 +181,54 @@ async function deleteFile(projectid, filename, username){
                                CreateTime: Date.now(),
                                UpdateTime: Date.now(),
                                Deleted: false,
-                               User: username});
+                               User: username,
+                               OrderedTime: (Date.now()*1000)});
         await project.save();
     } catch (err) {
         console.error("[db] error creating File in project database: ", err);
         return { "success": false, "description": "File Deletion Failed!!!" };
     }
     return { "success": true, "description": "File Deletion Finished!!!" };
+}
+
+// delete a file in projectid
+async function renameFile(projectid, filename, newfilename, username){
+    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
+        return { "success": false, "description": "Invalid Projectid!!!" };
+    projectid = projectid.toLowerCase();
+    if (typeof(filename) !== "string" || filename.match(regxfile) === null)
+        return { "success": false, "description": "Invalid File Name!!!" };
+    if (typeof(username) !== "string" || username.match(regxstr) === null)
+        return { "success": false, "description": "Invalid Username!!!" };
+    if (typeof(newfilename) !== "string" || newfilename.match(regxfile) === null)
+        return { "success": false, "description": "Invalid File Name!!!" };
+    
+        try{
+        var project = await Projects.findById(projectid);
+    } catch (err) {
+        console.error("[db] error querying File in project database: ", err);
+        return { "success": false, "description": "Project Not Found!!!" };
+    }
+    if(project === null)
+        return { "success": false, "description": "Project Not Found!!!" };
+    else if (project.Deleted === true)
+        return { "success": false, "description": "Project Has Been Deleted!!!" };
+    
+    var file = project.Files.find(function(item){
+        return item.FileName === filename;
+      });
+    if(file === undefined)
+        return { "success": false, "description": "File Not Found!!!" };
+    if( file.Deleted === true)
+        return { "success": false, "description": "File Has Already Been Deleted!!!" };
+    try{
+        file.FileName = newfilename;
+        await project.save();
+    } catch (err) {
+        console.error("[db] error creating File in project database: ", err);
+        return { "success": false, "description": "File Rename Failed!!!" };
+    }
+    return { "success": true, "description": "File Rename Finished!!!" };
 }
 
 // create a project
@@ -222,79 +334,6 @@ async function deleteProject(projectid){
     return { "success": true, "description": "Project Deletion Finished!!!" };
 }
 
-// list file in project
-async function listFiles(projectid){
-    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
-        return { "success": false, "description": "Invalid Projectid!!!" };    
-    projectid = projectid.toLowerCase();
-    try {
-        var project = await Projects.findById(projectid);
-    } catch (err) {
-        console.error("[db] error deleting project in project database: " + err);
-        return { "success": false, "description": "Project Querying Failed!!!", "files": null  };
-    }
-    if(project === null)
-        return { "success": false, "description": "Project Not Found!!!", "files": null  };
-    else if (project.Deleted === true)
-        return { "success": false, "description": "Project Has Been Deleted!!!", "files": null };
-    
-    filenames = [];
-    project.Files.forEach(function(file){
-        if (file.Deleted === false)
-            filenames.push(file.FileName);
-    });
-    return { "success": true, "description": "List Files!!!", "files": filenames };
-
-}
-
-// get file content in specific file
-async function getFile(projectid, filename){
-    if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
-        return { "success": false, "description": "Invalid Projectid!!!" };    
-    projectid = projectid.toLowerCase();
-    if (typeof(filename) !== "string" || filename.match(regxfile) === null)
-        return { "success": false, "description": "Invalid File Name!!!" };
-    
-    try{
-        var project = await Projects.findById(projectid);
-    } catch (err) {
-        console.error("[db] error querying File in project database: ", err);
-        return { "success": false, "description": "Project Not Found!!!", "content": null };
-    }
-    if(project === null)
-        return { "success": false, "description": "Project Not Found!!!", "content": null };
-    else if (project.Deleted === true)
-        return { "success": false, "description": "Project Has Been Deleted!!!", "content": null };
-
-    var file = project.Files.find(function(item){
-        return item.FileName === filename;
-        });
-    if(file === undefined)
-        return { "success": false, "description": "File Not Found!!!", "content": null };
-    if( file.Deleted === true)
-        return { "success": false, "description": "File Has Already Been Deleted!!!", "content": null };
-    
-    let data = []
-    let LineChanges = file.LineChanges.sort(function(a,b){
-        return a.OrderedTime - b.OrderedTime;
-    })
-
-    for (let linechange of LineChanges)
-    {
-        if(linechange.Type === "insert"){
-            data.splice(linechange.Index - 1, 0, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
-        }
-        else if(linechange.Type === "update")
-            data.splice(linechange.Index - 1, 1, { "lineid": linechange.Index, "user": linechange.User, "data": linechange.Data });
-        else if(linechange.Type === "drop")
-            data = [];
-        else
-            data.splice(linechange.Index - 1, 1);
-    }
-
-    return { "success": true, "description": "Finish Getting File !!!", "content": data };
-}
-
 // get users in project
 async function getProjectUsers(projectid){
     if (typeof(projectid) !== "string" || projectid.match(regxhex) === null || projectid.length !== 24)
@@ -331,7 +370,9 @@ async function getProjectName(projectid){
     return { "success": true, "description": "Project Querying Finished!!!", "name":  project.ProjectName};
 }
 
-// 
+
+
+//  
 module.exports = {createProject: createProject,
                   deleteProject: deleteProject,
                   deleteFile: deleteFile, 
@@ -339,4 +380,5 @@ module.exports = {createProject: createProject,
                   listFiles: listFiles,
                   getFile: getFile,
                   getProjectUsers: getProjectUsers,
-                  getProjectName: getProjectName};
+                  getProjectName: getProjectName,
+                  renameFile: renameFile};
