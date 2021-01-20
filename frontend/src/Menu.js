@@ -135,7 +135,14 @@ function Menu() {
             })
         }
         else if(resProfile.status===200){
-            const {Nickname, Company, Email, Githubname, Facebookname, Location} = await resProfile.json()
+            let {Nickname, Company, Email, Githubname, Facebookname, Location} = await resProfile.json()
+            Nickname     = Nickname===undefined     ? '' : Nickname
+            Company      = Company===undefined      ? '' : Company
+            Email        = Email===undefined        ? '' : Email
+            Githubname   = Githubname===undefined   ? '' : Githubname
+            Facebookname = Facebookname===undefined ? '' : Facebookname
+            Location     = Location===undefined     ? '' : Location
+
             setNickname(Nickname)
             setCompany(Company)
             setGit(Githubname)
