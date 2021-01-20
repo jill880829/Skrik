@@ -8,7 +8,6 @@ const regxstr = /^[ A-Za-z0-9_.-]+$/;
 const regxnum = /^[0-9]+$/;
 const regxemail = /^[ @A-Za-z0-9_.-]+$/;
 
-// TODO: addUser function
 
 // register use
 async function createUser(username, password){
@@ -27,8 +26,9 @@ async function createUser(username, password){
     if(user !== null)
         return { "success": false, "description": "Username Existed" };
     const passwordHash = base64.stringify(sha256(password));
-    try{  
-        await UserData.create({ Username: username, Password: passwordHash, Nickname: username});
+    try{
+        let obj = { Username: username, Password: passwordHash, Nickname: username, Company: 'Specify it!', Githubname: 'Specify it!', Facebookname: 'Specify it!', Location: 'Specify it!', Email: 'Specify it!'};
+        await UserData.create(obj);
     } catch (err) {
         console.error("[db] error creating user in UserDatas database: " + err);
         return { "success": false, "description": "User creation Failed!!!" };
@@ -75,6 +75,7 @@ async function listProjectids(username){
     return { "success": true, "description": "List Project ids", "ids": userdata.ProjectIds };
 }
 
+// for FB authenticate
 async function authFB(fbid, profileName){
     if (typeof(fbid) !== "string" || fbid.match(regxnum) === null)
         throw "Invalid fbid!!!";
@@ -91,6 +92,7 @@ async function authFB(fbid, profileName){
     return { username: username };
 }
 
+// for Google authenticate
 async function authGoogle(googleid, profileName){
     if (typeof(googleid) !== "string" || googleid.match(regxnum) === null)
         throw "Invalid googleid!!!";
@@ -107,6 +109,7 @@ async function authGoogle(googleid, profileName){
     return { username: username };
 }
 
+// for Github authenticate
 async function authGithub(githubid, profileName){
     if (typeof(githubid) !== "string" || githubid.match(regxnum) === null)
         throw "Invalid githubid!!!";
@@ -123,6 +126,7 @@ async function authGithub(githubid, profileName){
     return { username: username };
 }
 
+// set user profile
 async function setProfile(username, nickname, company, gitname, fbname, loc, email){
     if (typeof(username) !== "string" || username.match(regxstr) === null)
         return { "success": false, "description": "Invalid Username!!!" };
@@ -163,6 +167,7 @@ async function setProfile(username, nickname, company, gitname, fbname, loc, ema
     return { "success": true, "description": "Operation Success!!!" };
 }
 
+// get user profile
 async function getProfile(username){
 
     if (typeof(username) !== "string" || username.match(regxstr) === null)
