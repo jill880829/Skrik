@@ -205,13 +205,14 @@ router.post('/delete_project', jsonParser, async function (req, res) {
         return res.status(401).send("Invalid User!!!");
     var user = req.session.passport.user;
     var idsha = req.body.idsha;
-    console.log(idsha)
     var get_res = await QueryRedis.getID(idsha);
     if (get_res["success"] === false) 
         return res.status(403).send(get_res["description"]);
     else
         var projectid = get_res["id"];
     let projectname = await QueryProject.getProjectName(projectid);
+    if (projectname["success"] === false)
+        return res.status(403).send(projectname["description"]);
     if(projectname["name"].split('/')[0] !== user){
         console.log('[/api/delete_project]: User is not Owner')
         return res.status(403).send(' You are not Owner');
