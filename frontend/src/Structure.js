@@ -7,7 +7,7 @@ import { VscNewFile, VscNewFolder, VscCloudDownload, VscCollapseAll } from "reac
 import { TiPencil, TiDeleteOutline} from "react-icons/ti";
 import { SiCplusplus, SiJson } from "react-icons/si";
 import "./css/Structure.css";
-// import { borderRadius } from "react-select/src/theme";
+
 
 const FILE_ICONS = {
     js: <DiJsBadge />,
@@ -95,11 +95,16 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
     const handleAddNewFolder = () => {
         AddNewFile(true)
     }
+    const handleProjectName = (proName) => { 
+        if (proName.length > 22) 
+            return (proName.substr(0, 20) + '...')
+        else return (proName)
+    }
     const StructureHeader = ({ projectName }) => {
         return (
             <div className='Header'>
                 <div className="header_title">
-                    <span className="header_titleName">{projectName}</span>
+                    <span className="header_titleName">{handleProjectName(projectName)}</span>
                 </div>
                 <div className='Navbar'>
                     <IconContext.Provider value={{ className: 'navbar_icons' }}>

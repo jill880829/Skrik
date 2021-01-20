@@ -1,48 +1,16 @@
 
 import React, { useState, useEffect, Component } from 'react';
 import Modal from './components/modal';
-
 import { IconContext } from "react-icons";
 import { FcPlus } from "react-icons/fc";
-import { BsTrash, BsClockHistory, BsFillPeopleFill } from "react-icons/bs";
+
 import { GoLocation, GoMail } from "react-icons/go";
 import { FaFacebook, FaGithub } from 'react-icons/fa'
 import { BiBuildingHouse , BiLogOutCircle } from 'react-icons/bi';
 import { message } from 'antd'
 import './components/project.css'
 import './css/Menu.css'
-
-class Project extends Component {
-    render() {
-        const { id, key, name, hist, colab, intoProject, deleteProject } = this.props;
-        return (
-            <div id={id} key={key} className='project_container' onClick={intoProject}>
-                <div className='project_wrapper' style={{ position: 'relative' }} onClick={this.intoProject}>
-                    <p className='project_title'>{name}</p>
-                    <div className='project_history'>
-                        <IconContext.Provider value={{ color: 'gray', size: '12px', className: 'project_history' }}>
-                            <div>
-                                <BsClockHistory /> <span>changed {hist} days ago</span>
-                            </div>
-                            <div>
-                                <BsFillPeopleFill /> <span>{colab.length - 1} collaborators</span>
-                            </div>
-                        </IconContext.Provider>
-                    </div>
-                    <div className='project_btn' onClick={deleteProject}>
-                        <button className='project_trash' >
-                            <IconContext.Provider value={{ color: 'gray', size: '16px', className: 'project_icon' }}>
-                                <BsTrash />
-                            </IconContext.Provider>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-}
-
-
+import Project from './components/project'
 
 const ls = []
 const transfer = (ele) => {
@@ -66,14 +34,7 @@ function Menu() {
     const [email, setEmail] = useState('');
     const [savedData, setData] = useState(['', '', '', '', ''])
     const [update, setUpdate] = useState({});
-    // const []
-    useEffect(()=>{
-        const content = {
-            content: "Welcome",
-            duration: 2
-        }
-        message.success(content)
-    },[])
+
     useEffect(async () => {
         const result = await
             fetch('/api/projects', {
@@ -90,12 +51,12 @@ function Menu() {
         }
         else if(result.status===403){
             result.text().then(res => {
-                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
+                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
             })
         }
         else if(result.status===500){
             result.text().then(res => {
-                message.error({content: `500 Internal Server Error\n${res}`, duration:2})
+                message.error({content: `500 Internal Server Error\n${res}`, duration:1.5})
             })
         }
         else if (result.status===200){
@@ -109,7 +70,7 @@ function Menu() {
             message.success(content)
         }
         else{
-            message.error({content: `Unknown Error!`, duration:2})
+            message.error({content: `Unknown Error!`, duration:1.5})
         }
         const resProfile = await
             fetch('/api/get_profile', {
@@ -126,12 +87,12 @@ function Menu() {
         }
         else if(resProfile.status===403){
             resProfile.text().then(res => {
-                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
+                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
             })
         }
         else if(resProfile.status===500){
             resProfile.text().then(res => {
-                message.error({content: `500 Internal Server Error\n${res}`, duration:2})
+                message.error({content: `500 Internal Server Error\n${res}`, duration:1.5})
             })
         }
         else if(resProfile.status===200){
@@ -156,6 +117,7 @@ function Menu() {
     const modalRef = React.useRef();
 
     const openModal = () => {
+        if (editMode === true) setEdit(false);
         modalRef.current.openModal();
     }
     const intoProject = (e) => {
@@ -163,12 +125,15 @@ function Menu() {
         window.location.href = `/Editor/${e}/${nickname}`
 
     }
-    const handleKeyUp = (e) => {
-        if (e.key === 'Enter' && e.target.value !== "") {
-            console.log(e.target.value)
-        }
-    }
+    // const handleModalKeyUp = (e) => {
+    //     if (e.key === 'Enter' && e.target.value !== "") {
+    //         var ConfirmBtn = document.getElementById('confirmBtn');
+    //         confirmModal(ConfirmBtn)
+            
+    //     }
+    // }
     const confirmModal = async (e) => {
+        // console.log('e',e)
         if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].nodeName.toLowerCase() === 'input') {
             if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].value !== '') {
                 let inputPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1]
@@ -204,12 +169,12 @@ function Menu() {
                     if (res.status === 403) {
 
                         res.text().then(res => {
-                            message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
+                            message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
                         })
                     }
                     else if (res.status === 500) {
                         res.text().then(res => {
-                            message.error({content: `500 Internal Server Error\n${res}`, duration:2})
+                            message.error({content: `500 Internal Server Error\n${res}`, duration:1.5})
                         })
                     }
                     else if (res.status === 200) {
@@ -218,7 +183,7 @@ function Menu() {
                     }
                     else if (res.status === 401) {
                         res.text().then(res => {
-                            message.error({content: `401 Unauthorized\n${res}`, duration:2})
+                            message.error({content: `401 Unauthorized\n${res}`, duration:1.5})
                         })
                         window.location.href = '/Login'
                     }
@@ -236,7 +201,7 @@ function Menu() {
         setList(newList)
     }
     const editProfile = () => {
-        console.log('edit');
+        // console.log('edit');
         setEdit(true);
     }
     const back2Profile = () => { setEdit(false); }
@@ -259,13 +224,13 @@ function Menu() {
         }).then(res => {
             if (res.status === 401) {
                 res.text().then(res => {
-                    message.error({content: `401 Unauthorized\n${res}`, duration:2})
+                    message.error({content: `401 Unauthorized\n${res}`, duration:1.5})
                 })
                 window.location.href = '/Login'
             }
             else if (res.status === 403) {
                 res.text().then(res => {
-                    message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:2})
+                    message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
                 })
             }
             else if (res.status === 200) {
@@ -278,8 +243,8 @@ function Menu() {
         })
     }
     return (
+        
         <div className='menu_container' >
-            {/* <div style={{ float: 'left', width: '4%', height: '100%', backgroundColor: 'transparent' }}></div> */}
             <div className='menuProfile' >
                 <div className='menu_profile'>
                     <div className="profile_container">
@@ -291,7 +256,7 @@ function Menu() {
                         </div>
 
                         {editMode ?
-                            <div>
+                            <div className = 'profile_edit_mode'>
                                 <div className="profile_detail">
                                     <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
                                         <BiBuildingHouse style={{ verticalAlign: 'middle' }} />
@@ -299,6 +264,7 @@ function Menu() {
                                     <div style={{ marginLeft: '20px' }}></div>
                                     <input className='profile_edit_input'
                                         placeholder='Company'
+                                        // onKeyUp={ }
                                         onChange={(event) => { setCompany(event.target.value) }}
                                         defaultValue={savedData[0]}>
                                     </input>
@@ -351,19 +317,18 @@ function Menu() {
                                     >
                                     </input>
                                 </div>
-                                <div style={{ display: 'flex', textAlign: 'center', justifyContent: 'center' }}>
-                                    <button onClick={save} style={{ display: 'inline-block', margin: '20px', padding: '2px 10px', backgroundColor: ' #48a147', borderColor: 'transparent', borderRadius: '10px', color: 'white' }}>Save</button>
-                                    <button onClick={back2Profile} style={{ display: 'inline-block', margin: '20px', padding: '2px 10px', backgroundColor: ' #aaaaaa', borderColor: 'transparent', borderRadius: '10px', color: 'white' }}>Cancel</button>
+                                <div className='profile_last_btns_list'>
+                                    <button className='profile_last_btn' onClick={save} style={{ backgroundColor: ' #48a147' }}>Save</button>
+                                    <button className='profile_last_btn' onClick={back2Profile} style={{ backgroundColor: ' #aaaaaa'}}>Cancel</button>
                                 </div>
-
                             </div>
                             :
-                            <div>
+                            <div className='profile_display_mode'>
                                 <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                                     <button className='profile_edit_btn' variant='contained' onClick={editProfile}>Edit Profile</button>
                                 </div>
                                 <div style={{ height: 20 }} />
-                                <div>
+                                <div className = 'profile_display_list'>
                                     {savedData[0] !== '' && savedData[0] !== undefined ?
                                         <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
@@ -436,7 +401,6 @@ function Menu() {
                 </div>
             </div>
             <div className='menuMenu'>
-                {/* style={{ float: 'left', width: '68%', height: '100%', padding: '30px' }} */}
                 <div className='menu_menu' >
                     {list.map(project => (
                         <Project
@@ -459,7 +423,6 @@ function Menu() {
                             <BiLogOutCircle className='logoutBtn' onClick={()=>{window.location.href='/Login'}}/>
                             <FcPlus onClick={openModal} className='plusBtn'/>
                         </div>
-                        
                     </div>
                 </IconContext.Provider>
             </div>
@@ -467,17 +430,17 @@ function Menu() {
                 <span className='menu_modal_span'>Create a project</span>
                 <div className='menu_modal_inputs'>
                     <div>
-                        <p style={{ display: 'inline-block' }}>Project Name</p>
+                        <p style={{ display: 'inline-block', fontSize:'20px'}}>Project Name</p>
                         <p className='menu_modal_warning_hidden'>* Project Name error!</p>
                     </div>
-                    <input className='menu_modal_input' type='text' name='name' id='name' onKeyUp={handleKeyUp} />
-                    Collaborators
+                    <input className='menu_modal_input' type='text' name='name' id='name'  />
+                        <p style={{ display: 'inline-block', fontSize:'20px'}}>Collaborators</p>
                     <input className='menu_modal_input' ></input>
                     <p style={{ color: '#CCCCCC', fontSize: 10, lineHeight: 0.8 }}>* Use ";" to split collaborators</p>
                 </div>
                 <div className='menu_modal_btns'>
-                    <button className='menu_modal_btn menu_btn_close' onClick={() => modalRef.current.closeModal()}>Close</button>
-                    <button className='menu_modal_btn menu_btn_confirm' onClick={confirmModal}>Confirm</button>
+                    <button className='menu_modal_btn menu_btn_close' onClick={() => modalRef.current.closeModal()}>Cancel</button>
+                    <button id = 'confirmBtn' className='menu_modal_btn menu_btn_confirm' onClick={confirmModal}>Confirm</button>
                 </div>
             </Modal>
         </div>
