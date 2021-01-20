@@ -46,10 +46,10 @@ const Login = () => {
             }).then(res => {
                 if (res.status === 200) {
                     setShowReg(false);
-                    alert("Successfully Registered!")
+                    message.success({content:"Successfully Registered!",duration:2})
                 }
                 else if (res.status === 500) {
-                    alert("500 Internal Server Error")
+                    message.error({content:"500 Internal Server Error",duration:2})
                 }
                 else if (res.status === 403) {
                     res.text().then(res => {
@@ -57,7 +57,7 @@ const Login = () => {
                     })
                 }
                 else {
-                    alert("Unknown Error")
+                    message.error({content:"Unknown Error",duration:2})
                 }
             })
                 .catch(error => console.error('Error:Login Error'))
@@ -65,7 +65,7 @@ const Login = () => {
         }
         else {
             // Error messages
-            alert("Please check your confirm password!")
+            message.error({content:"Please check your confirm password!",duration:2})
             setShowReg(true);
         }
     }

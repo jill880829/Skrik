@@ -345,6 +345,13 @@ wss.on('connection', async ws => {
                 console.log("[clear buffers] In project", projectID)
                 sendBack(['download', {}])
             }
+            case 'rename': {
+                connection[projectID].forEach((client) => {
+                    if (client.readyState === WebSocket.OPEN) {
+                        Broadcast(client, ['rename', payload])
+                    }
+                })
+            }
             case 'file': {
 
                 break

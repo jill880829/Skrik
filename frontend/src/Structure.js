@@ -4,7 +4,7 @@ import { IconContext } from "react-icons";
 import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons/ai";
 import { DiJsBadge, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { VscNewFile, VscNewFolder, VscCloudDownload, VscCollapseAll } from "react-icons/vsc";
-import { TiDeleteOutline} from "react-icons/ti";
+import { TiPencil, TiDeleteOutline} from "react-icons/ti";
 import { SiCplusplus, SiJson } from "react-icons/si";
 import "./css/Structure.css";
 // import { borderRadius } from "react-select/src/theme";
@@ -30,8 +30,9 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 
-export default function Structure({projectName,returnNewFile,returnDelete,returnDownload,returnClickFile,fileList,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
+export default function Structure({projectName,returnNewFile,returnDelete,returnRename,returnDownload,returnClickFile,fileList,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
     
+
     const File = ({ name, filepath, focusOn }) => {
         let ext = name.split(".")[1];
         return (
@@ -86,7 +87,6 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
             else{
                 returnNewFile(path)
             }
-            
         }
     }
     const handleAddNewFile = () => {
@@ -108,6 +108,7 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
                             <VscNewFolder onClick={() => handleAddNewFolder()} />
                             <VscCloudDownload onClick={() => returnDownload()}  />
                             <TiDeleteOutline onClick={() => returnDelete()} />
+                            <TiPencil onClick={() => handleRename()} />
                             <VscCollapseAll onClick={() => { alert("Collapse All") }} />
                         </div>
                     </IconContext.Provider>
@@ -151,18 +152,49 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
         }
 
     }
-    
+    const [focusID, setFocusID] = useState("") 
     const handleclickFile = (event) => {
         let fp = event.target.parentNode.id
+        setFocusID([fp,0])
         resetStatus()
         const filename = onClickFile(String(fp))
         returnClickFile({"type":"file","name":filename})
     }
     const handleclickFolder = (event) => {
         let fp = event.target.parentNode.parentNode.id
+        setFocusID([fp,1])
         resetStatus()
         const foldername = onClickFolder(String(fp))
         returnClickFile({"type":"folder","name":foldername})
+    }
+    const handleEnter = (event) => {
+        if(event.key==='Enter'){
+            console.log(event.target.value)
+            returnRename(event.target.value)
+        }
+    } 
+    // const iterRename = (node) => {
+    //     const name = node.children[1].innerHTML
+    //     iterRename(node.)
+    // }
+    const handleRename = () => {
+        const focusEle = document.getElementById(focusID[0])
+        let focusSpan,focusName
+        if(focusID[1]===1){
+        }
+        else{
+            if(focusID!==""){
+                focusSpan = focusEle.children[1]
+                focusName = focusEle.children[1].innerHTML
+                let newSpan = document.createElement('input')
+                newSpan.className = "inputSpan"
+                newSpan.value = focusName
+                newSpan.onkeypress = (event) => handleEnter(event)
+                focusSpan.parentNode.replaceChild(newSpan,focusSpan)
+            }
+        }
+        // console.log(focusEle.children[0].children[1].innerHTML)
+        
     }
     return (
         <div className="App">
