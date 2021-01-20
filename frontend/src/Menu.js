@@ -5,7 +5,7 @@ import { FcPlus } from "react-icons/fc";
 
 import { GoLocation, GoMail } from "react-icons/go";
 import { FaFacebook, FaGithub } from 'react-icons/fa'
-import { BiBuildingHouse , BiLogOutCircle } from 'react-icons/bi';
+import { BiBuildingHouse, BiLogOutCircle } from 'react-icons/bi';
 import { message } from 'antd'
 import './components/project.css'
 import './css/Menu.css'
@@ -44,33 +44,33 @@ function Menu() {
                     'Content-Type': 'application/json'
                 }
             })
-        if(result.status===401){
+        if (result.status === 401) {
             result.text().then(res => {
                 window.location.href = '/Login'
             })
         }
-        else if(result.status===403){
+        else if (result.status === 403) {
             result.text().then(res => {
-                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
+                message.error({ content: `403 Forbidden: Refuse to create the project!\n${res}`, duration: 1.5 })
             })
         }
-        else if(result.status===500){
+        else if (result.status === 500) {
             result.text().then(res => {
-                message.error({content: `500 Internal Server Error\n${res}`, duration:1.5})
+                message.error({ content: `500 Internal Server Error\n${res}`, duration: 1.5 })
             })
         }
-        else if (result.status===200){
+        else if (result.status === 200) {
             const backendList = await result.json()
             //console.log(backendList)
             setList([...transfer(backendList)])
             const content = {
                 content: "Personal data up to date",
-                duration:1.5
+                duration: 1.5
             }
             message.success(content)
         }
-        else{
-            message.error({content: `Unknown Error!`, duration:1.5})
+        else {
+            message.error({ content: `Unknown Error!`, duration: 1.5 })
         }
         const resProfile = await
             fetch('/api/get_profile', {
@@ -80,30 +80,30 @@ function Menu() {
                     'Content-Type': 'application/json'
                 }
             })
-        if(resProfile.status===401){
+        if (resProfile.status === 401) {
             resProfile.text().then(res => {
                 window.location.href = '/Login'
             })
         }
-        else if(resProfile.status===403){
+        else if (resProfile.status === 403) {
             resProfile.text().then(res => {
-                message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
+                message.error({ content: `403 Forbidden: Refuse to create the project!\n${res}`, duration: 1.5 })
             })
         }
-        else if(resProfile.status===500){
+        else if (resProfile.status === 500) {
             resProfile.text().then(res => {
-                message.error({content: `500 Internal Server Error\n${res}`, duration:1.5})
+                message.error({ content: `500 Internal Server Error\n${res}`, duration: 1.5 })
             })
         }
-        else if(resProfile.status===200){
-            let {Nickname, Company, Email, Githubname, Facebookname, Location} = await resProfile.json()
-            Nickname     = Nickname===undefined     ? '' : Nickname
-            Company      = Company===undefined      ? '' : Company
-            Email        = Email===undefined        ? '' : Email
-            Githubname   = Githubname===undefined   ? '' : Githubname
-            Facebookname = Facebookname===undefined ? '' : Facebookname
-            Location     = Location===undefined     ? '' : Location
-            
+        else if (resProfile.status === 200) {
+            let { Nickname, Company, Email, Githubname, Facebookname, Location } = await resProfile.json()
+            Nickname = Nickname === undefined ? '' : Nickname
+            Company = Company === undefined ? '' : Company
+            Email = Email === undefined ? '' : Email
+            Githubname = Githubname === undefined ? '' : Githubname
+            Facebookname = Facebookname === undefined ? '' : Facebookname
+            Location = Location === undefined ? '' : Location
+
             setNickname(Nickname)
             setCompany(Company)
             setGit(Githubname)
@@ -113,8 +113,8 @@ function Menu() {
             setData([Company, Githubname, Facebookname, Location, Email]);
             setWaiting(false)
         }
-    }, [newProject,update])
-    
+    }, [newProject, update])
+
     const modalRef = React.useRef();
 
     const openModal = () => {
@@ -125,22 +125,22 @@ function Menu() {
     const intoProject = (e) => {
         window.location.href = `/Editor/${e}/${nickname}`
     }
-    const handleSaveProfile = (e) => { 
-        if (e.key === 'Enter' ) save()
+    const handleSaveProfile = (e) => {
+        if (e.key === 'Enter') save()
     }
-    
+
     const confirmModal = async (e) => {
         if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].nodeName.toLowerCase() === 'input') {
             if (e.target.parentNode.parentNode.childNodes[1].childNodes[1].value !== '') {
                 let inputPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1]
                 let newPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1].value;
                 let newColab = (e.target.parentNode.parentNode.childNodes[1].childNodes[3].value).split(';');
-                const same = list.filter(project => { 
-                    if (project.name.split('/')[1] === newPro && project.name.split('/')[0] === nickname) return true 
+                const same = list.filter(project => {
+                    if (project.name.split('/')[1] === newPro && project.name.split('/')[0] === nickname) return true
                 })
                 if (same.length > 0) {
-                    message.error({content:'This project name has already existed!',duration:1.5})
-                    
+                    message.error({ content: 'This project name has already existed!', duration: 1.5 })
+
                     inputPro.classList.add('menu_modal_input_warning');
                     inputPro.parentNode.childNodes[0].childNodes[1].className = 'menu_modal_warning_visible'
                 }
@@ -168,12 +168,12 @@ function Menu() {
                     if (res.status === 403) {
 
                         res.text().then(res => {
-                            message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
+                            message.error({ content: `403 Forbidden: Refuse to create the project!\n${res}`, duration: 1.5 })
                         })
                     }
                     else if (res.status === 500) {
                         res.text().then(res => {
-                            message.error({content: `500 Internal Server Error\n${res}`, duration:1.5})
+                            message.error({ content: `500 Internal Server Error\n${res}`, duration: 1.5 })
                         })
                     }
                     else if (res.status === 200) {
@@ -182,7 +182,7 @@ function Menu() {
                     }
                     else if (res.status === 401) {
                         res.text().then(res => {
-                            message.error({content: `401 Unauthorized\n${res}`, duration:1.5})
+                            message.error({ content: `401 Unauthorized\n${res}`, duration: 1.5 })
                         })
                         window.location.href = '/Login'
                     }
@@ -196,7 +196,7 @@ function Menu() {
     }
 
     const deleteProject = (id) => {
-        const passData = {idsha: id}
+        const passData = { idsha: id }
         fetch('/api/delete_project', {
             method: 'POST', // or 'PUT'
             body: JSON.stringify(passData),
@@ -206,38 +206,38 @@ function Menu() {
         }).then(res => {
             if (res.status === 401) {
                 res.text().then(res => {
-                    message.error({content: `401 Unauthorized\n${res}`, duration:1.5})
+                    message.error({ content: `401 Unauthorized\n${res}`, duration: 1.5 })
                 })
                 window.location.href = '/Login'
             }
             else if (res.status === 403) {
                 res.text().then(res => {
-                    message.error({content: `403 Forbidden: Refuse to delete the project!\n${res}`, duration:1.5})
-                    if(res === "Project Has Been Deleted!!!"){
-                        message.info({content: `Wait for automatically refresh!`, duration:1.5})
+                    message.error({ content: `403 Forbidden: Refuse to delete the project!\n${res}`, duration: 1.5 })
+                    if (res === "Project Has Been Deleted!!!") {
+                        message.info({ content: `Wait for automatically refresh!`, duration: 1.5 })
                         setUpdate(res)
                     }
                 })
             }
             else if (res.status === 500) {
                 res.text().then(res => {
-                    message.error({content: `500 Internal Server Error\n${res}`, duration:1.5})
+                    message.error({ content: `500 Internal Server Error\n${res}`, duration: 1.5 })
                 })
             }
             else if (res.status === 200) {
                 setUpdate(passData);
             }
             else {
-                message.error({content: `Unknown Error!`, duration:1.5})
+                message.error({ content: `Unknown Error!`, duration: 1.5 })
             }
         })
     }
 
     const editProfile = () => {
-        if(!waiting)
+        if (!waiting)
             setEdit(true);
-        else{
-            message.warning({content:"Please wait until your profile up to date"})
+        else {
+            message.warning({ content: "Please wait until your profile up to date" })
         }
     }
 
@@ -249,8 +249,8 @@ function Menu() {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
-        }) 
-        window.location.href='/Login';
+        })
+        window.location.href = '/Login';
     }
     const save = () => {
         setData([company, git, fb, location, email]);
@@ -271,13 +271,13 @@ function Menu() {
         }).then(res => {
             if (res.status === 401) {
                 res.text().then(res => {
-                    message.error({content: `401 Unauthorized\n${res}`, duration:1.5})
+                    message.error({ content: `401 Unauthorized\n${res}`, duration: 1.5 })
                 })
                 window.location.href = '/Login'
             }
             else if (res.status === 403) {
                 res.text().then(res => {
-                    message.error({content: `403 Forbidden: Refuse to create the project!\n${res}`, duration:1.5})
+                    message.error({ content: `403 Forbidden: Refuse to create the project!\n${res}`, duration: 1.5 })
                 })
             }
             else if (res.status === 200) {
@@ -291,7 +291,7 @@ function Menu() {
         })
     }
     return (
-        
+
         <div className='menu_container' >
             <div className='menuProfile' >
                 <div className='menu_profile'>
@@ -304,7 +304,7 @@ function Menu() {
                         </div>
 
                         {editMode ?
-                            <div className = 'profile_edit_mode'>
+                            <div className='profile_edit_mode'>
                                 <div className="profile_detail">
                                     <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }}>
                                         <BiBuildingHouse style={{ verticalAlign: 'middle' }} />
@@ -312,7 +312,7 @@ function Menu() {
                                     <div style={{ marginLeft: '20px' }}></div>
                                     <input className='profile_edit_input'
                                         placeholder='Company'
-                                        onKeyUp={ handleSaveProfile }
+                                        onKeyUp={handleSaveProfile}
                                         onChange={(event) => { setCompany(event.target.value) }}
                                         defaultValue={savedData[0]}>
                                     </input>
@@ -326,7 +326,7 @@ function Menu() {
                                         placeholder='Github Username'
                                         onChange={(event) => { setGit(event.target.value) }}
                                         defaultValue={savedData[1]}
-                                        onKeyUp={ handleSaveProfile }
+                                        onKeyUp={handleSaveProfile}
                                     >
                                     </input>
                                 </div>
@@ -339,7 +339,7 @@ function Menu() {
                                         placeholder='Facebook Username'
                                         onChange={(event) => { setFb(event.target.value) }}
                                         defaultValue={savedData[2]}
-                                        onKeyUp={ handleSaveProfile }
+                                        onKeyUp={handleSaveProfile}
                                     >
                                     </input>
                                 </div>
@@ -352,7 +352,7 @@ function Menu() {
                                         placeholder='Location'
                                         onChange={(event) => { setLoc(event.target.value) }}
                                         defaultValue={savedData[3]}
-                                        onKeyUp={ handleSaveProfile }
+                                        onKeyUp={handleSaveProfile}
                                     >
                                     </input>
                                 </div>
@@ -365,13 +365,13 @@ function Menu() {
                                         placeholder='Email Address'
                                         onChange={(event) => { setEmail(event.target.value) }}
                                         defaultValue={savedData[4]}
-                                        onKeyUp={ handleSaveProfile }
+                                        onKeyUp={handleSaveProfile}
                                     >
                                     </input>
                                 </div>
                                 <div className='profile_last_btns_list'>
                                     <button className='profile_last_btn' onClick={save} style={{ backgroundColor: ' #48a147' }}>Save</button>
-                                    <button className='profile_last_btn' onClick={back2Profile} style={{ backgroundColor: ' #aaaaaa'}}>Cancel</button>
+                                    <button className='profile_last_btn' onClick={back2Profile} style={{ backgroundColor: ' #aaaaaa' }}>Cancel</button>
                                 </div>
                             </div>
                             :
@@ -380,7 +380,7 @@ function Menu() {
                                     <button className='profile_edit_btn' variant='contained' onClick={editProfile}>Edit Profile</button>
                                 </div>
                                 <div style={{ height: 20 }} />
-                                <div className = 'profile_display_list'>
+                                <div className='profile_display_list'>
                                     {savedData[0] !== '' && savedData[0] !== undefined ?
                                         <div className="profile_detail">
                                             <IconContext.Provider value={{ color: '#bbbbbb', size: '20px' }} >
@@ -469,11 +469,11 @@ function Menu() {
                 </div>
             </div>
             <div className='menuBar'>
-                <IconContext.Provider value={{ className:'menuBar_btn' }}>
-                    <div style={{display:'flex' ,height:'100%'}}>
+                <IconContext.Provider value={{ className: 'menuBar_btn' }}>
+                    <div style={{ display: 'flex', height: '100%' }}>
                         <div className='menuBar_navbar'>
-                            <BiLogOutCircle className='logoutBtn' onClick={logout}/>
-                            <FcPlus onClick={openModal} className='plusBtn'/>
+                            <BiLogOutCircle className='logoutBtn' onClick={logout} />
+                            <FcPlus onClick={openModal} className='plusBtn' />
                         </div>
                     </div>
                 </IconContext.Provider>
@@ -482,17 +482,17 @@ function Menu() {
                 <span className='menu_modal_span'>Create a project</span>
                 <div className='menu_modal_inputs'>
                     <div>
-                        <p style={{ display: 'inline-block', fontSize:'20px'}}>Project Name</p>
+                        <p style={{ display: 'inline-block', fontSize: '20px' }}>Project Name</p>
                         <p className='menu_modal_warning_hidden'>* Project Name error!</p>
                     </div>
-                    <input className='menu_modal_input' type='text' name='name' id='name'  />
-                        <p style={{ display: 'inline-block', fontSize:'20px'}}>Collaborators</p>
+                    <input className='menu_modal_input' type='text' name='name' id='name' />
+                    <p style={{ display: 'inline-block', fontSize: '20px' }}>Collaborators</p>
                     <input className='menu_modal_input' ></input>
                     <p style={{ color: '#CCCCCC', fontSize: 10, lineHeight: 0.8 }}>* Use ";" to split collaborators</p>
                 </div>
                 <div className='menu_modal_btns'>
                     <button className='menu_modal_btn menu_btn_close' onClick={() => modalRef.current.closeModal()}>Cancel</button>
-                    <button id = 'confirmBtn' className='menu_modal_btn menu_btn_confirm' onClick={confirmModal}>Confirm</button>
+                    <button id='confirmBtn' className='menu_modal_btn menu_btn_confirm' onClick={confirmModal}>Confirm</button>
                 </div>
             </Modal>
         </div>

@@ -76,7 +76,7 @@ function defaultSpan(crName, color) {
             newSpan.style.cursor = 'default'
         }, 3000);
     }, false);
-    
+
     return newSpan
 }
 
@@ -97,7 +97,7 @@ export default function Editor(props) {
     // Cursors and Bookmarks (include mine)
     const [bookMarks, setBookMarks] = useState({})
     const [cursors, setCursors] = useState({})
-    
+
 
     useEffect(async () => {
         //console.log("Load from backend")
@@ -140,7 +140,7 @@ export default function Editor(props) {
                 setFile([...files])
                 setTree([...transfer(rmduplicate(files).list)])
             }
-            else{
+            else {
                 setFile([])
                 setTree([
                     { type: "blankFolder", displayAddBlank: false, },
@@ -296,7 +296,7 @@ export default function Editor(props) {
         setDeletePath("Untitled")
         setFileName("Untitled")
     }
-    
+
     const handleDownload = () => {
         message.info({ content: "Start download the project", duration: 2 })
         // alert("Download Click")
@@ -304,12 +304,12 @@ export default function Editor(props) {
     }
 
     const handleRename = (ls) => {
-        
+
         const arr = filePath.split('/')
         arr.pop()
-        const _new = (arr.join('/')+'/'+ls)
-        sendData(['rename', { old:filePath, new:_new, name:username }])
-        
+        const _new = (arr.join('/') + '/' + ls)
+        sendData(['rename', { old: filePath, new: _new, name: username }])
+
     }
     const ext = fileName.split(".")[1];
     return (
@@ -382,7 +382,7 @@ export default function Editor(props) {
                                 curserWidth: 2,
                                 indentUnit: 0,
                                 electricChars: false,
-                                
+
                             }}
                             smartIndent={false}
                             placeholder='Select a code mode...'
@@ -396,7 +396,7 @@ export default function Editor(props) {
                         </div>
                     </div>
                 }
-                
+
                 <div className='help_bar'>
                     <IconContext.Provider value={{ className: 'helpBar_btn' }}>
                         <div style={{ display: 'flex', height: '100%' }}>

@@ -25,19 +25,19 @@ function App() {
             <Redirect to="/Login" />
           </Route>
           <Route path="/Login" exact={true}>
-            <Login/>
+            <Login />
           </Route>
           <Route path="/Editor/:hash/:username" exact={true} >
-            <Editor/>  
+            <Editor />
           </Route>
-          
+
           <Route path="/Menu" exact={true}>
-            <Menu/>
+            <Menu />
           </Route>
           <Route path="*">
-            <Error/>
+            <Error />
           </Route>
-          
+
         </Switch>
       </div>
     </Router>

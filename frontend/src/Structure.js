@@ -4,7 +4,7 @@ import { IconContext } from "react-icons";
 import { AiOutlineFile, AiOutlineFolder, AiOutlineFolderOpen } from "react-icons/ai";
 import { DiJsBadge, DiCss3Full, DiHtml5, DiReact, DiPython } from "react-icons/di";
 import { VscNewFile, VscNewFolder, VscCloudDownload } from "react-icons/vsc";
-import { TiPencil, TiDeleteOutline} from "react-icons/ti";
+import { TiPencil, TiDeleteOutline } from "react-icons/ti";
 import { SiCplusplus, SiJson } from "react-icons/si";
 import { message } from 'antd'
 import "./css/Structure.css";
@@ -31,21 +31,21 @@ const Collapsible = styled.div`
   overflow: hidden;
 `;
 const regxfile = /^[ /A-Za-z0-9_.-]+$/;
-export default function Structure({projectName,returnNewFile,returnDelete,returnRename,returnDownload,returnClickFile,fileList,treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath}) {
-    
+export default function Structure({ projectName, returnNewFile, returnDelete, returnRename, returnDownload, returnClickFile, fileList, treeStructure, setTree, resetStatus, onClickFile, onClickFolder, AddNewFile, SaveToTree, currentFilePath }) {
+
 
     const File = ({ name, filepath, focusOn }) => {
         let ext = name.split(".")[1];
         return (
-            
-                <div id={filepath} className={focusOn ? 'structureFile_Focus' :'structureFile'} filepath={filepath} key={filepath}>
+
+            <div id={filepath} className={focusOn ? 'structureFile_Focus' : 'structureFile'} filepath={filepath} key={filepath}>
                 {FILE_ICONS[ext] || <AiOutlineFile />}
-                <span className="fileSpan" 
-                onClick={(event) => handleclickFile(event)} 
+                <span className="fileSpan"
+                    onClick={(event) => handleclickFile(event)}
                     key={filepath + ' span'}>{name}</span>
-                </div>
-                
-            
+            </div>
+
+
         );
     };
     const Folder = ({ name, children, folderpath, focusOn }) => {
@@ -81,14 +81,14 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
     const handlePressEnter = (event, isFolder) => {
         if (event.key === 'Enter') {
             let newFileName = event.target.value
-            if(newFileName.match(regxfile) === null)
-                message.error({content: 'Invalid Filename', duration: 1.5})
-            else{
+            if (newFileName.match(regxfile) === null)
+                message.error({ content: 'Invalid Filename', duration: 1.5 })
+            else {
                 let path = SaveToTree(newFileName, isFolder)
-                if(fileList.includes(path)){
-                    message.error({content: 'Filename Exists', duration: 1.5})
+                if (fileList.includes(path)) {
+                    message.error({ content: 'Filename Exists', duration: 1.5 })
                 }
-                else{
+                else {
                     returnNewFile(path)
                 }
             }
@@ -100,8 +100,8 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
     const handleAddNewFolder = () => {
         AddNewFile(true)
     }
-    const handleProjectName = (proName) => { 
-        if (proName.length > 22) 
+    const handleProjectName = (proName) => {
+        if (proName.length > 22)
             return (proName.substr(0, 20) + '...')
         else return (proName)
     }
@@ -116,7 +116,7 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
                         <div className='navbar_bar'>
                             <VscNewFile onClick={() => handleAddNewFile()} />
                             <VscNewFolder onClick={() => handleAddNewFolder()} />
-                            <VscCloudDownload onClick={() => returnDownload()}  />
+                            <VscCloudDownload onClick={() => returnDownload()} />
                             <TiDeleteOutline onClick={() => returnDelete()} />
                             <TiPencil onClick={() => handleRename()} />
                         </div>
@@ -161,49 +161,49 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
         }
 
     }
-    const [focusID, setFocusID] = useState("") 
+    const [focusID, setFocusID] = useState("")
     const handleclickFile = (event) => {
         let fp = event.target.parentNode.id
-        setFocusID([fp,0])
+        setFocusID([fp, 0])
         resetStatus()
         const filename = onClickFile(String(fp))
-        returnClickFile({"type":"file","name":filename})
+        returnClickFile({ "type": "file", "name": filename })
     }
     const handleclickFolder = (event) => {
         let fp = event.target.parentNode.parentNode.id
-        setFocusID([fp,1])
+        setFocusID([fp, 1])
         resetStatus()
         const foldername = onClickFolder(String(fp))
-        returnClickFile({"type":"folder","name":foldername})
+        returnClickFile({ "type": "folder", "name": foldername })
     }
     const handleEnter = (event) => {
-        if(event.key==='Enter'){
+        if (event.key === 'Enter') {
             //console.log(event.target.value)
             returnRename(event.target.value)
         }
-    } 
+    }
     // const iterRename = (node) => {
     //     const name = node.children[1].innerHTML
     //     iterRename(node.)
     // }
     const handleRename = () => {
         const focusEle = document.getElementById(focusID[0])
-        let focusSpan,focusName
-        if(focusID[1]===1){
+        let focusSpan, focusName
+        if (focusID[1] === 1) {
         }
-        else{
-            if(focusID!==""){
+        else {
+            if (focusID !== "") {
                 focusSpan = focusEle.children[1]
                 focusName = focusEle.children[1].innerHTML
                 let newSpan = document.createElement('input')
                 newSpan.className = "inputSpan"
                 newSpan.value = focusName
                 newSpan.onkeypress = (event) => handleEnter(event)
-                focusSpan.parentNode.replaceChild(newSpan,focusSpan)
+                focusSpan.parentNode.replaceChild(newSpan, focusSpan)
             }
         }
         // console.log(focusEle.children[0].children[1].innerHTML)
-        
+
     }
     return (
         <div className="App">
@@ -211,7 +211,7 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
             <Tree>
                 {displayStruct(treeStructure)}
             </Tree>
-            <rightClick/>
+            <rightClick />
         </div>
     );
 }

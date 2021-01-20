@@ -8,7 +8,7 @@ import { IoCheckbox } from "react-icons/io5";
 import { IconContext } from "react-icons";
 import Divider from '@material-ui/core/Divider';
 
-import { ImFacebook2, ImGoogle, ImGithub} from "react-icons/im";
+import { ImFacebook2, ImGoogle, ImGithub } from "react-icons/im";
 import { message } from 'antd'
 import './css/Login.css'
 
@@ -46,18 +46,18 @@ const Login = () => {
             }).then(res => {
                 if (res.status === 200) {
                     setShowReg(false);
-                    message.success({content:"Successfully Registered!",duration:2})
+                    message.success({ content: "Successfully Registered!", duration: 2 })
                 }
                 else if (res.status === 500) {
-                    message.error({content:"500 Internal Server Error",duration:2})
+                    message.error({ content: "500 Internal Server Error", duration: 2 })
                 }
                 else if (res.status === 403) {
                     res.text().then(res => {
-                        message.error({content:`${res}!\nPlease Change a Username!`,duration:2})
+                        message.error({ content: `${res}!\nPlease Change a Username!`, duration: 2 })
                     })
                 }
                 else {
-                    message.error({content:"Unknown Error",duration:2})
+                    message.error({ content: "Unknown Error", duration: 2 })
                 }
             })
                 .catch(error => console.error('Error:Login Error'))
@@ -65,7 +65,7 @@ const Login = () => {
         }
         else {
             // Error messages
-            message.error({content:"Please check your confirm password!",duration:2})
+            message.error({ content: "Please check your confirm password!", duration: 2 })
             setShowReg(true);
         }
     }
@@ -85,7 +85,7 @@ const Login = () => {
                 }
                 message.error(content)
             }
-            
+
             else if (res.status === 200) {
                 window.location.href = '/Menu'
             }
@@ -106,7 +106,7 @@ const Login = () => {
         }
     }
 
-    const handleEnter = (e, now) => { 
+    const handleEnter = (e, now) => {
         if (e.key === 'Enter') {
             if (now === 'username') {
                 let next = e.target.parentNode.parentNode.parentNode.childNodes[2].childNodes[1].childNodes[1];
@@ -116,16 +116,16 @@ const Login = () => {
                 let next = e.target.parentNode.parentNode.parentNode.childNodes[4]
                 next.click()
             }
-            else if (now === 'newName') { 
+            else if (now === 'newName') {
                 let next = e.target.parentNode.parentNode.parentNode.childNodes[4].childNodes[1].childNodes[1]
-                
+
                 next.focus()
             }
-            else if (now === 'newPass') { 
+            else if (now === 'newPass') {
                 let next = e.target.parentNode.parentNode.parentNode.childNodes[5].childNodes[1].childNodes[1]
                 next.focus()
             }
-            else if (now === 'conPass') { 
+            else if (now === 'conPass') {
                 let next = e.target.parentNode.parentNode.parentNode.childNodes[7]
                 next.click()
             }
@@ -163,7 +163,7 @@ const Login = () => {
                                 label='Username'
                                 margin='normal'
                                 variant="outlined"
-                                onKeyPress={(event) => { handleEnter(event,'newName') }}   
+                                onKeyPress={(event) => { handleEnter(event, 'newName') }}
                                 onChange={(event) => { setUsername(event.target.value) }}
                                 InputLabelProps={{ style: { color: "#a2693b", } }}
                                 InputProps={{
@@ -177,8 +177,8 @@ const Login = () => {
                                 type="password"
                                 margin='normal'
                                 variant="outlined"
-                                onKeyPress={(event) => { handleEnter(event,'newPass') }}   
-                                onChange={(event) => {setPassword(event.target.value);}}
+                                onKeyPress={(event) => { handleEnter(event, 'newPass') }}
+                                onChange={(event) => { setPassword(event.target.value); }}
                                 InputLabelProps={{ style: { color: "#a2693b" } }}
                                 InputProps={{
                                     style: { color: "#a2693b", letterSpacing: 1, size: 30 },
@@ -191,7 +191,7 @@ const Login = () => {
                                 type="password"
                                 margin='normal'
                                 variant="outlined"
-                                onKeyPress={(event) => { handleEnter(event,'conPass') }}   
+                                onKeyPress={(event) => { handleEnter(event, 'conPass') }}
                                 onChange={(event) => {
                                     //setConfirm(event.target.value);
                                     handleKeyUp(event.target.value);
@@ -219,9 +219,9 @@ const Login = () => {
                     </Grid>
                 }
                 {!showRegister &&
-                <Grid container item xs={12} sm={6} style={{ padding: 10, backgroundColor: '#231f22' }} direction='column' justify='space-between' alignItems='center'>
-                    <div />
-                    <div style={{ display: 'flex', flexDirection: 'column', padding: 30, borderRadius: '10%' }}>
+                    <Grid container item xs={12} sm={6} style={{ padding: 10, backgroundColor: '#231f22' }} direction='column' justify='space-between' alignItems='center'>
+                        <div />
+                        <div style={{ display: 'flex', flexDirection: 'column', padding: 30, borderRadius: '10%' }}>
                             <Grid container justify='center'>
                                 <img
                                     src='https://i.imgur.com/qCO0nq4.png'
@@ -233,8 +233,8 @@ const Login = () => {
                                 label='Username'
                                 margin='normal'
                                 variant="outlined"
-                                onKeyPress={(event) => { handleEnter(event,'username') }}
-                                onChange={(event) => {setUsername(event.target.value)}}
+                                onKeyPress={(event) => { handleEnter(event, 'username') }}
+                                onChange={(event) => { setUsername(event.target.value) }}
                                 InputLabelProps={{ style: { color: "#a2693b", } }}
                                 InputProps={{
                                     style: { color: "#a2693b", letterSpacing: 1 },
@@ -247,7 +247,7 @@ const Login = () => {
                                 type="password"
                                 margin='normal'
                                 variant="outlined"
-                                onKeyPress={(event) => { handleEnter(event,'password') }}   
+                                onKeyPress={(event) => { handleEnter(event, 'password') }}
                                 onChange={(event) => { setPassword(event.target.value) }}
                                 InputLabelProps={{ style: { color: "#a2693b" } }}
                                 InputProps={{
@@ -262,33 +262,33 @@ const Login = () => {
                             </Button>
                             <div style={{ height: 20 }} />
                             <Button id='login_join_btn' onClick={toRegister}>Interested in joining?</Button>
-                        <div id='login_separator'>or</div>
-                        <div id='login_social_login_container'>
-                            <Button
-                                onClick={()=>{window.location.href='/api/login/fb'}}
-                                variant='contained'
-                                id='login_fb_btn'
-                                startIcon={<ImFacebook2 style={{ marginRight: 10, marginLeft: 5 }} />}>
-                                Login with Facebook
+                            <div id='login_separator'>or</div>
+                            <div id='login_social_login_container'>
+                                <Button
+                                    onClick={() => { window.location.href = '/api/login/fb' }}
+                                    variant='contained'
+                                    id='login_fb_btn'
+                                    startIcon={<ImFacebook2 style={{ marginRight: 10, marginLeft: 5 }} />}>
+                                    Login with Facebook
                             </Button>
-                            <Button
-                                onClick={()=>{window.location.href='/api/login/google'}}
-                                variant='contained'
-                                id='login_google_btn'
-                                startIcon={<ImGoogle style={{ marginRight: 10, marginLeft: 5 }} />}>
-                                Login with Google
+                                <Button
+                                    onClick={() => { window.location.href = '/api/login/google' }}
+                                    variant='contained'
+                                    id='login_google_btn'
+                                    startIcon={<ImGoogle style={{ marginRight: 10, marginLeft: 5 }} />}>
+                                    Login with Google
                             </Button>
-                            <Button
-                                onClick={()=>{window.location.href='/api/login/github'}}
-                                variant='contained'
-                                id='login_git_btn'
-                                startIcon={<ImGithub style={{ marginRight: 10, marginLeft: 5 }} />}>
-                                Login with Github
+                                <Button
+                                    onClick={() => { window.location.href = '/api/login/github' }}
+                                    variant='contained'
+                                    id='login_git_btn'
+                                    startIcon={<ImGithub style={{ marginRight: 10, marginLeft: 5 }} />}>
+                                    Login with Github
                             </Button>
+                            </div>
                         </div>
-                    </div>
-                    <div />
-                </Grid>
+                        <div />
+                    </Grid>
                 }
             </Grid>
         </div>

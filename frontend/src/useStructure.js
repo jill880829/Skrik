@@ -23,7 +23,7 @@ const useStructure = (str) => {
     }
     const modifyClickTree = (fp_arr, isFolder) => {
         let a = treeStructure
-        let filename='/'
+        let filename = '/'
         for (let i = 0; i < fp_arr.length - 1; i++) {
             a[fp_arr[i]].status = 'open'
             filename += (`${a[fp_arr[i]].name}/`)
@@ -38,9 +38,9 @@ const useStructure = (str) => {
             a[fp_arr[fp_arr.length - 1]].status = 'on'
             filename += (`${a[fp_arr[fp_arr.length - 1]].name}`)
         }
-        
+
         setTree([...treeStructure])
-        return(filename)
+        return (filename)
     }
     const onClickFile = (fp) => {
         let fp_arr = fp.split('_')
@@ -88,10 +88,10 @@ const useStructure = (str) => {
                 if (result.find === 'find') {
                     const currentFilePath = `${ele[i].name}/${result.path}`
                     //console.log(currentFilePath)
-                    return {"find":"find","path":currentFilePath}
+                    return { "find": "find", "path": currentFilePath }
 
                 }
-                else return {"find":"unfind","path":""}
+                else return { "find": "unfind", "path": "" }
             }
             else if (ele[i].type === 'folder' && (ele[i].status === 'innestopen' || ele[i].status === 'innestopenFocus')) {
                 for (let j = 0; j < ele[i].data.length; j++) {
@@ -120,23 +120,23 @@ const useStructure = (str) => {
                                     "EOF"
                                 ]
                             });
-                            return {"find":"find","path":`${ele[i].name}/${name}/`}
+                            return { "find": "find", "path": `${ele[i].name}/${name}/` }
                         }
                     }
                     else {
                         if (ele[i].data[j].type === 'blankFile') {
-                            const currentFilePath = `${ele[i].name}/${name}` 
-                            return {"find":"find","path":currentFilePath}
+                            const currentFilePath = `${ele[i].name}/${name}`
+                            return { "find": "find", "path": currentFilePath }
                         }
                     }
                 }
             }
         }
         let returnName
-        for(let i=0;i<ele.length;i++){
-            if(isFolder){
+        for (let i = 0; i < ele.length; i++) {
+            if (isFolder) {
                 if (ele[i].type === 'blankFolder') {
-                    returnName = name+'/'
+                    returnName = name + '/'
                     ele[i].displayAddBlank = false;
                     let cnt = 0
                     for (let k = 0; k < ele.length; k++) {
@@ -169,7 +169,7 @@ const useStructure = (str) => {
                 }
             }
         }
-        return {"find":"find","path":returnName}
+        return { "find": "find", "path": returnName }
     }
     const AddNewFile = (isFolder) => {
         let findInsertPlace = IterAddNewFile(treeStructure, isFolder)

@@ -1,4 +1,4 @@
-import React , { forwardRef, useImperativeHandle }from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import ReactDOM from 'react-dom';
 
 import './modal.css'
@@ -8,7 +8,7 @@ const Modal = forwardRef((props, ref) => {
         return {
             openModal: () => open(),
             closeModal: () => close(),
-            confirmModal:() =>  confirm()
+            confirmModal: () => confirm()
         }
     });
 

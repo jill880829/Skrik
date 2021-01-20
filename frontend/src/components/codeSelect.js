@@ -20,7 +20,7 @@ const customStyles = {
         background: "#023950",
         borderRadius: 0,
         marginTop: 0,
-    
+
     }),
     menuList: (base, state) => ({
         ...base,
@@ -36,11 +36,11 @@ const customStyles = {
         "&:hover": {
             backgroundColor: state.isFocused ? "#022244" : "#023950",
         }
-        
+
     }),
 };
 
-function CodeSelect({options, onChange}) {
+function CodeSelect({ options, onChange }) {
     return <div>
         <Select styles={customStyles} options={options} onChange={onChange} ></Select>
     </div>
