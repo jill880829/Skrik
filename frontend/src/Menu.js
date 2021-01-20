@@ -139,7 +139,6 @@ function Menu() {
                 let inputPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1]
                 let newPro = e.target.parentNode.parentNode.childNodes[1].childNodes[1].value;
                 let newColab = (e.target.parentNode.parentNode.childNodes[1].childNodes[3].value).split(';');
-                console.log(list)
                 const same = list.filter(project => { 
                     if (project.name.split('/')[1] === newPro && project.name.split('/')[0] === nickname) return true 
                 })

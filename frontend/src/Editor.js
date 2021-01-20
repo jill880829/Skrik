@@ -100,7 +100,7 @@ export default function Editor(props) {
     
 
     useEffect(async () => {
-        console.log("Load from backend")
+        //console.log("Load from backend")
         const result = await fetch(`/api/ls/${hash}`, {
             method: 'GET',
             headers: new Headers({
@@ -239,12 +239,12 @@ export default function Editor(props) {
     }
 
     client.onopen = () => {
-        console.log('websocket open')
+        //console.log('websocket open')
         client.send(JSON.stringify(['init', hash]))
     }
 
     client.onclose = () => {
-        console.log('websocket close')
+        //console.log('websocket close')
         setOpened(false)
         setProjectInit(false)
     }
@@ -289,9 +289,9 @@ export default function Editor(props) {
         setDeletePath(ls.name)
     }
     const handleDelete = () => {
-        console.log(deletePath)
+        //console.log(deletePath)
         if (deletePath !== "Untitled")
-            console.log("DE:")
+            //console.log("DE:")
             sendData(['delete', { "deleter": username, "path": deletePath }])
         setDeletePath("Untitled")
         setFileName("Untitled")

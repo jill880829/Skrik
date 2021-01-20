@@ -20,7 +20,7 @@ const Modal = forwardRef((props, ref) => {
     };
     const confirm = () => {
         setDisplay(false);
-        console.log('confirm')
+        //console.log('confirm')
     };
 
     if (display) {

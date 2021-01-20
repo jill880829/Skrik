@@ -90,7 +90,7 @@ const Login = () => {
                 window.location.href = '/Menu'
             }
             else {
-                console.log("ERROR")
+                //console.log("ERROR")
             }
         })
             .catch(error => console.error('Error:Login Error'))

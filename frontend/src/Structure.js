@@ -174,7 +174,7 @@ export default function Structure({projectName,returnNewFile,returnDelete,return
     }
     const handleEnter = (event) => {
         if(event.key==='Enter'){
-            console.log(event.target.value)
+            //console.log(event.target.value)
             returnRename(event.target.value)
         }
     } 

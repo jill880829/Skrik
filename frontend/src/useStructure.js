@@ -43,7 +43,7 @@ const useStructure = (str) => {
         return(filename)
     }
     const loadStructure = (data) => {
-        console.log("Function for reading message from backend")
+        //console.log("Function for reading message from backend")
     }
     const onClickFile = (fp) => {
         let fp_arr = fp.split('_')
@@ -90,7 +90,7 @@ const useStructure = (str) => {
                 const result = IterComfirmNewFile(ele[i].data, name, isFolder)
                 if (result.find === 'find') {
                     const currentFilePath = `${ele[i].name}/${result.path}`
-                    console.log(currentFilePath)
+                    //console.log(currentFilePath)
                     return {"find":"find","path":currentFilePath}
 
                 }
@@ -194,7 +194,7 @@ const useStructure = (str) => {
     }
     const SaveToTree = (name, isFolder) => {
         let result = IterComfirmNewFile(treeStructure, name, isFolder).path
-        console.log(result)
+        //console.log(result)
         setTree([...treeStructure])
         result = `/${result}`
         return result
