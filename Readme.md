@@ -28,19 +28,13 @@ git clone https://github.com/jill880829/Skrik
         # install and set gcloud info
         install gcloud (find steps from web!!)
         gcloud components install kubectl
-        gcloud init
-        gcloud auth login
-        gcloud config set project skrik-299012
+        gcloud init ( project: skrik-299012, default zone: asia-east1-a )
         gcloud container clusters get-credentials skrik-taiwan        
 
         # port forwarding the database
         kubectl get pods  (check mongo and redis pod name)
-        kubectl port-forward <pod-name> [port]:[port]
-        
-        #docker ports:
-        mongo:           27017
-        mongo-express:   8081
-        redis:           6379
+        kubectl port-forward mongo-0 27017:27017
+        kubectl port-forward redis-0 6379:6379
 
         ```
     - Run backend server
